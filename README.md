@@ -12,5 +12,5 @@ To make use of this file you will need to navigate to the folder that contains t
 If you are on windows, you shall make use of the Windows Command Prompt or Windows Powershell. If you are on mac then the terminal would do just fine.
 
 You will then need to run:
-pip install -r requirements.txt
+"pip install -r requirements.txt"
 in your respective shell.
