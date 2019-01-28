@@ -14,6 +14,13 @@
       media="screen"
       href="../static/dashboard.css"
     />
+
+    <style>
+      .chart {
+        margin-top: 30px;
+        text-align: center;
+      }
+    </style>
     <script src="main.js"></script>
 
     <link
@@ -32,17 +39,30 @@
       integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP"
       crossorigin="anonymous"
     ></script>
+
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
   </head>
   <body>
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Buffett</a>
 
-      <input
-        class="form-control form-control-dark w-100"
-        type="text"
-        placeholder="Search"
-        aria-label="Search"
-      />
+      <!-- 
+        Begin implementation of the search functionality -->
+      <form
+        class="form-inline w-100"
+        action="{{ url_for('search') }}"
+        method="get"
+      >
+        <input
+          class="form-control form-control-dark w-100"
+          type="text"
+          name="name"
+          placeholder="Search (start typing)"
+          aria-label="Search"
+        />
+      </form>
+      <!-- End of search functionality implementation -->
 
       <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
@@ -277,20 +297,17 @@
       </div>
     </div>
 
+    <div id="container"></div>
+    <!-- {{ temp }} -->
+    <script>
+      var chart = Highcharts.stockChart("container", {
+        series: {{ temp }}
+      });
+    </script>
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script>
-      window.jQuery ||
-        document.write(
-          '<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>'
-        );
-    </script>
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
