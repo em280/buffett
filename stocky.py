@@ -22,14 +22,6 @@ def process_api_call(api_url):
 	return result.json()
 
 
-def get_current_share_price(symbol):
-	'''
-	Returns current price value in dollars
-	'''  
-	api_url = '{}stock/{}/quote'.format(base_api_link,symbol)
-	
-	return process_api_call(api_url)['iexRealtimePrice']
-
 def get_company_info(symbol):
 	'''
 	Returns general information on company (inc. CEO, Sector, Description)
@@ -63,4 +55,3 @@ def get_current_share_quote(symbol):
 	api_url = '{}stock/{}/quote'.format(base_api_link,symbol)
 	
 	return process_api_call(api_url)
-	

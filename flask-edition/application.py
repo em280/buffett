@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 
 from stocky import get_month_chart
+from stocky import get_current_share_quote
 
 import json
 import plotly
@@ -33,9 +34,12 @@ def search():
     @author EM
     Functionality for the search function.
     """
-    name = request.args.get("name")
-    temp = get_month_chart("TSLA", 1)
-    return render_template("search.html", name=name, temp=temp)
+    symbol = request.args.get("name")
+    current_price = get_current_share_quote(symbol)['latestPrice']
+    
+    
+    
+    return render_template("search.html", symbol=symbol, current_price=current_price)
 
 
 @app.route("/live")
