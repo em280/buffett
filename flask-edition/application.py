@@ -36,9 +36,7 @@ def search():
     """
     symbol = request.args.get("name")
     current_price = get_current_share_quote(symbol)['latestPrice']
-    
-    
-    
+
     return render_template("search.html", symbol=symbol, current_price=current_price)
 
 
@@ -49,20 +47,14 @@ def show():
     Functionality for the search function.
     """
     return json.dumps(get_month_chart("TSLA", 1))
-    # tt = json.JSONDecoder().decode(get_month_chart("TSLA", 1))
 
-    # xScale = tt["close"]
-    # yScale = tt["date"]
+if __name__ == "__main__":
+    """
+    @author EM
+    This is the main entry of the program.
 
-    # # Create a trace
-    # trace = go.Scatter(
-    #     x=xScale,
-    #     y=yScale
-    # )
-
-    # data = [trace]
-    # graphJSON = json.dumps(data, cls=plotly.utils.PlotlyJSONEncoder)
-
-    # t = json.dumps(get_month_chart("TSLA", 1),
-    #                cls=plotly.utils.PlotlyJSONEncoder)
-    # return render_template("live.html", t=t, graphJSON=graphJSON)
+    Debug has been set to true for development purposes.
+    This program can now be executed by typing "python application.py" or "python3 application.py"
+    provided you are in the current directory of application.py
+    """
+    app.run(debug=True)
