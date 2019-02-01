@@ -20,15 +20,13 @@ import numpy as np
 
 # The name of this application is app
 app = Flask(__name__)
-# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy()
 
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
 # PostgreSQL or MySQL shall be used for production
-# engine = create_engine(os.getenv("DATABASE_URL"))
-# db = scoped_session(sessionmaker(bind=engine))
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database_test.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db.init_app(app)
 
 
 
@@ -38,12 +36,12 @@ def index():
     @author EM
     The homepage of the application.
     """
-    # temp = get_month_chart("TSLA", 1)
-    # return render_template("index.html", temp=temp)
-    temp = jsonify(get_month_chart("TSLA", 1))
+    # List all users
+    users = User.query.all()
+    tesla = jsonify(get_month_chart("TSLA", 1))
 
     return render_template('index.html',
-                           temp=temp)
+                           tesla=tesla, users=users)
 
 
 @app.route("/search", methods=["GET"])
@@ -72,8 +70,7 @@ def dashboard():
     @author EM
     Functionality for the user dashboard/portfolio function.
     """
-    # records = 
-    return render_template("index.html", records=records)
+    
 
 @app.route("/buy")
 def buy():
@@ -90,6 +87,19 @@ def sell():
     Functionality for the user sell function.
     """
 
+@app.route("/register")
+def register():
+    """
+    @author EM
+    Functionality for the user sell function.
+    """
+    # Register a user
+    user = User().add_user("bob")
+    return "A user has been registered."
+
+def main():
+    db.create_all()
+
 
 if __name__ == "__main__":
     """
@@ -100,4 +110,6 @@ if __name__ == "__main__":
     This program can now be executed by typing "python application.py" or "python3 application.py"
     provided you are in the current directory of application.py
     """
+    with app.app_context():
+        main()
     app.run(debug=True)
