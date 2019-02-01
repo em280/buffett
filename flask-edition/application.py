@@ -15,7 +15,7 @@ import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-
+import chartjs
 import numpy as np
 
 # The name of this application is app
@@ -49,13 +49,25 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     """
-    @author EM
+    @author SH
     Functionality for the search function.
     """
     symbol = request.args.get("name")
     current_price = get_current_share_quote(symbol)['latestPrice']
-
-    return render_template("search.html", symbol=symbol, current_price=current_price)
+  
+    chart = chartjs.chart(symbol, "Line", 640, 480)
+    data = get_month_chart(symbol, 3)
+    labels = []
+    ds = []
+    for rows in data:
+        labels.append(rows['date'])
+        ds.append(rows['close'])
+    
+    chart.set_labels(labels)
+    chart.add_dataset(ds)
+    chart.set_params(fillColor = "rgba(220,220,220,0.5)", strokeColor = "rgba(220,220,220,0.8)", highlightFill = "rgba(220,220,220,0.75)", highlightStroke = "rgba(220,220,220,1)",)
+    company_chart = chart.make_chart_full_html()
+    return render_template("search.html", company_chart=company_chart, current_price=current_price)
 
 
 @app.route("/live")

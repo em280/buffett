@@ -63,4 +63,9 @@ def get_current_share_quote(symbol):
 	api_url = '{}stock/{}/quote'.format(base_api_link,symbol)
 	
 	return process_api_call(api_url)
-	
+
+stuff = get_month_chart('aapl', 3)
+
+for things in stuff:
+	print(things['date'])
+	print(things['close'])
