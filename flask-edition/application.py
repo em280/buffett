@@ -83,6 +83,21 @@ def dashboard():
     Functionality for the user dashboard/portfolio function.
     """
 
+@app.route("/buy")
+def buy():
+    """
+    @author 
+    Functionality for the user buy function.
+    """
+
+
+@app.route("/sell")
+def sell():
+    """
+    @author 
+    Functionality for the user sell function.
+    """
+
 
 if __name__ == "__main__":
     """
@@ -93,4 +108,10 @@ if __name__ == "__main__":
     This program can now be executed by typing "python application.py" or "python3 application.py"
     provided you are in the current directory of application.py
     """
+    # fl = open("starter_db.csv")
+    # reader = csv.reader(fl)
+    # for username, password in reader:
+    #     db.execute("INSERT INTO users(username, password) VALUES {username, password}")
+        
+    # db.session.commit()
     app.run(debug=True)
