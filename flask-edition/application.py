@@ -29,16 +29,6 @@ db = SQLAlchemy()
 # PostgreSQL or MySQL shall be used for production
 # engine = create_engine(os.getenv("DATABASE_URL"))
 # db = scoped_session(sessionmaker(bind=engine))
-#
-#class User(db.Model):
-#    __tablename__ = "users"
-#    id = db.Column(db.Integer, primary_key=True)
-#    username = db.Column(db.String, nullable=False)
-#    password = db.Column(db.String, nullable=False)
-#    cash = db.Column(db.Integer, default=1000)
-#
-#    def __repr__(self):
-#        return f"User('{self.username}', '{self.cash}')"
 
 
 
@@ -108,10 +98,4 @@ if __name__ == "__main__":
     This program can now be executed by typing "python application.py" or "python3 application.py"
     provided you are in the current directory of application.py
     """
-    # fl = open("starter_db.csv")
-    # reader = csv.reader(fl)
-    # for username, password in reader:
-    #     db.execute("INSERT INTO users(username, password) VALUES {username, password}")
-        
-    # db.session.commit()
     app.run(debug=True)
