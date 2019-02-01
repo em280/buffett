@@ -157,9 +157,14 @@
                 </tr>
               </thead>
               <tbody>
-                {% for record in records %}
-                <tr></tr>
-
+                {% for user in users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.username }}</td>
+                  <td>0</td>
+                  <td>1000</td>
+                  <td>1000</td>
+                </tr>
                 {% endfor %}
               </tbody>
             </table>
@@ -172,7 +177,7 @@
     <!-- {{ temp }} -->
     <script>
       var chart = Highcharts.stockChart("container", {
-        series: {{ temp }}
+        series: {{ tesla }}
       });
     </script>
 
