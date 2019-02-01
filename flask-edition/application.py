@@ -70,6 +70,8 @@ def dashboard():
     @author EM
     Functionality for the user dashboard/portfolio function.
     """
+    # List all users
+    users = User.query.all()
     
 
 @app.route("/buy")
@@ -86,6 +88,8 @@ def sell():
     @author 
     Functionality for the user sell function.
     """
+    # Enable selling of shares
+    return render_template("index.html", message="You have sold one of your shares.")
 
 @app.route("/register")
 def register():
@@ -98,6 +102,7 @@ def register():
     return "A user has been registered."
 
 def main():
+    # Create a database with tables
     db.create_all()
 
 
