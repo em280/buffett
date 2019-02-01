@@ -8,6 +8,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     cash = db.Column(db.Integer, default=1000)
+    
 
     def __repr__(self):
         return f"User('{self.username}', '{self.cash}')"
