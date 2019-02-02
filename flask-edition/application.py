@@ -15,7 +15,7 @@ import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-import chartjs # This line is causing some problems at the moment
+import chartjs
 import numpy as np
 
 # The name of this application is app
