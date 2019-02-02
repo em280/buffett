@@ -75,8 +75,9 @@ def dashboard():
     @author EM
     Functionality for the user dashboard/portfolio function.
     """
-    # List all users
-    users = User.query.all()
+    # List all stocks owned by the user
+    user_stocks = Portfolio.query.all()
+    return render_template("index.html", user_stocks)
     
 
 @app.route("/buy")
@@ -95,6 +96,12 @@ def sell():
     Functionality for the user sell function.
     """
     # Enable selling of shares
+    # Remove stock from user's portfolio
+    # You can use DELETE or log the sale as a negative quantity
+    # Update cash/value of user [the stock is sold at its current price]
+    # return success or failure message
+
+    
     return render_template("index.html", message="You have sold one of your shares.")
 
 @app.route("/history")
