@@ -14,7 +14,7 @@ if __name__ == "__main__":
     """
     @author proposal by EM
     """
-	# Run this file using the python command
+	# Run this file using the python command when carrying out tests
 	# Test functions can be invoked from here
 
 def process_api_call(api_url):

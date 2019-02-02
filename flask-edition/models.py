@@ -3,8 +3,8 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-from sqlalchemy import DateTime
-from sqlalchemy.sql import func
+# from sqlalchemy import DateTime
+# from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
@@ -17,6 +17,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
+    cash = db.Column(db.Integer, default=10000.00)
 
     def add_user(self, name):
         usr = User(username=name, password="passhash")
@@ -26,8 +27,10 @@ class User(db.Model):
     def get_user(self, id):
         pass
 
-    def update_user(self, id):
-        pass
+    def update_user(self, id, cash):
+        usr = User.query.get(id=int(id))
+        usr.cash = cash
+
 
     def remove_user(self, id):
         """
@@ -84,6 +87,9 @@ class Portfolio(db.Model):
             return False
         db.session.delete(ptf)
         db.session.commit()
+
+    def __repr__(self):
+        return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}')"
 
 # class History(db.Model):
 #     __tablename__ = "history"

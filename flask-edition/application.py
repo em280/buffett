@@ -77,16 +77,28 @@ def dashboard():
     """
     # List all stocks owned by the user
     user_stocks = Portfolio.query.all()
-    return render_template("index.html", user_stocks)
+    return render_template("index.html", user_stocks=user_stocks)
     
 
 @app.route("/buy")
 def buy():
     """
-    @author 
+    @author EM
     Functionality for the user buy function.
     """
-    return render_template("index.html", message="You have bought some shares.")
+    symbol = "MSFT"
+    current_price = get_current_share_quote(symbol)['latestPrice']
+    noOfShares = 1
+    # userid of 3 is used as an example
+    userid = 3
+    Portfolio().add_portfolio_stock(userid, symbol)
+    # update cash/value balance of the user
+    user = User.query.get(userid)
+    user.cash = user.cash - (current_price * noOfShares)
+    db.session.commit()
+    # User().update_user(userid, user.cash)
+    # dashboard()
+    return render_template("index.html", message=f"You have bought some shares worth £{current_price:,.2f}.")
 
 
 @app.route("/sell")
@@ -101,7 +113,12 @@ def sell():
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
 
-    
+    # Get stock information
+    stock_symbol = "MSFT"
+    remove_portfolio_stock(stock_symbol)
+    # update user's cash balance
+    userid = 3
+    User().update_user(userid, 100)
     return render_template("index.html", message="You have sold one of your shares.")
 
 @app.route("/history")
@@ -127,7 +144,7 @@ def register():
     Functionality for the user register function.
     """
     # Register a user
-    user = User().add_user("bob")
+    user = User().add_user("alice") # bob alan alice dw er ty
     return "A user has been registered."
 
 @app.route("/unregister")
@@ -136,8 +153,8 @@ def unregister():
     @author EM
     Functionality for the user unregister function.
     """
-    # Unregister a user
-    User().remove_user(4)
+    # Unregister a user based on their id
+    User().remove_user(2)
     return "A user has been unregistered." # Update this function for when user was not removed
 
 def main():
