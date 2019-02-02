@@ -15,7 +15,7 @@ import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-# import chartjs # This line is causing some problems at the moment
+import chartjs # This line is causing some problems at the moment
 import numpy as np
 
 # The name of this application is app
@@ -68,14 +68,6 @@ def search():
     return render_template("search.html", company_chart=company_chart, current_price=current_price)
 
 
-@app.route("/live")
-def show():
-    """
-    @author EM
-    Functionality for the search function.
-    """
-    return json.dumps(get_month_chart("TSLA", 1))
-
 @app.route("/dashboard")
 def dashboard():
     """
@@ -92,6 +84,7 @@ def buy():
     @author 
     Functionality for the user buy function.
     """
+    return render_template("index.html", message="You have bought some shares.")
 
 
 @app.route("/sell")
@@ -103,11 +96,27 @@ def sell():
     # Enable selling of shares
     return render_template("index.html", message="You have sold one of your shares.")
 
+@app.route("/history")
+def history():
+    """
+    @author EM
+    Functionality for the history function.
+    """
+    return render_template("index.html", message="This is a record of all your transactions.")
+
+@app.route("/summary")
+def summary():
+    """
+    @author EM
+    Functionality for the summary function.
+    """
+    return render_template("index.html", message="This is a summary of your profile.")
+
 @app.route("/register")
 def register():
     """
     @author EM
-    Functionality for the user sell function.
+    Functionality for the user register function.
     """
     # Register a user
     user = User().add_user("bob")
@@ -115,6 +124,8 @@ def register():
 
 def main():
     # Create a database with tables
+    # This method will only be called at the beginning of the program
+    # to initiate the database and never again.
     db.create_all()
 
 

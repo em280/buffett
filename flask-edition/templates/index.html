@@ -106,7 +106,8 @@
 
             <ul class="nav flex-column mb-2">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary">Buy</button>
+                <a href="{{ url_for('buy') }}"><button type="button" class="btn btn-primary">Buy</button></a>
+                
               </li>
               <li class="nav-item">
                 <a href="{{ url_for('sell') }}"
