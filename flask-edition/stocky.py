@@ -10,6 +10,13 @@ import json
 
 base_api_link = 'https://api.iextrading.com/1.0/'
 
+if __name__ == "__main__":
+    """
+    @author proposal by EM
+    """
+	# Run this file using the python command
+	# Test functions can be invoked from here
+
 def process_api_call(api_url):
 	try:
 		result = requests.get(api_url)
@@ -64,8 +71,11 @@ def get_current_share_quote(symbol):
 	
 	return process_api_call(api_url)
 
-stuff = get_month_chart('aapl', 3)
+def test():
+	stuff = get_month_chart('aapl', 3)
 
-for things in stuff:
-	print(things['date'])
-	print(things['close'])
+	for things in stuff:
+		print(things['date'])
+		print(things['close'])
+
+	

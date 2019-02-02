@@ -117,10 +117,13 @@
                 >
               </li>
               <li class="nav-item">
-                <button type="button" class="btn btn-primary">History</button>
+                <a href="{{ url_for('history') }}"><button type="button" class="btn btn-primary">History</button></a>
+                
               </li>
               <li class="nav-item">
-                <button type="button" class="btn btn-primary">Summary</button>
+                <a href="{{ url_for('summary') }}">
+                    <button type="button" class="btn btn-primary">Summary</button>
+                </a>
               </li>
             </ul>
           </div>
