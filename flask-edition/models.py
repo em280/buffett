@@ -19,8 +19,20 @@ class User(db.Model):
         db.session.add(usr)
         db.session.commit()
 
+    def remove_user(self, id):
+        """
+        @author EM
+        Remove the user from the game.
+        """
+        usr = User.query.get(int(id))
+        if not usr:
+            return False
+        # usr = User.query.get(int(id))
+        db.session.delete(usr)
+        db.session.commit()
+
     def __repr__(self):
-        return f"User('{self.username}', '{self.cash}')"
+        return f"User('{self.username}')"
 
 # class Portfolio(db.Model):
 #     __tablename__ = "portfolio"

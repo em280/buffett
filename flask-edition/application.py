@@ -31,6 +31,7 @@ db.init_app(app)
 
 
 @app.route("/")
+@app.route("/index")
 def index():
     """
     @author EM
@@ -121,6 +122,16 @@ def register():
     # Register a user
     user = User().add_user("bob")
     return "A user has been registered."
+
+@app.route("/unregister")
+def unregister():
+    """
+    @author EM
+    Functionality for the user unregister function.
+    """
+    # Unregister a user
+    User().remove_user(4)
+    return "A user has been unregistered." # Update this function for when user was not removed
 
 def main():
     # Create a database with tables
