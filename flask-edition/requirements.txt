@@ -1,3 +1,7 @@
 python
 flask
+Flask-SQLAlchemy
 plotly
+chartjs
+numpy
+requests
