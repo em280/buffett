@@ -34,7 +34,6 @@ db.init_app(app)
 @app.route("/index")
 def index():
     """
-    @author EM
     The homepage of the application.
     """
     # List all users
@@ -53,7 +52,6 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     """
-    @author SH
     Functionality for the search function.
     """
     # symbol = request.args.get("name")
@@ -94,7 +92,6 @@ def search():
 @app.route("/dashboard")
 def dashboard():
     """
-    @author EM
     Functionality for the user dashboard/portfolio function.
     """
     # List all stocks owned by the user
@@ -105,7 +102,6 @@ def dashboard():
 @app.route("/buy", methods=["GET"])
 def buy():
     """
-    @author EM
     Functionality for the user buy function.
     """
     symbol = request.args.get("symbol")
@@ -136,7 +132,6 @@ def buy():
 @app.route("/sell")
 def sell():
     """
-    @author 
     Functionality for the user sell function.
     """
     # Enable selling of shares
@@ -156,7 +151,6 @@ def sell():
 @app.route("/history")
 def history():
     """
-    @author EM
     Functionality for the history function.
     """
     return render_template("index.html", message="This is a record of all your transactions.")
@@ -164,7 +158,6 @@ def history():
 @app.route("/summary")
 def summary():
     """
-    @author EM
     Functionality for the summary function.
     """
     return render_template("index.html", message="This is a summary of your profile.")
@@ -172,7 +165,6 @@ def summary():
 @app.route("/register")
 def register():
     """
-    @author EM
     Functionality for the user register function.
     """
     # Register a user
@@ -182,7 +174,6 @@ def register():
 @app.route("/unregister")
 def unregister():
     """
-    @author EM
     Functionality for the user unregister function.
     """
     # Unregister a user based on their id
@@ -206,7 +197,6 @@ def main():
 
 if __name__ == "__main__":
     """
-    @author EM
     This is the main entry of the program.
 
     Debug has been set to true for development purposes.

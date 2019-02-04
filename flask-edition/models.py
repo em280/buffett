@@ -10,7 +10,6 @@ db = SQLAlchemy()
 
 class User(db.Model):
     """
-    @author EM
     A representation of the users table in the database.
     """
     __tablename__ = "user"
@@ -48,7 +47,6 @@ class User(db.Model):
 
 class Portfolio(db.Model):
     """
-    @author EM
     A representation of the portfolio table in the database.
     """
     __tablename__ = "portfolio"

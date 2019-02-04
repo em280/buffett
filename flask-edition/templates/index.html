@@ -116,6 +116,7 @@ endblock %} {% block body %}
         <!-- show form here -->
         <form id="buyform" action="{{ url_for('buy') }}" method="get">
           <input type="text" name="symbol" placeholder="Symbol" />
+          <input type="text" name="shares" placeholder="Shares" />
           <button type="button" class="btn btn-primary">Buy</button>
         </form>
       </div>
