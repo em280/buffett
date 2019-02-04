@@ -1,0 +1,38 @@
+<head>
+        <!-- Plotly.js -->
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      </head>
+      <body>
+      <!-- Plotly chart will be drawn inside this DIV -->
+      <div id="myDiv"></div>
+        <script>
+        /* JAVASCRIPT CODE GOES HERE */
+        Plotly.d3.csv("{{ temp | safe }}", function(err, rows){
+
+            function unpack(rows, key) {
+            return rows.map(function(row) { return row[key]; });
+            }
+
+
+            var trace1 = {
+            type: "scatter",
+            mode: "lines",
+            name: 'AAPL High',
+            x: unpack(rows, 'timestamp'),
+            y: unpack(rows, 'close'),
+            line: {color: '#17BECF'}
+            }
+
+
+
+            var data = [trace1];
+            
+            var layout = {
+            title: 'Basic Time Series', 
+            };
+
+            Plotly.newPlot('myDiv', data, layout, {showSendToCloud: false});
+            })
+        </script>
+      </body>
+      </html>
