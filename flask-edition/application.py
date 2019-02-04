@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 
-from stocky import get_month_chart
-from stocky import get_current_share_quote
+# from stocky import get_month_chart
+# from stocky import get_current_share_quote
+# from stocky import get_company_info
+from stocky import * # Import all the functions
 from models import * # Import all the models
 
 import csv
@@ -82,10 +84,10 @@ def search():
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
     temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
-    data = [symbol]
+    
 
     return render_template('index.html',
-                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
+                           temp=temp, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
 
 
 
@@ -104,29 +106,34 @@ def buy():
     """
     Functionality for the user buy function.
     """
+    # Get form information
     symbol = request.args.get("symbol")
+    noOfShares = request.args.get("shares")
+    cinfo = get_company_info(symbol)
+
     # symbol = "MSFT"
     current_price = get_current_share_quote(symbol)['latestPrice']
-    noOfShares = 1
+    # noOfShares = 1
     # userid of 3 is used as an example
     userid = 1
     Portfolio().add_portfolio_stock(userid, symbol)
     # update cash/value balance of the user
     user = User.query.get(userid)
-    user.cash = user.cash - (current_price * noOfShares)
+    user.cash = user.cash - (current_price * float(noOfShares))
+    amt = user.cash
     db.session.commit()
     # User().update_user(userid, user.cash)
     # update portfolio display instead
-    name = ""
+    name = cinfo["companyName"]
     data = []
     data.append(symbol)
     data.append(name)
-    data.append(shares)
+    data.append(noOfShares)
     data.append(current_price)
     data.append(user.cash)
     # return render_template("index.html", data=data, message=f"You have bought some shares worth £{current_price:,.2f}.")
     return render_template('index.html',
-                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
+                        data=data, symbol=symbol, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
 
 
 @app.route("/sell")

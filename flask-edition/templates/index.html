@@ -117,7 +117,7 @@ endblock %} {% block body %}
         <form id="buyform" action="{{ url_for('buy') }}" method="get">
           <input type="text" name="symbol" placeholder="Symbol" />
           <input type="text" name="shares" placeholder="Shares" />
-          <button type="button" class="btn btn-primary">Buy</button>
+          <button type="submit" class="btn btn-primary">Buy</button>
         </form>
       </div>
 
@@ -136,15 +136,8 @@ endblock %} {% block body %}
             </tr>
           </thead>
           <tbody>
-            {% if data is none %} {% for stock in stocks %}
-            <!-- <tr>
-              <td>{{ user.id }}</td>
-              <td>{{ user.username }}</td>
-              <td>0</td>
-              <td>££££</td>
-              <td>{{ user.cash }}</td>
-            </tr> -->
-            {% endfor %} {% else %} {% for item in data %}
+            {% if data is none %} {% for stock in stocks %} {% endfor %} {% else
+            %} {% for item in data %}
             <tr>
               <td>{{ item.symbol }}</td>
               <td>{{ item.name }}</td>
@@ -166,7 +159,7 @@ endblock %} {% block body %}
               <td></td>
               <td></td>
               <td></td>
-              <td>{{ amt }}</td>
+              <td>$10,000.00</td>
             </tr>
           </tbody>
         </table>
