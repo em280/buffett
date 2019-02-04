@@ -1,23 +1,36 @@
-<!-- <!DOCTYPE html> -->
-<!-- <html> -->
-<!--   <head> -->
-<!--     <meta charset="utf-8" /> -->
-<!--     <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
-<!--     <title>Search</title> -->
-<!--     <meta name="viewport" content="width=device-width, initial-scale=1" /> -->
-<!--     <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
-<!--     <script src="main.js"></script> -->
-<!--   </head> -->
-<!--   <body> -->
-<!--     You searched for {{ symbol }}! -->
-<!--     <div>{{ current_price }}</div> -->
-<!--   </body> -->
-<!-- </html> -->
-<html>
-<body>
-  the current price is {{ current_price }}
-  {{ company_chart | safe}}
-</body>
+{% extends "layout.html" %} {% block title %} Search {% endblock %} {% block
+body %}
+<!-- This is where the body starts [BODY BEGIN] -->
+<!-- The current price is {{ current_price }} -->
 
+<!-- Plotly chart will be drawn inside this DIV -->
+<div id="myDiv"></div>
 
-</html>
+<script>
+  /* JAVASCRIPT CODE GOES HERE */
+  Plotly.d3.csv("{{ temp | safe }}", function(err, rows) {
+    function unpack(rows, key) {
+      return rows.map(function(row) {
+        return row[key];
+      });
+    }
+
+    var trace1 = {
+      type: "scatter",
+      mode: "lines",
+      name: "AAPL High",
+      x: unpack(rows, "timestamp"),
+      y: unpack(rows, "close"),
+      line: { color: "#17BECF" }
+    };
+
+    var data = [trace1];
+
+    var layout = {
+      title: "{{ symbol | safe }}"
+    };
+
+    Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
+  });
+</script>
+{% endblock %}
