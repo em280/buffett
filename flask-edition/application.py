@@ -39,10 +39,15 @@ def index():
     """
     # List all users
     users = User.query.all()
-    tesla = jsonify(get_month_chart("TSLA", 1))
+    user = User.query.first()
+    amt = user.cash
+    # tesla = jsonify(get_month_chart("TSLA", 1))
+    symbol = "MSFT"
+    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+    temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
 
     return render_template('index.html',
-                           tesla=tesla, users=users)
+                           temp=temp, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}")
 
 
 @app.route("/search", methods=["GET"])
@@ -51,22 +56,39 @@ def search():
     @author SH
     Functionality for the search function.
     """
-    symbol = request.args.get("name")
-    current_price = get_current_share_quote(symbol)['latestPrice']
+    # symbol = request.args.get("name")
+    # current_price = get_current_share_quote(symbol)['latestPrice']
   
-    chart = chartjs.chart(symbol, "Line", 640, 480)
-    data = get_month_chart(symbol, 3)
-    labels = []
-    ds = []
-    for rows in data:
-        labels.append(rows['date'])
-        ds.append(rows['close'])
+    # # chart = chartjs.chart(symbol, "Line", 640, 480)
+    # chart = chartjs.chart(symbol, "Line", 900, 380)
+    # data = get_month_chart(symbol, 3)
+    # labels = []
+    # ds = []
+    # for rows in data:
+    #     labels.append(rows['date'])
+    #     ds.append(rows['close'])
     
-    chart.set_labels(labels)
-    chart.add_dataset(ds)
-    chart.set_params(fillColor = "rgba(220,220,220,0.5)", strokeColor = "rgba(220,220,220,0.8)", highlightFill = "rgba(220,220,220,0.75)", highlightStroke = "rgba(220,220,220,1)",)
-    company_chart = chart.make_chart_full_html()
-    return render_template("search.html", company_chart=company_chart, current_price=current_price)
+    # chart.set_labels(labels)
+    # chart.add_dataset(ds)
+    # chart.set_params(fillColor = "rgba(220,220,220,0.5)", strokeColor = "rgba(220,220,220,0.8)", highlightFill = "rgba(220,220,220,0.75)", highlightStroke = "rgba(220,220,220,1)",)
+    # company_chart = chart.make_chart_full_html()
+    # # return render_template("search.html", company_chart=company_chart, current_price=current_price)
+    # return render_template("search.html", symbol=symbol, current_price=current_price)
+    # # return render_template("index.html", company_chart=company_chart, current_price=current_price)
+
+    # The below code makes use of alphavantage api for testing purposes
+    users = User.query.all()
+    user = User.query.first()
+    symbol = request.args.get("name")
+    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+    symbol = symbol.upper()
+    akey = "XKRYNVS020SDNVD8"
+    temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
+    data = [symbol]
+
+    return render_template('index.html',
+                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
+
 
 
 @app.route("/dashboard")
@@ -80,25 +102,35 @@ def dashboard():
     return render_template("index.html", user_stocks=user_stocks)
     
 
-@app.route("/buy")
+@app.route("/buy", methods=["GET"])
 def buy():
     """
     @author EM
     Functionality for the user buy function.
     """
-    symbol = "MSFT"
+    symbol = request.args.get("symbol")
+    # symbol = "MSFT"
     current_price = get_current_share_quote(symbol)['latestPrice']
     noOfShares = 1
     # userid of 3 is used as an example
-    userid = 3
+    userid = 1
     Portfolio().add_portfolio_stock(userid, symbol)
     # update cash/value balance of the user
     user = User.query.get(userid)
     user.cash = user.cash - (current_price * noOfShares)
     db.session.commit()
     # User().update_user(userid, user.cash)
-    # dashboard()
-    return render_template("index.html", message=f"You have bought some shares worth £{current_price:,.2f}.")
+    # update portfolio display instead
+    name = ""
+    data = []
+    data.append(symbol)
+    data.append(name)
+    data.append(shares)
+    data.append(current_price)
+    data.append(user.cash)
+    # return render_template("index.html", data=data, message=f"You have bought some shares worth £{current_price:,.2f}.")
+    return render_template('index.html',
+                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
 
 
 @app.route("/sell")
@@ -144,7 +176,7 @@ def register():
     Functionality for the user register function.
     """
     # Register a user
-    user = User().add_user("alice") # bob alan alice dw er ty
+    user = User().add_user("bob") # bob alan alice dw er ty
     return "A user has been registered."
 
 @app.route("/unregister")
@@ -157,11 +189,19 @@ def unregister():
     User().remove_user(2)
     return "A user has been unregistered." # Update this function for when user was not removed
 
+@app.route("/test")
+def test():
+    temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
+    # temp = 9999
+    return render_template("test.html", temp=temp)
+
+@app.route("/initdb")
 def main():
     # Create a database with tables
     # This method will only be called at the beginning of the program
     # to initiate the database and never again.
     db.create_all()
+    return "db initialized"
 
 
 if __name__ == "__main__":
