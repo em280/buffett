@@ -6,16 +6,21 @@ endblock %} {% block body %}
     >Buffett</a
   >
 
-  <!-- 
-        Begin implementation of the search functionality -->
+  <!-- Begin implementation of the search functionality -->
   <form class="form-inline w-100" action="{{ url_for('search') }}" method="get">
     <input
       class="form-control form-control-dark w-100"
       type="text"
       name="name"
+      id="searchBoxStocks"
       placeholder="Search"
       aria-label="Search"
+      list="stock-options"
     />
+    
+    <datalist id="stock-options">
+      
+    </datalist>
   </form>
   <!-- End of search functionality implementation -->
 
@@ -237,5 +242,56 @@ endblock %} {% block body %}
     Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
   });
 </script>
+
+   <!-- Autocomplete -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>	
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> 
+  </script>
+  <link rel='stylesheet' href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script>
+    
+    q = [];
+    
+    
+    $("#searchBoxStocks").keyup(function () {
+      searchQ = $("#searchBoxStocks").val();
+      autoCompleteStocks(searchQ);
+      console.log(q);
+      
+      
+    })
+
+    
+    
+    function autoCompleteStocks(searchQ) {
+      $.get("https://www.alphavantage.co/query", {function: 'SYMBOL_SEARCH', keywords: searchQ, apikey:'XKRYNVS020SDNVD8'}, function (d) {
+        p = d.bestMatches;
+
+        if (q.includes(p[0]['1. symbol']) == false) {
+          q.push(p[0]['1. symbol']);
+          addOption(p[0]['1. symbol'], p[0]['2. name']);
+        }
+        else if (q.includes(p[1]['1. symbol']) == false) {
+          q.push(p[1]['1. symbol']);
+          addOption(p[1]['1. symbol'], p[1]['2. name']);
+        }
+        else if (q.includes(p[2]['1. symbol']) == false) {
+          q.push(p[2]['1. symbol']);
+          addOption(p[2]['1. symbol'], p[2]['2. name']);
+        }
+        },'json')
+    }
+    
+    function addOption(v, t) {
+      var test = "<option value='" + v + "'>" + t + "</option>";
+      $("#stock-options").append("<option value='" + v + "'>" + t + "</option>");
+      console.log(test);
+    }
+    
+    
+
+      
+  </script>
 
 {% endblock %}
