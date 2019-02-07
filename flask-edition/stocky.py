@@ -10,12 +10,7 @@ import json
 
 base_api_link = 'https://api.iextrading.com/1.0/'
 
-if __name__ == "__main__":
-    """
-    @author proposal by EM
-    """
-	# Run this file using the python command when carrying out tests
-	# Test functions can be invoked from here
+
 
 def process_api_call(api_url):
 	try:
@@ -79,3 +74,8 @@ def test():
 		print(things['close'])
 
 	
+if __name__ == "__main__":
+	# Run this file using the python command when carrying out tests
+	# Test functions can be invoked from here
+	t = get_company_info("MSFT")
+	print(t)

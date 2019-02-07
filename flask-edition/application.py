@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 
-from stocky import get_month_chart
-from stocky import get_current_share_quote
+# from stocky import get_month_chart
+# from stocky import get_current_share_quote
+# from stocky import get_company_info
+from stocky import * # Import all the functions
 from models import * # Import all the models
 
 import csv
@@ -34,7 +36,6 @@ db.init_app(app)
 @app.route("/index")
 def index():
     """
-    @author EM
     The homepage of the application.
     """
     # List all users
@@ -53,7 +54,6 @@ def index():
 @app.route("/search", methods=["GET"])
 def search():
     """
-    @author SH
     Functionality for the search function.
     """
     # symbol = request.args.get("name")
@@ -84,17 +84,16 @@ def search():
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
     temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
-    data = [symbol]
+    
 
     return render_template('index.html',
-                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
+                           temp=temp, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
 
 
 
 @app.route("/dashboard")
 def dashboard():
     """
-    @author EM
     Functionality for the user dashboard/portfolio function.
     """
     # List all stocks owned by the user
@@ -105,38 +104,41 @@ def dashboard():
 @app.route("/buy", methods=["GET"])
 def buy():
     """
-    @author EM
     Functionality for the user buy function.
     """
+    # Get form information
     symbol = request.args.get("symbol")
+    noOfShares = request.args.get("shares")
+    cinfo = get_company_info(symbol)
+
     # symbol = "MSFT"
     current_price = get_current_share_quote(symbol)['latestPrice']
-    noOfShares = 1
+    # noOfShares = 1
     # userid of 3 is used as an example
     userid = 1
     Portfolio().add_portfolio_stock(userid, symbol)
     # update cash/value balance of the user
     user = User.query.get(userid)
-    user.cash = user.cash - (current_price * noOfShares)
+    user.cash = user.cash - (current_price * float(noOfShares))
+    amt = user.cash
     db.session.commit()
     # User().update_user(userid, user.cash)
     # update portfolio display instead
-    name = ""
+    name = cinfo["companyName"]
     data = []
     data.append(symbol)
     data.append(name)
-    data.append(shares)
+    data.append(noOfShares)
     data.append(current_price)
     data.append(user.cash)
     # return render_template("index.html", data=data, message=f"You have bought some shares worth £{current_price:,.2f}.")
     return render_template('index.html',
-                           temp=temp, data=data, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
+                        data=data, symbol=symbol, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
 
 
 @app.route("/sell")
 def sell():
     """
-    @author 
     Functionality for the user sell function.
     """
     # Enable selling of shares
@@ -156,7 +158,6 @@ def sell():
 @app.route("/history")
 def history():
     """
-    @author EM
     Functionality for the history function.
     """
     return render_template("index.html", message="This is a record of all your transactions.")
@@ -164,7 +165,6 @@ def history():
 @app.route("/summary")
 def summary():
     """
-    @author EM
     Functionality for the summary function.
     """
     return render_template("index.html", message="This is a summary of your profile.")
@@ -172,7 +172,6 @@ def summary():
 @app.route("/register")
 def register():
     """
-    @author EM
     Functionality for the user register function.
     """
     # Register a user
@@ -182,7 +181,6 @@ def register():
 @app.route("/unregister")
 def unregister():
     """
-    @author EM
     Functionality for the user unregister function.
     """
     # Unregister a user based on their id
@@ -206,7 +204,6 @@ def main():
 
 if __name__ == "__main__":
     """
-    @author EM
     This is the main entry of the program.
 
     Debug has been set to true for development purposes.
