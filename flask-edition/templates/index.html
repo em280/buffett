@@ -76,47 +76,17 @@ endblock %} {% block body %}
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('history') }}">
               <span data-feather="archive"></span> History
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ url_for('summary') }}">
               <span data-feather="file-text"></span> Summary
             </a>
           </li>
         </ul>
-
-        <!--Commented out, code above replaced this-->
-
-        <!-- <ul class="nav flex-column mb-2">
-          <li class="nav-item">
-            <button
-              type="button"
-              class="btn btn-primary"
-              onclick="setVisible()"
-            >
-              Buy
-            </button>
-          </li>
-          <li class="nav-item">
-            <a
-              ><button type="button" class="btn btn-primary">
-                Sell
-              </button></a
-            >
-          </li>
-          <li class="nav-item">
-            <a href="{{ url_for('history') }}"
-              ><button type="button" class="btn btn-primary">History</button></a
-            >
-          </li>
-          <li class="nav-item">
-            <a href="{{ url_for('summary') }}">
-              <button type="button" class="btn btn-primary">Summary</button>
-            </a>
-          </li> -->
       </div>
     </nav>
 
@@ -171,6 +141,36 @@ endblock %} {% block body %}
 
       <!-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
 
+      {% if history is defined %}
+
+      <h2>History</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th>Shares</th>
+              <th>Price</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in history %}
+            <tr>
+              <td>{{ item.symbol }}</td>
+              <td>{{ data["company_name"] }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ data["current_price"] }}</td>
+              <td>{{ item.transaction_date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% else %}
+
       <h2>Portfolio</h2>
       <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -184,11 +184,13 @@ endblock %} {% block body %}
             </tr>
           </thead>
           <tbody>
-            {% if stocks is defined %} {% for stock in stocks %}
+            {% set val = 0 %} {% if stocks is defined %} {% for stock in stocks
+            %}
             <tr>
               <td>{{ stock.symbol }}</td>
               <td>
-                {{ data["stock_info"][loop.nextitem] }}
+                {{ data["stock_info"][val]["company_name"] }}
+                {% set val = val + 1 %}
               </td>
               <td>{{ stock.quantity }}</td>
               <td>{{ data["current_price"] }}</td>
@@ -213,6 +215,8 @@ endblock %} {% block body %}
           </tbody>
         </table>
       </div>
+
+      {% endif %}
 
       <!-- This is for testing BEGIN-->
       <div>

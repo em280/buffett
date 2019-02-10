@@ -92,12 +92,17 @@ class Portfolio(db.Model):
     def __repr__(self):
         return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}')"
 
-# class History(db.Model):
-#     __tablename__ = "history"
-#     id = db.Column(db.Integer, primary_key=True)
-#     transaction_date = db.Column(DateTime(timezone=True), server_default=func.now())
-#     quantity = db.Column(db.Integer, nullable=False)
-#     users_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-#     users = db.relationship("User", back_populates="history")
-#     symbol = db.Column(db.String, nullable=False)
-#     transaction_type = db.Column(db.Integer, unique=False)
+class History(db.Model):
+    __tablename__ = "history"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    symbol = db.Column(db.String, nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    
+    # transaction_type = db.Column(db.Integer, unique=False)
+    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    def add_hist(self, usrid, symbol, quantity):
+        hist = History(user_id=usrid, symbol=symbol, quantity=int(quantity))
+        db.session.add(hist)
+        db.session.commit()

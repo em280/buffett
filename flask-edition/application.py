@@ -44,18 +44,20 @@ def index():
     temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     
     data = {}
-    stock_info = {}
+    stock_info = []
     info = {}
 
-    ptf = Portfolio.query.filter_by(id=int(1)).all()
+    ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
     if ptf is not None:
+        index = 0
         for stock in ptf:
             total_share_price = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
             grand_total = user.cash + total_share_price
             info["grand_total"] = usd(grand_total)
             info["total_share_price"] = usd(total_share_price)
             info["company_name"] = get_company_info(stock.symbol)["companyName"]
-            stock_info[stock.symbol] = info
+            stock_info.append(info)
+            index = index + 1
 
     
     data["symbol"] = symbol.upper()
@@ -152,6 +154,9 @@ def buy():
             # update portfolio table
             Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
 
+            # update history table
+            History().add_hist(userid, symbol.upper(), noOfShares)
+
             db.session.commit()
             
         data = {}
@@ -165,7 +170,7 @@ def buy():
         ptf = Portfolio.query.filter_by(id=int(1)).all()
         if ptf is not None:
             for stock in ptf:
-                grand_total = user.cash + (ptf.quantity * get_current_share_quote(ptf.symbol)['latestPrice'])
+                grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
@@ -199,19 +204,51 @@ def sell():
 
 @app.route("/history")
 def history():
-    """
-    Functionality for the history function.
-    """
-    data = ["This is a record of all your transactions."]
-    # return redirect(url_for("index.html"))
-    return render_template("index.html", message="This is a record of all your transactions.")
+    """ Functionality for the history function. """
+    data = {}
+    
+    
+    history = History.query.all()
+    if history is None:
+        # Just show the index page for now.
+        return redirect(url_for("index"))
+
+    info = []
+
+    for item in history:
+        company_info = get_company_info(item.symbol)
+        company_name = company_info["companyName"]
+        current_price = get_current_share_quote(item.symbol)['latestPrice']
+
+        data["symbol"] = item.symbol.upper()
+        info.append(item.symbol)
+        
+        info.append(company_name)
+        info.append(item.quantity)
+        info.append(usd(current_price))
+        info.append(item.transaction_date)
+
+        data["company_name"] = company_name
+        data["current_price"] = usd(current_price)
+
+    return render_template("index.html", data=data, history=history, temp=temp, message="This is a record of all your transactions.")
 
 @app.route("/summary")
 def summary():
-    """
-    Functionality for the summary function.
-    """
-    return render_template("index.html", message="This is a summary of your profile.")
+    """ Functionality for the summary function. """
+    # Showing open positions for the loggedin user
+    stocks = Portfolio.query.all()
+    data = {}
+    for stock in stocks:
+        current_stock = get_company_info(stock.symbol)
+
+        postion = {
+            "company_name": current_stock["companyName"],
+            "current_price": get_current_share_quote(stock.symbol)["latestPrice"],
+            "symbol": current_stock["symbol"]
+        }
+
+    return render_template("index.html", temp=temp, data=stocks, message="This is a summary of your profile.")
 
 @app.route("/register")
 def register():
