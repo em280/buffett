@@ -188,7 +188,7 @@ endblock %} {% block body %}
             <tr>
               <td>{{ stock.symbol }}</td>
               <td>
-                {{ data["stock_info"][stock.symbol]["company_name"] }}
+                {{ data["stock_info"][loop.nextitem] }}
               </td>
               <td>{{ stock.quantity }}</td>
               <td>{{ data["current_price"] }}</td>
