@@ -1,8 +1,5 @@
 from flask import Flask, render_template, request, jsonify
 
-# from stocky import get_month_chart
-# from stocky import get_current_share_quote
-# from stocky import get_company_info
 from stocky import * # Import all the functions
 from models import * # Import all the models
 
@@ -30,25 +27,27 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database_test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
+# Globals
+temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
+
 
 
 @app.route("/")
 @app.route("/index")
 def index():
-    """
-    The homepage of the application.
-    """
-    # List all users
-    users = User.query.all()
+    """ The homepage of the application. """
+    # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
-    amt = user.cash
-    # tesla = jsonify(get_month_chart("TSLA", 1))
+    amt = usd(user.cash)
     symbol = "MSFT"
-    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+    current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
     temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
+    data = {}
+    data["symbol"] = symbol
+    data["amount"] = amt
+    data["current_price"] = current_price
 
-    return render_template('index.html',
-                           temp=temp, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}")
+    return render_template('index.html', temp=temp, data=data)
 
 
 @app.route("/search", methods=["GET"])
@@ -80,14 +79,15 @@ def search():
     users = User.query.all()
     user = User.query.first()
     symbol = request.args.get("name")
-    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+    
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
     temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
+    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
     
 
     return render_template('index.html',
-                           temp=temp, symbol=symbol, users=users, current_price=f"£{current_price:,.2f}", user=user)
+                           temp=temp, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", user=user)
 
 
 
@@ -160,6 +160,8 @@ def history():
     """
     Functionality for the history function.
     """
+    data = ["This is a record of all your transactions."]
+    # return redirect(url_for("index.html"))
     return render_template("index.html", message="This is a record of all your transactions.")
 
 @app.route("/summary")
@@ -200,6 +202,10 @@ def main():
     # to initiate the database and never again.
     db.create_all()
     return "db initialized"
+
+def usd(value):
+    """ Format an amount in usd currency. """
+    return f"${value:,.2f}"
 
 
 if __name__ == "__main__":

@@ -70,7 +70,7 @@ endblock %} {% block body %}
             </button>
           </li>
           <li class="nav-item">
-            <a href="{{ url_for('sell') }}"
+            <a
               ><button type="button" class="btn btn-primary">
                 Sell
               </button></a
@@ -112,7 +112,10 @@ endblock %} {% block body %}
         <!-- The current price is {{ current_price }} -->
       </div>
       <div style="text-align: center;">
-        <h5>The current price for {{ symbol }} is {{ current_price }}.</h5>
+        <h5>
+          The current price for {{ data["symbol"] }} is
+          {{ data["current_price"] }}.
+        </h5>
         <!-- show form here -->
         <form id="buyform" action="{{ url_for('buy') }}" method="get">
           <input type="text" name="symbol" placeholder="Symbol" />
@@ -136,14 +139,13 @@ endblock %} {% block body %}
             </tr>
           </thead>
           <tbody>
-            {% if data is none %} {% for stock in stocks %} {% endfor %} {% else
-            %} {% for item in data %}
+            {% for stock in stocks %}
             <tr>
-              <td>{{ item.symbol }}</td>
-              <td>{{ item.name }}</td>
-              <td>{{ item.shares }}</td>
-              <td>{{ item.current_price }}</td>
-              <td>{{ item.cash }}</td>
+              <td>{{ stock.symbol }}</td>
+              <td>{{ stock.name }}</td>
+              <td>{{ stock.shares }}</td>
+              <td>{{ stock.current_price }}</td>
+              <td>{{ stock.cash }}</td>
             </tr>
             {% endfor %}
             <tr>
@@ -151,15 +153,15 @@ endblock %} {% block body %}
               <td></td>
               <td></td>
               <td></td>
-              <td>{{ amt }}</td>
+              <td>{{ data["amount"] }}</td>
             </tr>
-            {% endif %}
             <tr>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
-              <td>$10,000.00</td>
+              <!-- The field below is for the TOTAL amount-->
+              <td>{{ data["amount"] }}</td>
             </tr>
           </tbody>
         </table>

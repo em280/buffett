@@ -2,6 +2,7 @@ import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # from sqlalchemy import DateTime
 # from sqlalchemy.sql import func
@@ -26,6 +27,7 @@ class User(db.Model):
     def get_user(self, id):
         pass
 
+    # use the update method which requires the use of set
     def update_user(self, id, cash):
         usr = User.query.get(id=int(id))
         usr.cash = cash
@@ -54,6 +56,7 @@ class Portfolio(db.Model):
     usr_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
+    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     # usrs = db.relationship("User", backref="portfolio", lazy=True)
     # foreign key relates to user table primary key
     # usr_id = db.Column(db.Integer, db.ForeignKey("user.id"))
@@ -66,6 +69,8 @@ class Portfolio(db.Model):
         ptf = Portfolio(usr_id=int(usr_id), symbol=symbol, quantity=1)
         db.session.add(ptf)
         db.session.commit()
+
+    # maybe update the portfolio as well
 
     def get_portfolio_stocks(self, id):
         """
