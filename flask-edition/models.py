@@ -17,7 +17,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
-    cash = db.Column(db.Integer, default=10000.00)
+    cash = db.Column(db.Integer, default=10000)
 
     def add_user(self, name):
         usr = User(username=name, password="passhash")
@@ -45,7 +45,7 @@ class User(db.Model):
         db.session.commit()
 
     def __repr__(self):
-        return f"User('{self.username}')"
+        return f"<User {self.id}, '{self.username}', {self.cash}>"
 
 class Portfolio(db.Model):
     """
@@ -62,11 +62,9 @@ class Portfolio(db.Model):
     # usr_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     # transaction_type = db.Column(db.Integer, nullable=False)
 
-    def add_portfolio_stock(self, usr_id, symbol):
-        """
-        Add a user's stock to their portfolio.
-        """
-        ptf = Portfolio(usr_id=int(usr_id), symbol=symbol, quantity=1)
+    def add_portfolio_stock(self, usr_id, symbol, quantity):
+        """ Add a user's stock to their portfolio. """
+        ptf = Portfolio(usr_id=int(usr_id), symbol=symbol, quantity=int(quantity))
         db.session.add(ptf)
         db.session.commit()
 

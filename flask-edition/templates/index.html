@@ -17,16 +17,14 @@ endblock %} {% block body %}
       aria-label="Search"
       list="stock-options"
     />
-    
-    <datalist id="stock-options">
-      
-    </datalist>
+
+    <datalist id="stock-options"> </datalist>
   </form>
   <!-- End of search functionality implementation -->
 
   <ul class="navbar-nav px-3">
     <li class="nav-item text-nowrap">
-      <a class="nav-link"  href="#">Sign out</a>
+      <a class="nav-link" href="#">Sign out</a>
     </li>
   </ul>
 </nav>
@@ -66,13 +64,13 @@ endblock %} {% block body %}
 
         <ul class="nav flex-column">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a id="buy" class="nav-link" href="#">
               <span data-feather="shopping-cart"></span> Buy
             </a>
           </li>
 
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a id="sell" class="nav-link" href="#">
               <span data-feather="shopping-bag"></span> Sell
             </a>
           </li>
@@ -92,7 +90,7 @@ endblock %} {% block body %}
 
         <!--Commented out, code above replaced this-->
 
-       <!-- <ul class="nav flex-column mb-2">
+        <!-- <ul class="nav flex-column mb-2">
           <li class="nav-item">
             <button
               type="button"
@@ -118,7 +116,7 @@ endblock %} {% block body %}
             <a href="{{ url_for('summary') }}">
               <button type="button" class="btn btn-primary">Summary</button>
             </a>
-          </li> --> 
+          </li> -->
       </div>
     </nav>
 
@@ -149,10 +147,25 @@ endblock %} {% block body %}
           {{ data["current_price"] }}.
         </h5>
         <!-- show form here -->
-        <form id="buyform" action="{{ url_for('buy') }}" method="get">
+        <form
+          id="buyform"
+          action="{{ url_for('buy') }}"
+          method="post"
+          style="display: none;"
+        >
           <input type="text" name="symbol" placeholder="Symbol" />
           <input type="text" name="shares" placeholder="Shares" />
           <button type="submit" class="btn btn-primary">Buy</button>
+        </form>
+        <form
+          id="sellform"
+          action="{{ url_for('sell') }}"
+          method="post"
+          style="display: none;"
+        >
+          <input type="text" name="symbol" placeholder="Symbol" />
+          <input type="text" name="shares" placeholder="Shares" />
+          <button type="submit" class="btn btn-primary">Sell</button>
         </form>
       </div>
 
@@ -171,15 +184,17 @@ endblock %} {% block body %}
             </tr>
           </thead>
           <tbody>
-            {% for stock in stocks %}
+            {% if stocks is defined %} {% for stock in stocks %}
             <tr>
               <td>{{ stock.symbol }}</td>
-              <td>{{ stock.name }}</td>
-              <td>{{ stock.shares }}</td>
-              <td>{{ stock.current_price }}</td>
-              <td>{{ stock.cash }}</td>
+              <td>
+                {{ data["stock_info"][stock.symbol]["company_name"] }}
+              </td>
+              <td>{{ stock.quantity }}</td>
+              <td>{{ data["current_price"] }}</td>
+              <td>{{ data["total_share_price"] }}</td>
             </tr>
-            {% endfor %}
+            {% endfor %} {% endif %}
             <tr>
               <td>AMOUNT</td>
               <td></td>
@@ -193,7 +208,7 @@ endblock %} {% block body %}
               <td></td>
               <td></td>
               <!-- The field below is for the TOTAL amount-->
-              <td>{{ data["amount"] }}</td>
+              <td>{{ data["grand_total"] }}</td>
             </tr>
           </tbody>
         </table>
@@ -265,62 +280,74 @@ endblock %} {% block body %}
     var data = [trace1];
 
     var layout = {
-      title: "{{ symbol | safe }}"
+      title: "{{ data["symbol"] | safe }}"
     };
 
     Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
   });
 </script>
 
-   <!-- Autocomplete -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
-  </script>	
-  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"> 
-  </script>
-  <link rel='stylesheet' href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
-    <script>
-    
-    q = [];
-    
-    
-    $("#searchBoxStocks").keyup(function () {
-      searchQ = $("#searchBoxStocks").val();
-      autoCompleteStocks(searchQ);
-      console.log(q);
-      
-      
-    })
+<!-- Autocomplete -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
+/>
+<script>
+  q = [];
 
-    
-    
-    function autoCompleteStocks(searchQ) {
-      $.get("https://www.alphavantage.co/query", {function: 'SYMBOL_SEARCH', keywords: searchQ, apikey:'XKRYNVS020SDNVD8'}, function (d) {
+  $("#searchBoxStocks").keyup(function() {
+    searchQ = $("#searchBoxStocks").val();
+    autoCompleteStocks(searchQ);
+    console.log(q);
+  });
+
+  function autoCompleteStocks(searchQ) {
+    $.get(
+      "https://www.alphavantage.co/query",
+      {
+        function: "SYMBOL_SEARCH",
+        keywords: searchQ,
+        apikey: "XKRYNVS020SDNVD8"
+      },
+      function(d) {
         p = d.bestMatches;
 
-        if (q.includes(p[0]['1. symbol']) == false) {
-          q.push(p[0]['1. symbol']);
-          addOption(p[0]['1. symbol'], p[0]['2. name']);
+        if (q.includes(p[0]["1. symbol"]) == false) {
+          q.push(p[0]["1. symbol"]);
+          addOption(p[0]["1. symbol"], p[0]["2. name"]);
+        } else if (q.includes(p[1]["1. symbol"]) == false) {
+          q.push(p[1]["1. symbol"]);
+          addOption(p[1]["1. symbol"], p[1]["2. name"]);
+        } else if (q.includes(p[2]["1. symbol"]) == false) {
+          q.push(p[2]["1. symbol"]);
+          addOption(p[2]["1. symbol"], p[2]["2. name"]);
         }
-        else if (q.includes(p[1]['1. symbol']) == false) {
-          q.push(p[1]['1. symbol']);
-          addOption(p[1]['1. symbol'], p[1]['2. name']);
-        }
-        else if (q.includes(p[2]['1. symbol']) == false) {
-          q.push(p[2]['1. symbol']);
-          addOption(p[2]['1. symbol'], p[2]['2. name']);
-        }
-        },'json')
-    }
-    
-    function addOption(v, t) {
-      var test = "<option value='" + v + "'>" + t + "</option>";
-      $("#stock-options").append("<option value='" + v + "'>" + t + "</option>");
-      console.log(test);
-    }
-    
-    
+      },
+      "json"
+    );
+  }
 
-      
-  </script>
+  function addOption(v, t) {
+    var test = "<option value='" + v + "'>" + t + "</option>";
+    $("#stock-options").append("<option value='" + v + "'>" + t + "</option>");
+    console.log(test);
+  }
+</script>
+
+<script>
+  $(document).ready(function() {
+    $("#buy").click(function() {
+      $("#sellform").hide();
+      $("#buyform").show();
+    });
+
+    $("#sell").click(function() {
+      $("#buyform").hide();
+      $("#sellform").show();
+    });
+  });
+</script>
 
 {% endblock %}

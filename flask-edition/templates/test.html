@@ -3,6 +3,19 @@
         <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
       </head>
       <body>
+
+        {% if temp is none %}
+          <h6>Nothing to do</h6>
+        {% else %}
+        {% for item in temp %}
+          {{ item }}
+          
+        {% endfor %}
+        <h6>THE END</h6>
+        {% endif %}
+
+
+
       <!-- Plotly chart will be drawn inside this DIV -->
       <div id="myDiv"></div>
         <script>

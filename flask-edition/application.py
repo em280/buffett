@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
@@ -42,12 +42,31 @@ def index():
     symbol = "MSFT"
     current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
     temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
+    
     data = {}
-    data["symbol"] = symbol
+    stock_info = {}
+    info = {}
+
+    ptf = Portfolio.query.filter_by(id=int(1)).all()
+    if ptf is not None:
+        for stock in ptf:
+            total_share_price = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            grand_total = user.cash + total_share_price
+            info["grand_total"] = usd(grand_total)
+            info["total_share_price"] = usd(total_share_price)
+            info["company_name"] = get_company_info(stock.symbol)["companyName"]
+            stock_info[stock.symbol] = info
+
+    
+    data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
+    data["stock_info"] = stock_info
+    
 
-    return render_template('index.html', temp=temp, data=data)
+    stocks = Portfolio.query.all()
+
+    return render_template('index.html', temp=temp, data=data, stocks=stocks)
 
 
 @app.route("/search", methods=["GET"])
@@ -78,16 +97,22 @@ def search():
     # The below code makes use of alphavantage api for testing purposes
     users = User.query.all()
     user = User.query.first()
+    amt = usd(user.cash)
     symbol = request.args.get("name")
     
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
     temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+
+    data = {}
+    data["symbol"] = symbol.upper()
+    data["amount"] = amt
+    data["current_price"] = current_price
     
 
     return render_template('index.html',
-                           temp=temp, symbol=symbol, users=users, current_price=f"${current_price:,.2f}", user=user)
+                           temp=temp, data=data, users=users, current_price=f"${current_price:,.2f}", user=user)
 
 
 
@@ -96,44 +121,61 @@ def dashboard():
     """
     Functionality for the user dashboard/portfolio function.
     """
-    # List all stocks owned by the user
-    user_stocks = Portfolio.query.all()
-    return render_template("index.html", user_stocks=user_stocks)
+    # Just show the index page for now.
+    return redirect(url_for("index"))
     
 
-@app.route("/buy", methods=["GET"])
+@app.route("/buy", methods=["GET", "POST"])
 def buy():
-    """
-    Functionality for the user buy function.
-    """
-    # Get form information
-    symbol = request.args.get("symbol")
-    noOfShares = request.args.get("shares")
-    cinfo = get_company_info(symbol)
+    """ Functionality for the user buy function. """
+    if request.method == "POST":
+        # Get form information
+        symbol = request.form["symbol"]
+        noOfShares = int(request.form["shares"])
 
-    # symbol = "MSFT"
-    current_price = get_current_share_quote(symbol)['latestPrice']
-    # noOfShares = 1
-    # userid of 3 is used as an example
-    userid = 1
-    Portfolio().add_portfolio_stock(userid, symbol)
-    # update cash/value balance of the user
-    user = User.query.get(userid)
-    user.cash = user.cash - (current_price * float(noOfShares))
-    amt = user.cash
-    db.session.commit()
-    # User().update_user(userid, user.cash)
-    # update portfolio display instead
-    name = cinfo["companyName"]
-    data = []
-    data.append(symbol)
-    data.append(name)
-    data.append(noOfShares)
-    data.append(current_price)
-    data.append(user.cash)
-    # return render_template("index.html", data=data, message=f"You have bought some shares worth £{current_price:,.2f}.")
-    return render_template('index.html',
-                        data=data, symbol=symbol, current_price=f"${current_price:,.2f}", amt=f"${amt:,.2f}", message=f"You have bought some shares worth £{current_price:,.2f}.")
+        # contact API
+        company_info = get_company_info(symbol)
+        company_name = company_info["companyName"]
+        current_price = get_current_share_quote(symbol)['latestPrice']
+
+        # some arithmetic
+        total_cost = (float(noOfShares) * current_price)
+
+        # Query database
+        userid = 1
+        user = User.query.get(userid)
+        usercash = user.cash
+
+        if usercash > total_cost:
+            # update cash for user in the database
+            user.cash = usercash - total_cost
+            # update portfolio table
+            Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
+
+            db.session.commit()
+            
+        data = {}
+        data["symbol"] = symbol.upper()
+        data["company_name"] = company_name
+        data["noOfShares"] = noOfShares
+        data["current_price"] = usd(current_price)
+        data["amount"] = usd(user.cash)
+
+        stocks = Portfolio.query.all()
+        ptf = Portfolio.query.filter_by(id=int(1)).all()
+        if ptf is not None:
+            for stock in ptf:
+                grand_total = user.cash + (ptf.quantity * get_current_share_quote(ptf.symbol)['latestPrice'])
+                data["grand_total"] = usd(grand_total)
+
+        return render_template('index.html',
+                        data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+        
+    # the code below is executed if the request method
+    # was GET or there was some sort of error
+
+    # Just show the index page for now.
+    return redirect(url_for("index"))
 
 
 @app.route("/sell")
@@ -173,12 +215,19 @@ def summary():
 
 @app.route("/register")
 def register():
-    """
-    Functionality for the user register function.
-    """
-    # Register a user
-    user = User().add_user("bob") # bob alan alice dw er ty
-    return "A user has been registered."
+    """ Functionality for the user register function. """
+    # Register some stub users
+    f = open("users.csv")
+    reader = csv.reader(f)
+    for name, passcode in reader:
+        user = User(username=name, password=passcode)
+        db.session.add(user)
+        print("A stub user has been added.")
+    db.session.commit()
+
+    # testing
+    temp = User.query.all()
+    return render_template("test.html", temp=temp)
 
 @app.route("/unregister")
 def unregister():
@@ -191,8 +240,10 @@ def unregister():
 
 @app.route("/test")
 def test():
-    temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
+    # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     # temp = 9999
+    temp = Portfolio.query.all()
+    temp = User.query.all()
     return render_template("test.html", temp=temp)
 
 @app.route("/initdb")
