@@ -1,4 +1,4 @@
-# buffet
+# Buffet
 
 A web implementation of the Stock Market Game.
 
@@ -20,3 +20,20 @@ Use the following command to install the dependencies and devDependencies.
 ```sh
 $ pip install -r requirements.txt
 ```
+
+
+### Running the Application
+
+You can run the application by navigating to the 'flask-edition' folder and typing the following command:
+
+```
+$ export FLASK_APP=application.py
+
+$ flask run
+```
+You can run the application in a debug mode like so:
+```
+$ export FLASK_ENV=development
+
+```
+
