@@ -167,7 +167,7 @@ def buy():
         data["amount"] = usd(user.cash)
 
         stocks = Portfolio.query.all()
-        ptf = Portfolio.query.filter_by(id=int(1)).all()
+        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
         if ptf is not None:
             for stock in ptf:
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
@@ -183,24 +183,59 @@ def buy():
     return redirect(url_for("index"))
 
 
-@app.route("/sell")
+@app.route("/sell", methods=["GET", "POST"])
 def sell():
     """
     Functionality for the user sell function.
     """
     # Enable selling of shares
-    # Remove stock from user's portfolio
+    # Remove stock from user's portfolio // or // add a new row with a negative value for the number of shares
     # You can use DELETE or log the sale as a negative quantity
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
 
-    # Get stock information
-    stock_symbol = "MSFT"
-    remove_portfolio_stock(stock_symbol)
-    # update user's cash balance
-    userid = 3
-    User().update_user(userid, 100)
-    return render_template("index.html", message="You have sold one of your shares.")
+    if request.method == "POST":
+        # Get form information
+        symbol = request.form["symbol"]
+        noOfShares = int(request.form["shares"]) * -1
+
+        # Query database
+        userid = 1
+        user = User.query.get(userid)
+
+        # contact API
+        company_info = get_company_info(symbol)
+        company_name = company_info["companyName"]
+        current_price = get_current_share_quote(symbol)['latestPrice']
+
+        stocks = Portfolio.query.all()
+        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
+        for stock in ptf:
+            if stock.symbol == symbol:
+                # some arithmetic
+                total_cost = (float(noOfShares) * current_price)
+
+                # update cash for user in the database
+                user.cash = usercash + total_cost
+                # update portfolio table
+                Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
+
+                # update history table
+                History().add_hist(userid, symbol.upper(), noOfShares)
+
+                db.session.commit()
+
+        data = {}
+        data["symbol"] = symbol.upper()
+        data["company_name"] = company_name
+        data["noOfShares"] = noOfShares
+        data["current_price"] = usd(current_price)
+        data["amount"] = usd(user.cash)
+
+        return render_template("index.html", data=data, temp=temp, stocks=stocks, message="You have sold one of your shares.")
+
+    # Just show the index page for now.
+    return redirect(url_for("index"))
 
 @app.route("/history")
 def history():
