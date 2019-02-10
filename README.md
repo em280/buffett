@@ -24,10 +24,16 @@ $ pip3 install -r requirements.txt
 
 ### Running the Application
 
+Note: The application is compatible and has only been tested using a version of 3.7.2+.
+
 You can run the application by navigating to the 'flask-edition' folder and typing the following command:
 
 ```
 $ python application.py
+```
+If you are using both python2 and python3 in your system then use the following command:
+```
+$ python3 application.py
 ```
 You can run the application in a debug mode like so:
 ```
