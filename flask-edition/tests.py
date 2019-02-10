@@ -1,6 +1,6 @@
 import unittest as ut
 import requests
-from stocky import get_current_share_price, get_month_chart
+from stocky import get_current_share_price, get_month_chart, get_day_chart
 
 class StockyTests(ut.TestCase):
 	def test_get_stock_price(self):
@@ -15,6 +15,9 @@ class StockyTests(ut.TestCase):
 		Test if an invalid parameter is correctly rejected
 		'''
 		self.assertEqual(get_month_chart('AAPL', 5), '5 is not a valid time period')
+	
+	def test_invalid_param_get_day_chart(self):
+		self.assertEqual(get_day_chart('MSFT', 4), '4 is not a valid time period')
 		
 if __name__ == '__main__':
 	ut.main()
