@@ -65,17 +65,3 @@ def get_current_share_quote(symbol):
 	api_url = '{}stock/{}/quote'.format(base_api_link,symbol)
 	
 	return process_api_call(api_url)
-
-def test():
-	stuff = get_month_chart('aapl', 3)
-
-	for things in stuff:
-		print(things['date'])
-		print(things['close'])
-
-	
-if __name__ == "__main__":
-	# Run this file using the python command when carrying out tests
-	# Test functions can be invoked from here
-	t = get_company_info("MSFT")
-	print(t)
