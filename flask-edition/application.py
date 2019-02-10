@@ -232,7 +232,7 @@ def sell():
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
 
-        return render_template("index.html", data=data, temp=temp, stocks=stocks, message="You have sold one of your shares.")
+        return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
 
     # Just show the index page for now.
     return redirect(url_for("index"))
@@ -315,7 +315,8 @@ def test():
     # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     # temp = 9999
     temp = Portfolio.query.all()
-    temp = User.query.all()
+    # temp = User.query.all()
+    
     return render_template("test.html", temp=temp)
 
 @app.route("/initdb")
