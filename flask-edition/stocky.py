@@ -65,3 +65,14 @@ def get_current_share_quote(symbol):
 	api_url = '{}stock/{}/quote'.format(base_api_link,symbol)
 	
 	return process_api_call(api_url)
+	
+def get_day_chart(symbol, num_of_days):
+	accepted_numbers = [1,3,6]
+	if num_of_days not in accepted_numbers:
+		return '{} is not a valid time period'.format(num_of_days)
+	else:
+		num_of_days = '{}d'.format(num_of_months)
+	
+	api_url = '{}stock/{}/chart/{}'.format(base_api_link, symbol, num_of_days)
+		
+	return process_api_call(api_url)

@@ -18,21 +18,27 @@ The Stock-Market-Game application requires [Python](https://www.python.org/) ver
 Use the following command to install the dependencies and devDependencies.
 
 ```sh
-$ pip install -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 
 ### Running the Application
 
+Note: The application is compatible and has only been tested using a [Python](https://www.python.org/) version of 3.7.2+.
+
 You can run the application by navigating to the 'flask-edition' folder and typing the following command:
 
-```
-$ export FLASK_APP=application.py
+```sh
+$ cd flask-edition
 
-$ flask run
+$ python application.py
+```
+If you are using both python2 and python3 in your system then use the following command:
+```sh
+$ python3 application.py
 ```
 You can run the application in a debug mode like so:
-```
+```sh
 $ export FLASK_ENV=development
 
 ```
