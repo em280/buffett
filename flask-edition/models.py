@@ -4,9 +4,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# from sqlalchemy import DateTime
-# from sqlalchemy.sql import func
-
 db = SQLAlchemy()
 
 class User(db.Model):
@@ -24,14 +21,10 @@ class User(db.Model):
         db.session.add(usr)
         db.session.commit()
 
-    def get_user(self, id):
-        pass
-
     # use the update method which requires the use of set
     def update_user(self, id, cash):
         usr = User.query.get(id=int(id))
         usr.cash = cash
-
 
     def remove_user(self, id):
         """
@@ -57,10 +50,6 @@ class Portfolio(db.Model):
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    # usrs = db.relationship("User", backref="portfolio", lazy=True)
-    # foreign key relates to user table primary key
-    # usr_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    # transaction_type = db.Column(db.Integer, nullable=False)
 
     def add_portfolio_stock(self, usr_id, symbol, quantity):
         """ Add a user's stock to their portfolio. """
@@ -98,7 +87,6 @@ class History(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    
     # transaction_type = db.Column(db.Integer, unique=False)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 

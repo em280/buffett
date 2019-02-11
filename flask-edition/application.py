@@ -64,7 +64,6 @@ def index():
     data["amount"] = amt
     data["current_price"] = current_price
     data["stock_info"] = stock_info
-    
 
     stocks = Portfolio.query.all()
 
@@ -73,34 +72,13 @@ def index():
 
 @app.route("/search", methods=["GET"])
 def search():
-    """
-    Functionality for the search function.
-    """
-    # symbol = request.args.get("name")
-    # current_price = get_current_share_quote(symbol)['latestPrice']
-  
-    # # chart = chartjs.chart(symbol, "Line", 640, 480)
-    # chart = chartjs.chart(symbol, "Line", 900, 380)
-    # data = get_month_chart(symbol, 3)
-    # labels = []
-    # ds = []
-    # for rows in data:
-    #     labels.append(rows['date'])
-    #     ds.append(rows['close'])
-    
-    # chart.set_labels(labels)
-    # chart.add_dataset(ds)
-    # chart.set_params(fillColor = "rgba(220,220,220,0.5)", strokeColor = "rgba(220,220,220,0.8)", highlightFill = "rgba(220,220,220,0.75)", highlightStroke = "rgba(220,220,220,1)",)
-    # company_chart = chart.make_chart_full_html()
-    # # return render_template("search.html", company_chart=company_chart, current_price=current_price)
-    # return render_template("search.html", symbol=symbol, current_price=current_price)
-    # # return render_template("index.html", company_chart=company_chart, current_price=current_price)
-
+    """ Functionality for the search function. """
     # The below code makes use of alphavantage api for testing purposes
     users = User.query.all()
     user = User.query.first()
     amt = usd(user.cash)
     symbol = request.args.get("name")
+    
     
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
@@ -112,10 +90,8 @@ def search():
     data["amount"] = amt
     data["current_price"] = current_price
     
-
     return render_template('index.html',
-                           temp=temp, data=data, users=users, current_price=f"${current_price:,.2f}", user=user)
-
+                           temp=temp, data=data, users=users, user=user)
 
 
 @app.route("/dashboard")
