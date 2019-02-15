@@ -1,8 +1,14 @@
+"""
+@author: EM
+"""
+
 import os
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+
+import datetime
 
 db = SQLAlchemy()
 
@@ -49,7 +55,9 @@ class Portfolio(db.Model):
     usr_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    
 
     def add_portfolio_stock(self, usr_id, symbol, quantity):
         """ Add a user's stock to their portfolio. """
@@ -68,15 +76,15 @@ class Portfolio(db.Model):
             return False
         return Portfolio.query.filter_by(usr_id=int(id)).all()
 
-    def remove_portfolio_stock(self, symbol):
-        """
-        Remove a user's stock from the portfolio table.
-        """
-        ptf = Portfolio.query.get(symbol)
-        if not ptf:
-            return False
-        db.session.delete(ptf)
-        db.session.commit()
+    # def remove_portfolio_stock(self, symbol):
+    #     """
+    #     Remove a user's stock from the portfolio table.
+    #     """
+    #     ptf = Portfolio.query.get(symbol)
+    #     if not ptf:
+    #         return False
+    #     db.session.delete(ptf)
+    #     db.session.commit()
 
     def __repr__(self):
         return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}')"
@@ -88,9 +96,10 @@ class History(db.Model):
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     # transaction_type = db.Column(db.Integer, unique=False)
-    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    # transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
 
     def add_hist(self, usrid, symbol, quantity):
-        hist = History(user_id=usrid, symbol=symbol, quantity=int(quantity))
+        hist = History(user_id=int(usrid), symbol=symbol, quantity=int(quantity))
         db.session.add(hist)
         db.session.commit()

@@ -97,15 +97,46 @@ def search():
 @app.route("/dashboard")
 def dashboard():
     """
+    @author: EM
     Functionality for the user dashboard/portfolio function.
     """
     # Just show the index page for now.
-    return redirect(url_for("index"))
+    # return redirect(url_for("index"))
+
+    info = {}
+    stocks = Portfolio.query.all()
+
+    user = User.query.first()
+    amt = usd(user.cash)
+    info["user_cash"] = amt
+    grand_total = user.cash
+
+    for item in stocks:
+        company_info = get_company_info(item.symbol)
+        company_name = company_info["companyName"]
+        current_price = get_current_share_quote(item.symbol)['latestPrice']
+
+        # record the name and current price of this stock
+        info[item.symbol] = company_name
+        info[item.symbol+"price"] = usd(current_price)
+        info[item.symbol+"total"] = current_price * item.quantity
+
+        if len(stocks) == len(stocks):
+            for k, value in info.items():
+                if k == item.symbol+"total":
+                    grand_total = float(grand_total) + float(value)
+            info["g_total"] = usd(grand_total)
+        info[item.symbol+"total"] = usd(current_price * item.quantity)
+
+    return render_template("portfolio.html", stocks=stocks, info=info)
     
 
 @app.route("/buy", methods=["GET", "POST"])
 def buy():
-    """ Functionality for the user buy function. """
+    """
+    @author: EM
+    Functionality for the user buy function.
+    """
     if request.method == "POST":
         # Get form information
         symbol = request.form["symbol"]
@@ -162,6 +193,7 @@ def buy():
 @app.route("/sell", methods=["GET", "POST"])
 def sell():
     """
+    @author: EM
     Functionality for the user sell function.
     """
     # Enable selling of shares
@@ -173,7 +205,7 @@ def sell():
     if request.method == "POST":
         # Get form information
         symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"]) * -1
+        noOfShares = int(request.form["shares"]) * (-1) # Negative number of shares
 
         # Query database
         userid = 1
@@ -186,20 +218,22 @@ def sell():
 
         stocks = Portfolio.query.all()
         ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
-        for stock in ptf:
-            if stock.symbol == symbol:
-                # some arithmetic
-                total_cost = (float(noOfShares) * current_price)
+        if ptf is not None:
+            for stock in ptf:
+                
+                if stock.symbol == symbol:
+                    # some arithmetic
+                    total_cost = (float(noOfShares) * current_price)
 
-                # update cash for user in the database
-                user.cash = usercash + total_cost
-                # update portfolio table
-                Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
+                    # update cash for user in the database
+                    user.cash = user.cash - total_cost
+                    # update portfolio table
+                    Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
 
-                # update history table
-                History().add_hist(userid, symbol.upper(), noOfShares)
+                    # update history table
+                    History().add_hist(userid, symbol.upper(), noOfShares)
 
-                db.session.commit()
+            db.session.commit()
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -215,34 +249,28 @@ def sell():
 
 @app.route("/history")
 def history():
-    """ Functionality for the history function. """
+    """
+    @author: EM
+    Functionality for the history function.
+    """
     data = {}
-    
+    info = {}
     
     history = History.query.all()
     if history is None:
         # Just show the index page for now.
         return redirect(url_for("index"))
 
-    info = []
-
     for item in history:
         company_info = get_company_info(item.symbol)
         company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
-        data["symbol"] = item.symbol.upper()
-        info.append(item.symbol)
-        
-        info.append(company_name)
-        info.append(item.quantity)
-        info.append(usd(current_price))
-        info.append(item.transaction_date)
+        # record the name and current price of this stock
+        info[item.symbol] = company_name
+        info[item.symbol+"price"] = usd(current_price)
 
-        data["company_name"] = company_name
-        data["current_price"] = usd(current_price)
-
-    return render_template("index.html", data=data, history=history, temp=temp, message="This is a record of all your transactions.")
+    return render_template("history.html", history=history, info=info, message="This is a record of all your transactions.")
 
 @app.route("/summary")
 def summary():
@@ -301,10 +329,25 @@ def main():
     # This method will only be called at the beginning of the program
     # to initiate the database and never again.
     db.create_all()
-    return "db initialized"
+
+    # Register some stub users
+    f = open("users.csv")
+    reader = csv.reader(f)
+    for name, passcode in reader:
+        user = User(username=name, password=passcode)
+        db.session.add(user)
+        print("A stub user has been added.")
+    db.session.commit()
+    # return "db initialized"
+    # testing
+    temp = User.query.all()
+    return render_template("test.html", temp=temp, msg="db initialized")
 
 def usd(value):
-    """ Format an amount in usd currency. """
+    """
+    @author: EM
+    Format an amount in usd currency.
+    """
     return f"${value:,.2f}"
 
 
