@@ -103,3 +103,7 @@ class History(db.Model):
         hist = History(user_id=int(usrid), symbol=symbol, quantity=int(quantity))
         db.session.add(hist)
         db.session.commit()
+
+    def __repr__(self):
+        # return f"<User {self.id}, '{self.username}', {self.cash}>"
+        return f"<History {self.id}, {self.user_id}, '{self.symbol}', {self.quantity}, '{self.transaction_date}' >"

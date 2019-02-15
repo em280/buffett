@@ -35,7 +35,10 @@ temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT
 @app.route("/")
 @app.route("/index")
 def index():
-    """ The homepage of the application. """
+    """
+    @author: SH
+    The homepage of the application.
+    """
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
     amt = usd(user.cash)
@@ -72,7 +75,10 @@ def index():
 
 @app.route("/search", methods=["GET"])
 def search():
-    """ Functionality for the search function. """
+    """
+    @author: SH
+    Functionality for the search function.
+    """
     # The below code makes use of alphavantage api for testing purposes
     users = User.query.all()
     user = User.query.first()
@@ -353,6 +359,7 @@ def usd(value):
 
 if __name__ == "__main__":
     """
+    @author: EM
     This is the main entry of the program.
 
     Debug has been set to true for development purposes.
