@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
+from buffet_helper import * # Import all the helper functions
 
 import csv
 import os
@@ -29,7 +30,6 @@ db.init_app(app)
 
 # Globals
 temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
-
 
 
 @app.route("/")
@@ -349,13 +349,6 @@ def main():
     temp = User.query.all()
     return render_template("test.html", temp=temp, msg="db initialized")
 
-def usd(value):
-    """
-    @author: EM
-    Format an amount in usd currency.
-    """
-    return f"${value:,.2f}"
-
 
 if __name__ == "__main__":
     """
@@ -367,5 +360,5 @@ if __name__ == "__main__":
     provided you are in the current directory of application.py
     """
     with app.app_context():
-        main()
+        main()  # Calling the main function to initialise the database
     app.run(debug=True)
