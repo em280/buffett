@@ -349,6 +349,14 @@ def main():
     temp = User.query.all()
     return render_template("test.html", temp=temp, msg="db initialized")
 
+@app.route("/login")
+def login():
+    """
+    @author: SA
+    """
+    # rendering login page
+    return render_template("login.html")
+    
 
 if __name__ == "__main__":
     """
