@@ -34,6 +34,7 @@ temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT
 
 @app.route("/")
 @app.route("/index")
+#@loginRequire
 def index():
     """
     @author: SH
@@ -348,6 +349,8 @@ def main():
     # testing
     temp = User.query.all()
     return render_template("test.html", temp=temp, msg="db initialized")
+
+
 
 @app.route("/login")
 def login():
