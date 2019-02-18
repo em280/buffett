@@ -5,19 +5,27 @@ Login
 {% block body %}
     <!-- This is where the body starts [BODY BEGIN] -->
     
+
+    <nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
+            <ul class="navbar-nav px-3">
+                    <li class="nav-item text-nowrap">
+    </nav>
+
 <h1 style="font-family:sans-serif";>Buffet - Stock Market Game</h1>
 
-<form name="login">
-    Username:<br>
-    <input type="text" name="user">
-    <br>
-    Password:<br>
-    <input type="password" name="pass">
-    <br>
-    <input type="button" onclick="check(this.form)" value="Login">
+<form>
+    <div class="form-group">
+        <div class="center  w-2">
+            <input type="text" class="form-control" placeholder="Username" name="user">
+            <br>
+            <input type="password" class="form-control" placeholder="Password" name="pass">
+            <br>
+            <button type="submit" class="btn btn-primary" onclick="check(this.form)" value="Login">Login</button>
+        </div>
+    </div>
 </form>
 <h2 style="font-family:sans-serif";>How to play</h2>
-<ul>
+<ul class="">
     <li>Ability to buy and sell shares relative to company's real prices</li>
     <li>The player is able to inspect their previous transactions</li>
     <li>Ability to check the stock of some other countries</li>
