@@ -15,5 +15,9 @@ def usd(value):
 def loginRequire(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
+        """
+        @author: SA
+        Login is required to progress to next page. 
+        """
         return redirect("/login")
     return decorated_function
