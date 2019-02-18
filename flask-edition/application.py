@@ -46,7 +46,8 @@ def index():
     symbol = "MSFT"
     current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
     temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
-    
+    tmp = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=demo"
+
     data = {}
     stock_info = []
     info = {}
@@ -63,7 +64,7 @@ def index():
             stock_info.append(info)
             index = index + 1
 
-    
+
     data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
@@ -85,8 +86,8 @@ def search():
     user = User.query.first()
     amt = usd(user.cash)
     symbol = request.args.get("name")
-    
-    
+
+
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
     temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
@@ -96,7 +97,7 @@ def search():
     data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
-    
+
     return render_template('index.html',
                            temp=temp, data=data, users=users, user=user)
 
@@ -136,7 +137,7 @@ def dashboard():
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
     return render_template("portfolio.html", stocks=stocks, info=info)
-    
+
 
 @app.route("/buy", methods=["GET", "POST"])
 def buy():
@@ -172,7 +173,7 @@ def buy():
             History().add_hist(userid, symbol.upper(), noOfShares)
 
             db.session.commit()
-            
+
         data = {}
         data["symbol"] = symbol.upper()
         data["company_name"] = company_name
@@ -189,7 +190,7 @@ def buy():
 
         return render_template('index.html',
                         data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
-        
+
     # the code below is executed if the request method
     # was GET or there was some sort of error
 
@@ -227,7 +228,7 @@ def sell():
         ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
         if ptf is not None:
             for stock in ptf:
-                
+
                 if stock.symbol == symbol:
                     # some arithmetic
                     total_cost = (float(noOfShares) * current_price)
@@ -262,7 +263,7 @@ def history():
     """
     data = {}
     info = {}
-    
+
     history = History.query.all()
     if history is None:
         # Just show the index page for now.
@@ -325,10 +326,11 @@ def unregister():
 def test():
     # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     # temp = 9999
-    temp = Portfolio.query.all()
+    # temp = Portfolio.query.all()
     # temp = User.query.all()
-    
-    return render_template("test.html", temp=temp)
+    # return render_template("test.html", temp=temp)
+    tmp = requests.get("https://api.iextrading.com/1.0/stock/MSFT/chart/1d/")
+    return render_template("tchart.html", tmp=tmp.json())
 
 @app.route("/initdb")
 def main():
@@ -359,7 +361,7 @@ def login():
     """
     # rendering login page
     return render_template("login.html")
-    
+
 
 if __name__ == "__main__":
     """
