@@ -7,6 +7,11 @@ from buffet_helper import * # Import all the helper functions
 import csv
 import os
 
+# importing tools for sessions
+from flask_session import Session
+from tempfile import mkdtemp
+# end import for sessions
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -20,6 +25,13 @@ import numpy as np
 
 # The name of this application is app
 app = Flask(__name__)
+
+# begin configuration of application for sessions
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+# end configuration for sessions
 
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
