@@ -7,6 +7,7 @@ Author: Sean Hamill
 # import the requests library used to handle HTTP GET requests
 import requests
 import json
+import csv
 
 base_api_link = 'https://api.iextrading.com/1.0/'
 
@@ -56,7 +57,9 @@ def get_month_chart(symbol, num_of_months):
 		num_of_months = '{}m'.format(num_of_months)
 	api_url = '{}stock/{}/chart/{}'.format(base_api_link, symbol, num_of_months)
 	
-	return process_api_call(api_url)
+	to_csv(process_api_call(api_url))
+	
+	return "tmp.csv"
 	
 def get_current_share_quote(symbol):
 	'''
@@ -76,3 +79,16 @@ def get_day_chart(symbol, num_of_days):
 	api_url = '{}stock/{}/chart/{}'.format(base_api_link, symbol, num_of_days)
 		
 	return process_api_call(api_url)
+
+def to_csv(data):
+	counter = 0
+	csv_file = open('tmp.csv', 'w+')
+	csvw = csv.writer(csv_file, quotechar='"')
+	
+	for rows in data:
+		if counter == 0:
+			csvw.writerow(['timestamp', 'close', 'open'])
+		counter = counter + 1
+		csvw.writerow([rows['date'], rows['close'], rows['open']])
+		
+

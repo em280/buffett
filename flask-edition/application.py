@@ -107,7 +107,8 @@ def search():
 
     symbol = symbol.upper()
     akey = "XKRYNVS020SDNVD8"
-    temp = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={symbol}&apikey={akey}&datatype=csv"
+    file = open('tmp.csv','r')
+    temp = file
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
     data = {}
@@ -117,7 +118,6 @@ def search():
 
     return render_template('index.html',
                            temp=temp, data=data, users=users, user=user)
-
 
 @app.route("/dashboard")
 def dashboard():
