@@ -49,6 +49,7 @@ temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT
 #@loginRequire
 def index():
     """
+    @author: SA - loginRequire implemented.
     @author: SH
     The homepage of the application.
     """
