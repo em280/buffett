@@ -98,7 +98,6 @@ def search():
     @author: SH
     Functionality for the search function.
     """
-    # The below code makes use of alphavantage api for testing purposes
     users = User.query.all()
     user = User.query.first()
     amt = usd(user.cash)
@@ -109,11 +108,6 @@ def search():
     get_month_chart(symbol,1)
     f = 'tmp.csv'
 
-    # for timestamp, close in reader:
-    #     filetmp = {"timestamp": timestamp, "close": close}
-
-    # file = open('tmp.csv','r')
-    # temp = file
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
     data = {}
