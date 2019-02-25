@@ -230,35 +230,42 @@ def sell():
     if request.method == "POST":
         # Get form information
         symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"]) #* (-1) # Negative number of shares
-
-        # Query database
-        userid = 1
-        user = User.query.get(userid)
+        noOfShares = int(request.form["shares"])
 
         # contact API
         company_info = get_company_info(symbol)
         company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
-        stocks = Portfolio.query.all()
-        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
-        if ptf is not None:
-            for stock in ptf:
+        # some arithmetic
+        total_cost = (float(noOfShares) * current_price)
 
-                if stock.symbol == symbol:
-                    # some arithmetic
-                    total_cost = (float(noOfShares) * current_price)
+        # Query database
+        userid = 1
+        user = User.query.get(userid)
+        # Not necessary to check for users balance
+        # update cash for user in the database
+        user.cash = user.cash + total_cost
 
-                    # update cash for user in the database
-                    user.cash = user.cash - total_cost
-                    # update portfolio table
-                    Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
+        # update portfolio table
+        # if number of shares is 2 or more then update row else delete row
+        portf = Portfolio.query.get(userid)
+        if portf is not None:
+            if portf.quantity >= 2:
+                Portfolio.quantity = portf.quantity - noOfShares
+                db.session.commit()
+            else:
+                db.session.delete(portf)
+                db.session.commit()
+            # Portfolio().add_portfolio_stock(userid, symbol.upper(), -noOfShares)
+        else:
+            # no such stock exist
+            pass
 
-                    # update history table
-                    History().add_hist(userid, symbol.upper(), noOfShares)
+        # update history table
+        History().add_hist(userid, symbol.upper(), -noOfShares)
 
-                    db.session.commit()
+        db.session.commit()
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -267,7 +274,18 @@ def sell():
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
 
-        return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
+        stocks = Portfolio.query.all()
+        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
+        if ptf is not None:
+            for stock in ptf:
+                grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
+                data["grand_total"] = usd(grand_total)
+
+        return render_template('index.html',
+                        data=data, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
+
+
+        # return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
 
     # Just show the index page for now.
     return redirect(url_for("index"))
@@ -343,8 +361,8 @@ def unregister():
 def test():
     # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     # temp = 9999
-    # temp = Portfolio.query.all()
-    temp = User.query.all()
+    temp = Portfolio.query.all()
+    # temp = User.query.all()
     return render_template("test.html", temp=temp)
     # tmp = requests.get("https://api.iextrading.com/1.0/stock/MSFT/chart/1d/")
     # return render_template("tchart.html", tmp=tmp.json())
