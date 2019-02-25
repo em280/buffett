@@ -146,7 +146,9 @@ endblock %} {% block body %}
         %}
       </div>
 
-      <div id="portfolio">{% block portfolio %}{% endblock %}</div>
+      <div id="portfolio">
+        {% block portfolio %}{#% include 'portfolio.html' %#}{% endblock %}
+      </div>
 
       <!-- This is for testing BEGIN-->
       <div>
