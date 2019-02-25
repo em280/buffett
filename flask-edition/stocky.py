@@ -90,5 +90,5 @@ def to_csv(data):
 			csvw.writerow(['timestamp', 'close', 'open'])
 		counter = counter + 1
 		csvw.writerow([rows['date'], rows['close'], rows['open']])
-		
+
 

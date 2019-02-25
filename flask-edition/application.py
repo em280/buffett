@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_file
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
@@ -62,9 +62,9 @@ def index():
     amt = usd(user.cash)
     symbol = "MSFT"
     current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
-    temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
-    tmp = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=demo"
+    get_month_chart(symbol,1)
 
+    temp = 'tmp.csv'
     data = {}
     stock_info = []
     info = {}
@@ -106,12 +106,11 @@ def search():
 
 
     symbol = symbol.upper()
-    akey = "XKRYNVS020SDNVD8"
+    get_month_chart(symbol,1)
+    f = 'tmp.csv'
 
-    f = open("users.csv")
-    reader = csv.reader(f)
-    for timestamp, close in reader:
-        filetmp = {"timestamp": timestamp, "close": close}
+    # for timestamp, close in reader:
+    #     filetmp = {"timestamp": timestamp, "close": close}
 
     # file = open('tmp.csv','r')
     # temp = file
@@ -123,7 +122,13 @@ def search():
     data["current_price"] = current_price
 
     return render_template('index.html',
-                           temp=filetmp, data=data, users=users, user=user)
+                           temp=f, data=data, users=users, user=user)
+
+
+@app.route("/tmp.csv")
+def get_file():
+    return send_file("tmp.csv")
+
 
 @app.route("/dashboard")
 def dashboard():
