@@ -225,7 +225,7 @@ def sell():
     if request.method == "POST":
         # Get form information
         symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"]) * (-1) # Negative number of shares
+        noOfShares = int(request.form["shares"]) #* (-1) # Negative number of shares
 
         # Query database
         userid = 1
