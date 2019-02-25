@@ -1,43 +1,79 @@
-{% extends "layout.html" %} 
+{% extends "base.html" %} 
 {% block title %} 
 Join Buffet - Buffet Stock Market Game
 {% endblock %} 
 {% block body %}
 
+<nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
+        <ul class="navbar-nav px-30 navbar-brand col-sm-3 col-md-2 mr-0">
+                <li class="nav-item text-nowrap ">Buffet</li>
+        </ul>
+</nav>
+
 <main class="container signup-section">
-    <div class="section-content">
-        <h2>Log In</h2>
+    <div class="row top top-placement">
+        <div class="w-30 mx-auto ">
+            <div class="section-content">
+                <h2>Log In</h2>
+            </div>
+        </div>
+    </div>
+   
+  <!--  <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-10">
+              <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-10">
+              <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
+            </div>
+          </div> -->
 
         <form action="/login" method="POST">
             {{ form.hidden_tag() }}
+            <div class="row top top-placement">
+                <div class="w-30 mx-auto ">
 
-            <div class="form-group">
-                {{ form.user_name.label }}
+                    <div class="form-group">
+                        {{ form.user_name.label }}
 
-                {% if form.user_name.errors %}
-                    {% for error in form.user_name.errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
+                            {% if form.user_name.errors %}
+                                {% for error in form.user_name.errors %}
+                                    <p class="error-message">{{ error }}</p>
+                                {% endfor %}
+                            {% endif %}
 
-                {{ form.user_name }}
+                            {{ form.user_name }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label }}
+
+                            {% if form.password.errors %}
+                                {% for error in form.password.errors %}
+                                    <p class="error-message">{{ error }}</p>
+                                    {% endfor %}
+                                {% endif %}
+
+                                {{ form.password }}
+                    </div>
+
+                            {{ form.submit(class="btn-primary") }}
+                </div>
             </div>
-
-            <div class="form-group">
-                {{ form.password.label }}
-
-                {% if form.password.errors %}
-                    {% for error in form.password.errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-
-                {{ form.password }}
-            </div>
-
-            {{ form.submit(class="btn-primary") }}
         </form>
     </div>
+    
+    <div class="row top top-placement">
+    <h2 style="font-family:sans-serif";>Become a specialist at trading through playing Buffet Stock Market Game:</h2>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Ability to buy and sell shares relative to company's real prices</li>
+        <li class="list-group-item">The player is able to inspect their previous transactions</li>
+        <li class="list-group-item">Ability to check the stock of some other countries</li>
+        <li class="list-group-item">A leaderboard is on display for players to see where they stand amongst friends and foes</li>
+    </ul>
 </main>
 
 {% endblock %}
