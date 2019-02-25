@@ -22,8 +22,8 @@ class User(db.Model):
     password = db.Column(db.String, nullable=False)
     cash = db.Column(db.Integer, default=10000)
 
-    def add_user(self, name):
-        usr = User(username=name, password="passhash")
+    def add_user(self, name, password):
+        usr = User(username=name, password=password)
         db.session.add(usr)
         db.session.commit()
 

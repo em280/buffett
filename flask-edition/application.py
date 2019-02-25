@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
+from forms import SignupForm, LoginForm # Import for form functionality
 
 import csv
 import os
@@ -25,6 +26,9 @@ import numpy as np
 
 # The name of this application is app
 app = Flask(__name__)
+
+# Protecting the form against CSRF security exploit (this exploit is called Cross-Site Request Forgery)
+app.secret_key = "development-key"
 
 # begin configuration of application for sessions
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -254,7 +258,7 @@ def sell():
                     # update history table
                     History().add_hist(userid, symbol.upper(), noOfShares)
 
-            db.session.commit()
+                    db.session.commit()
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -340,10 +344,10 @@ def test():
     # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
     # temp = 9999
     # temp = Portfolio.query.all()
-    # temp = User.query.all()
-    # return render_template("test.html", temp=temp)
-    tmp = requests.get("https://api.iextrading.com/1.0/stock/MSFT/chart/1d/")
-    return render_template("tchart.html", tmp=tmp.json())
+    temp = User.query.all()
+    return render_template("test.html", temp=temp)
+    # tmp = requests.get("https://api.iextrading.com/1.0/stock/MSFT/chart/1d/")
+    # return render_template("tchart.html", tmp=tmp.json())
 
 @app.route("/initdb")
 def main():
@@ -366,14 +370,52 @@ def main():
     return render_template("test.html", temp=temp, msg="db initialized")
 
 
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    """
+    @author: EM
+    """
+    form = SignupForm()
+
+    if request.method == "POST":
+        if form.validate() == False:
+            return render_template("signup.html", form=form)
+        else:
+            # Adding a new user to the database
+            new_user = User(username=form.user_name.data, password=form.password.data)
+            db.session.add(new_user)
+            db.session.commit()
+            # User().add_user()
+
+            session["user_name"] = new_user.user_name
+            return redirect(url_for("index"))
+    # Else the form was submitted via get
+    return render_template("signup.html", form=form)
 
 @app.route("/login")
 def login():
     """
-    @author: SA
+    @author: EM
     """
-    # rendering login page
-    return render_template("login.html")
+    form = LoginForm()
+
+    if request.method == "POST":
+        if form.validate() == False:
+            return render_template("login.html", form=form)
+        else:
+            username = form.user_name.data
+            password = form.password.data
+
+            user = User.query.filter_by(username=username).first()
+            if user is not None and user.check_password(password):
+                session["user_name"] = form.user_name.data
+                return redirect(url_for("index"))
+            else:
+                redirect(url_for("login"))
+
+    elif request.method == "GET":
+        # rendering login page
+        return render_template("login.html", form=form)
 
 
 if __name__ == "__main__":
