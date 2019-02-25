@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
@@ -416,6 +416,14 @@ def login():
     elif request.method == "GET":
         # rendering login page
         return render_template("login.html", form=form)
+
+@app.route("/logout")
+def logout():
+    """
+    @author: EM
+    """
+    session.pop("user_name", None)
+    return redirect(url_for("login"))
 
 
 if __name__ == "__main__":
