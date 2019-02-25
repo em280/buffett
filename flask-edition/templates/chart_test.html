@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Chart Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        /* #tchart {
+            width: 400px;
+            height: 400px;
+        } */
+    </style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+
+   
+
+</head>
+<body>
+
+        <div>{{ msg }}</div>
+
+        <div id="tchart">
+            <canvas id="myChart" width="1000" height="300"></canvas>
+        </div>
+        
+        <script>
+
+            function randomNumber(min, max) {
+			return Math.random() * (max - min) + min;
+		}
+
+		function randomBar(date, lastClose) {
+			var open = randomNumber(lastClose * 0.95, lastClose * 1.05);
+			var close = randomNumber(open * 0.95, open * 1.05);
+			return {
+				t: date.valueOf(),
+				y: close
+			};
+		}
+
+		var dateFormat = 'MMMM DD YYYY';
+		var date = moment('April 01 2017', dateFormat, true);
+		var data = [randomBar(date, 30)];
+		var labels = [date];
+		while (data.length < 60) {
+			date = date.clone().add(1, 'd');
+			if (date.isoWeekday() <= 5) {
+				data.push(randomBar(date, data[data.length - 1].y));
+				labels.push(date);
+			}
+		}
+
+
+        var color = Chart.defaults.global.defaultColor;
+
+
+
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'CHRT - Chart.js Corporation',
+                    backgroundColor: 'rgba(0, 255, 0, 0.2)',
+					borderColor: 'rgba(0, 255, 0)',
+					data: data,
+					type: 'line',
+					pointRadius: 0,
+					fill: true,
+					lineTension: 0,
+					borderWidth: 2
+                }]
+            },
+            options: {
+				scales: {
+					xAxes: [{
+						type: 'time',
+						distribution: 'series',
+						ticks: {
+							source: 'labels'
+						}
+					}],
+					yAxes: [{
+						scaleLabel: {
+							display: true,
+							labelString: 'Closing price ($)'
+						}
+					}]
+				}
+			}
+        });
+        </script>
+    
+</body>
+</html>
