@@ -198,20 +198,33 @@ endblock %} {% block body %}
       });
     }
 
-    var trace1 = {
-      type: "scatter",
-      mode: "lines",
-      name: "Close val",
-      x: unpack(rows, "timestamp"),
-      y: unpack(rows, "close"),
-      line: { color: "#17BECF" }
-    };
+    var trace = {
+  x: unpack(rows, 'timestamp'),
+  close: unpack(rows, 'close'),
+  high: unpack(rows, 'high'),
+  low: unpack(rows, 'low'),
+  open: unpack(rows, 'open'),
 
-    var data = [trace1];
+  // cutomise colors
+  increasing: {line: {color: 'green'}},
+  decreasing: {line: {color: 'red'}},
 
-    var layout = {
-      title: "{{ data["symbol"] | safe }}"
-    };
+  type: 'candlestick',
+  xaxis: 'x',
+  yaxis: 'y'
+};
+
+var data = [trace];
+
+var layout = {
+  dragmode: 'zoom',
+  showlegend: false,
+  xaxis: {
+    rangeslider: {
+     visible: false
+   }
+  }
+};
 
     Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
   });

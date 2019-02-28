@@ -87,8 +87,8 @@ def to_csv(data):
 	
 	for rows in data:
 		if counter == 0:
-			csvw.writerow(['timestamp', 'close', 'open'])
+			csvw.writerow(['timestamp', 'close', 'open', 'high','low'])
 		counter = counter + 1
-		csvw.writerow([rows['date'], rows['close'], rows['open']])
+		csvw.writerow([rows['date'], rows['close'], rows['open'], rows['high'], rows['low']])
 
 

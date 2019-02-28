@@ -44,8 +44,6 @@ app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database_test.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
-# Globals
-temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
 
 
 @app.route("/")
