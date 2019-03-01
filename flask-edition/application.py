@@ -59,7 +59,9 @@ def index():
     user = User.query.first()
     amt = usd(user.cash)
     symbol = "MSFT"
-    current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
+    current_price = usd(get_current_share_quote(symbol)['latestPrice'])
+
+    # obtaining graph information
     get_month_chart(symbol,1)
 
     temp = 'tmp.csv'
@@ -319,11 +321,11 @@ def history():
 
     for item in history:
         company_info = get_company_info(item.symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        info[item.symbol] = company_name
+        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
 
     return render_template("history.html", history=history, info=info, message="This is a record of all your transactions.")
@@ -331,6 +333,8 @@ def history():
 @app.route("/summary")
 def summary():
     """ Functionality for the summary function. """
+    # graph stuff
+    temp = 'tmp.csv'
     # Showing open positions for the loggedin user
     stocks = Portfolio.query.all()
     data = {}
@@ -338,9 +342,9 @@ def summary():
         current_stock = get_company_info(stock.symbol)
 
         postion = {
-            "company_name": current_stock["companyName"],
+            # "company_name": current_stock["companyName"],
             "current_price": get_current_share_quote(stock.symbol)["latestPrice"],
-            "symbol": current_stock["symbol"]
+            # "symbol": current_stock["symbol"]
         }
 
     return render_template("index.html", temp=temp, data=stocks, message="This is a summary of your profile.")
