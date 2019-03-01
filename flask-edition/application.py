@@ -118,6 +118,10 @@ def search():
 
 
 @app.route("/tmp.csv")
+'''
+@author: SH
+Returns file with stock information
+'''
 def get_file():
     return send_file("tmp.csv")
 
