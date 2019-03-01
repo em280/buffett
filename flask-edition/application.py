@@ -118,11 +118,14 @@ def search():
 
 
 @app.route("/tmp.csv")
-'''
-@author: SH
-Returns file with stock information
-'''
+
+
 def get_file():
+    """
+    author: SH
+
+    Returns file with stock information
+    """
     return send_file("tmp.csv")
 
 
@@ -450,6 +453,12 @@ def logout():
     session.pop("user_name", None)
     return redirect(url_for("login"))
 
+@app.route("/leaderboard")
+def leaderboard():
+    '''
+    @author: SH
+    '''
+    
 
 if __name__ == "__main__":
     """
