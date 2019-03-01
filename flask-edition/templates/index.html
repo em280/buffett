@@ -142,7 +142,7 @@ endblock %} {% block body %}
       <!-- <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas> -->
 
       <div id="history">
-        {% block history %} {% if history is defined %} {% endif %} {% endblock
+        {% block history %} {% if history is defined %} {% include "history.html" %} {% endif %} {% endblock
         %}
       </div>
 
@@ -230,7 +230,7 @@ var layout = {
   });
 </script>
 
-<!-- Autocomplete 
+<!-- Autocomplete
 Author: SH -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
