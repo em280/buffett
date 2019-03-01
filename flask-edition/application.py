@@ -249,8 +249,11 @@ def sell():
 
         # contact API
         company_info = get_company_info(symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
+
+        # graph stuff
+        temp = 'tmp.csv'
 
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
@@ -284,7 +287,7 @@ def sell():
 
         data = {}
         data["symbol"] = symbol.upper()
-        data["company_name"] = company_name
+        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
@@ -466,7 +469,7 @@ def leaderboard():
     '''
     @author: SH
     '''
-    # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below.
+    # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below. Then replace 'pass' when you have written code .
     pass
 
 if __name__ == "__main__":
