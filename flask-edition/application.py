@@ -182,6 +182,9 @@ def buy():
         # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
+        # graph stuff
+        temp = 'tmp.csv'
+
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
 
@@ -216,7 +219,7 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+                        data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
