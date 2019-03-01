@@ -150,11 +150,11 @@ def dashboard():
 
     for item in stocks:
         company_info = get_company_info(item.symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        info[item.symbol] = company_name
+        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
         info[item.symbol+"total"] = current_price * item.quantity
 
