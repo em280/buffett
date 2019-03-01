@@ -431,6 +431,7 @@ def signup():
 def login():
     """
     @author: EM
+    @author: SA
     """
     form = LoginForm()
 
@@ -465,7 +466,8 @@ def leaderboard():
     '''
     @author: SH
     '''
-
+    # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below.
+    pass
 
 if __name__ == "__main__":
     """
