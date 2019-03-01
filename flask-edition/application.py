@@ -59,7 +59,9 @@ def index():
     user = User.query.first()
     amt = usd(user.cash)
     symbol = "MSFT"
-    current_price = usd(get_current_share_quote(symbol)['latestPrice']) # This line needs to be corrected
+    current_price = usd(get_current_share_quote(symbol)['latestPrice'])
+
+    # obtaining graph information
     get_month_chart(symbol,1)
 
     temp = 'tmp.csv'
@@ -75,7 +77,7 @@ def index():
             grand_total = user.cash + total_share_price
             info["grand_total"] = usd(grand_total)
             info["total_share_price"] = usd(total_share_price)
-            info["company_name"] = get_company_info(stock.symbol)["companyName"]
+            # info["company_name"] = get_company_info(stock.symbol)["companyName"]
             stock_info.append(info)
             index = index + 1
 
@@ -148,11 +150,11 @@ def dashboard():
 
     for item in stocks:
         company_info = get_company_info(item.symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        info[item.symbol] = company_name
+        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
         info[item.symbol+"total"] = current_price * item.quantity
 
@@ -179,8 +181,11 @@ def buy():
 
         # contact API
         company_info = get_company_info(symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
+
+        # graph stuff
+        temp = 'tmp.csv'
 
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
@@ -203,7 +208,7 @@ def buy():
 
         data = {}
         data["symbol"] = symbol.upper()
-        data["company_name"] = company_name
+        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
@@ -244,8 +249,11 @@ def sell():
 
         # contact API
         company_info = get_company_info(symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
+
+        # graph stuff
+        temp = 'tmp.csv'
 
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
@@ -279,7 +287,7 @@ def sell():
 
         data = {}
         data["symbol"] = symbol.upper()
-        data["company_name"] = company_name
+        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
@@ -316,11 +324,11 @@ def history():
 
     for item in history:
         company_info = get_company_info(item.symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        info[item.symbol] = company_name
+        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
 
     return render_template("history.html", history=history, info=info, message="This is a record of all your transactions.")
@@ -328,6 +336,8 @@ def history():
 @app.route("/summary")
 def summary():
     """ Functionality for the summary function. """
+    # graph stuff
+    temp = 'tmp.csv'
     # Showing open positions for the loggedin user
     stocks = Portfolio.query.all()
     data = {}
@@ -335,9 +345,9 @@ def summary():
         current_stock = get_company_info(stock.symbol)
 
         postion = {
-            "company_name": current_stock["companyName"],
+            # "company_name": current_stock["companyName"],
             "current_price": get_current_share_quote(stock.symbol)["latestPrice"],
-            "symbol": current_stock["symbol"]
+            # "symbol": current_stock["symbol"]
         }
 
     return render_template("index.html", temp=temp, data=stocks, message="This is a summary of your profile.")
@@ -424,6 +434,7 @@ def signup():
 def login():
     """
     @author: EM
+    @author: SA
     """
     form = LoginForm()
 
@@ -458,7 +469,8 @@ def leaderboard():
     '''
     @author: SH
     '''
-
+    # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below. Then replace 'pass' when you have written code .
+    pass
 
 if __name__ == "__main__":
     """
