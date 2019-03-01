@@ -420,7 +420,7 @@ def signup():
     # Else the form was submitted via get
     return render_template("signup.html", form=form)
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
     """
     @author: EM
@@ -458,7 +458,7 @@ def leaderboard():
     '''
     @author: SH
     '''
-    
+
 
 if __name__ == "__main__":
     """
