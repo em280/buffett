@@ -75,7 +75,7 @@ def index():
             grand_total = user.cash + total_share_price
             info["grand_total"] = usd(grand_total)
             info["total_share_price"] = usd(total_share_price)
-            info["company_name"] = get_company_info(stock.symbol)["companyName"]
+            # info["company_name"] = get_company_info(stock.symbol)["companyName"]
             stock_info.append(info)
             index = index + 1
 
@@ -179,7 +179,7 @@ def buy():
 
         # contact API
         company_info = get_company_info(symbol)
-        company_name = company_info["companyName"]
+        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
         # some arithmetic
@@ -203,7 +203,7 @@ def buy():
 
         data = {}
         data["symbol"] = symbol.upper()
-        data["company_name"] = company_name
+        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
@@ -216,7 +216,7 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+                        data=data, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
