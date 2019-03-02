@@ -379,13 +379,9 @@ def unregister():
 
 @app.route("/test")
 def test():
-    # temp = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=MSFT&apikey=demo&datatype=csv"
-    # temp = 9999
     temp = Portfolio.query.all()
     # temp = User.query.all()
     return render_template("test.html", temp=temp)
-    # tmp = requests.get("https://api.iextrading.com/1.0/stock/MSFT/chart/1d/")
-    # return render_template("tchart.html", tmp=tmp.json())
 
 @app.route("/initdb")
 def main():
@@ -469,7 +465,6 @@ def leaderboard():
     '''
     @author: SH
     '''
-    # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below. Then replace 'pass' when you have written code .
     pass
 
 if __name__ == "__main__":
