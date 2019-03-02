@@ -1,7 +1,6 @@
 Flask
 Flask-SQLAlchemy
 plotly
-chartjs
 numpy
 requests
 flask-wtf
