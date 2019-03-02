@@ -472,6 +472,13 @@ def leaderboard():
     # Never leave a python function empty: if there is no code at the time of writing please type 'pass' as done below. Then replace 'pass' when you have written code .
     pass
 
+@app.route("/home")
+def home():
+    '''
+    @author: SA
+    '''
+    return render_template("home.html")
+
 if __name__ == "__main__":
     """
     @author: EM
