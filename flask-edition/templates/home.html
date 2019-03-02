@@ -4,21 +4,22 @@ Buffet - Buffet Stock Market Game
 {% endblock %} 
 {% block body %}
 
-<nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
-        <ul class="navbar-nav px-30 navbar-brand col-sm-3 col-md-2 mr-0">
-                <li class="nav-item text-nowrap ">Buffet</li>
-        </ul>
-
-        <ul class="navbar-nav navbar-dark px-3">
-                <li class="nav-item text-nowrap">
-                  <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                </li>
-        </ul>
-</nav>
 
 
+<ul class="nav justify-content-end">
+    <li class="nav-item">
+      <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+    </li>
+  </ul>
 
-    <div class="row top top-placement">
+
+
+    <div class="row text-center top-placement">
+            <div class="w-30 mx-auto ">
+                <div class="section-content">
             <h2 style="font-family:sans-serif";>Become a specialist at trading by playing Buffet Stock Market Game:</h2>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Ability to buy and sell shares relative to company's real prices</li>
@@ -26,29 +27,50 @@ Buffet - Buffet Stock Market Game
                 <li class="list-group-item">Ability to check the stock of some other countries</li>
                 <li class="list-group-item">A leaderboard is on display for players to see where they stand amongst friends and foes</li>
             </ul>
-        
-            <div class="card" style="width: 18rem;">
-                    <img src="..." class="card-img-top" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">Cras justo odio</li>
-                      <li class="list-group-item">Dapibus ac facilisis in</li>
-                      <li class="list-group-item">Vestibulum at eros</li>
-                    </ul>
-                    <div class="card-body">
-                      <a href="#" class="card-link">Card link</a>
-                      <a href="#" class="card-link">Another link</a>
-                    </div>
-                  </div>
 
-                  <div class="card text-center" style="width: 18rem;">
-                        <div class="card-body">
-                          <h5 class="card-title">Special title treatment</h5>
-                          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                          <a href="#" class="btn btn-primary">Go somewhere</a>
-                        </div>
-                      </div>
+    <header class="image">
+      <div class="image-bg">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h2 style="font-family:sans-serif";>Become a specialist at trading by playing Buffet Stock Market Game:</h2>
+                <p class="image-message">
+                    <i class="fa fa-plus-square-o"></i> Ability to buy and sell shares relative to company's real prices
+                    <br><i class="fa fa-play-circle"></i> Realtime and historical stock data
+                    <br><i class="fa fa-play-circle"></i> FX and cryptocurrency feeds
+                    <br><i class="fa fa-play-circle"></i> 50+ technical indicators
+                </p>
+                  <ul class="nav justify-content-end">
+                      <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+                      </li>
+                    </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <header class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h1 class="brand-heading">ALPHA VANTAGE</h1>
+                        <p class="intro-text">
+                            <i class="fa fa-play-circle"></i> Free APIs in JSON and CSV formats
+                            <br><i class="fa fa-play-circle"></i> Realtime and historical stock data
+                            <br><i class="fa fa-play-circle"></i> FX and cryptocurrency feeds
+                            <br><i class="fa fa-play-circle"></i> 50+ technical indicators
+                            <!--<br><i class="fa fa-play-circle"></i> Global coverage-->
+                        </p>
+                        <a href="https://www.alphavantage.co/documentation/" target="_blank" class="btn btn-default btn-lg">API Documentation + Examples</a>
+                        <a href="https://www.alphavantage.co/support/#api-key" target="_blank" class="btn btn-default btn-lg">Get your Free API Key Today</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
     {% endblock %}
