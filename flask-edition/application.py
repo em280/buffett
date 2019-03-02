@@ -467,6 +467,13 @@ def leaderboard():
     '''
     pass
 
+@app.route("/home")
+def home():
+    '''
+    @author: SA
+    '''
+    return render_template("home.html")
+
 if __name__ == "__main__":
     """
     @author: EM
