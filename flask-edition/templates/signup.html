@@ -1,4 +1,4 @@
-{% extends "layout.html" %} 
+{% extends "base.html" %} 
 {% block title %} 
 Join Buffet - Buffet Stock Market Game
 {% endblock %} 
@@ -10,55 +10,55 @@ Join Buffet - Buffet Stock Market Game
     
         <ul class="nav justify-content-end">
             <li class="nav-item">
-              <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+              <a class="nav-link" href="{{ url_for('login') }}">Login</a>
             </li>
           </ul>
-    </nav>
-    
-    <main class="container signup-section">
-        <div class="row">
-            <div class="w-30 mx-auto top top-placement">
-                <div class="section-content">
-                    <h2>Log In</h2>
-                </div>
-            </div>
-        </div>
+</nav>
+        
 
 <main class="container signup-section">
-    <div class="section-content">
-        <h2>Sign up for Buffet</h2>
+    <div class="row">
+        <div class="w-30 mx-auto top top-placement">
+            <div class="section-content">
+                <h2>Sign up for Buffet</h2>
+            </div>
+        </div>
     </div>
 
-        <form action="/signup" method="POST">
-            {{ form.hidden_tag() }}
+    <form action="/signup" method="POST">
+                    {{ form.hidden_tag() }}
+        <div class="row top top-placement">
+            <div class="w-30 mx-auto">    
 
-            <div class="form-group">
-                {{ form.user_name.label }}
+                    <div class="form-group">
+                        {{ form.user_name.label }}
 
-                {% if form.user_name.errors %}
-                    {% for error in form.user_name.errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
+                        {% if form.user_name.errors %}
+                            {% for error in form.user_name.errors %}
+                                <p class="error-message">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
 
-                {{ form.user_name }}
+                        {{ form.user_name }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.password.label }}
+
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <p class="error-message">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+
+                        {{ form.password }}
+                    </div>
+
+                    {{ form.submit(class="btn-primary") }}
             </div>
-
-            <div class="form-group">
-                {{ form.password.label }}
-
-                {% if form.password.errors %}
-                    {% for error in form.password.errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-
-                {{ form.password }}
-            </div>
-
-            {{ form.submit(class="btn-primary") }}
-        </form>
-    </div>
+        </div>        
+    </form>
+    
 </main>
 
 {% endblock %}
