@@ -4,6 +4,26 @@ Join Buffet - Buffet Stock Market Game
 {% endblock %} 
 {% block body %}
 
+<nav class="navbar navbar-light fixed-top bg-light flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
+          >Buffett</a>
+    
+        <ul class="nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+            </li>
+          </ul>
+    </nav>
+    
+    <main class="container signup-section">
+        <div class="row top top-placement">
+            <div class="w-30 mx-auto">
+                <div class="section-content">
+                    <h2>Log In</h2>
+                </div>
+            </div>
+        </div>
+
 <main class="container signup-section">
     <div class="section-content">
         <h2>Sign up for Buffet</h2>
