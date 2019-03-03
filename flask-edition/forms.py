@@ -1,5 +1,7 @@
 """
 @author: EM
+
+This is a helper file for forms and form validation.
 """
 
 from flask_wtf import Form
@@ -15,4 +17,3 @@ class LoginForm(Form):
     user_name = StringField("Username", validators=[DataRequired("Please enter your username.")])
     password = PasswordField("Password", validators=[DataRequired("Please provide a password.")])
     submit = SubmitField("Sign in")
-    
