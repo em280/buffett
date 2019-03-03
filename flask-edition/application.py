@@ -91,7 +91,7 @@ def index():
 
     company_info = get_company_info(symbol)
 
-    
+
 
     return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
 
@@ -183,10 +183,15 @@ def buy():
     buyForm = BuyForm()
     searchForm = SearchForm()
 
-    if request.method == "POST":
+    if buyForm.validate_on_submit():
+
+
+    # if request.method == "POST":
         # Get form information
-        symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"])
+        # symbol = request.form["symbol"]
+        symbol = buyForm.symbol.data.upper()
+        noOfShares = int(buyForm.shares.data)
+        # noOfShares = int(request.form["shares"])
 
         # contact API
         company_info = get_company_info(symbol)
@@ -230,7 +235,7 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+                        data=data, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
 
     # the code below is executed if the request method
     # was GET or there was some sort of error

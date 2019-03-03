@@ -10,6 +10,7 @@ Buy Stocks - Buffet Stock Market Game
           action="{{ url_for('buy') }}"
           method="POST"
         >
+        {{ buyForm.csrf_token }}
         {{ buyForm.hidden_tag() }}
 
         {{ buyForm.symbol(placeholder="Symbol") }}
