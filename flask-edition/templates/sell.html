@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 {% block title %}
-Buy Stocks - Buffet Stock Market Game
+Sell Stocks - Buffet Stock Market Game
 {% endblock %}
 {% block body %}
 
-<main class="container buy-section">
+<main class="container sell-section">
         <form
-          id="buyform"
-          action="{{ url_for('buy') }}"
+          id="sellform"
+          action="{{ url_for('sell') }}"
           method="POST"
         >
         {{ form.hidden_tag() }}
