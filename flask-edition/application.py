@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
-from forms import SignupForm, LoginForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm # Import for form functionality
 
 import csv
 import os
@@ -137,8 +137,6 @@ def dashboard():
     @author: EM
     Functionality for the user dashboard/portfolio function.
     """
-    # Just show the index page for now.
-    # return redirect(url_for("index"))
 
     info = {}
     stocks = Portfolio.query.all()
@@ -174,6 +172,8 @@ def buy():
     @author: EM
     Functionality for the user buy function.
     """
+    form = BuyForm()
+
     if request.method == "POST":
         # Get form information
         symbol = request.form["symbol"]
@@ -225,9 +225,10 @@ def buy():
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
+    return render_template("buy.html", form=form)
 
     # Just show the index page for now.
-    return redirect(url_for("index"))
+    # return redirect(url_for("index"))
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -241,6 +242,8 @@ def sell():
     # You can use DELETE or log the sale as a negative quantity
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
+
+    form = SellForm()
 
     if request.method == "POST":
         # Get form information
@@ -305,8 +308,7 @@ def sell():
 
         # return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
 
-    # Just show the index page for now.
-    return redirect(url_for("index"))
+    return render_template("sell.html", form=form)
 
 @app.route("/history")
 def history():
