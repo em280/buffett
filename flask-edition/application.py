@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
-from forms import SignupForm, LoginForm, BuyForm, SellForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 
 import csv
 import os
@@ -55,6 +55,7 @@ def index():
     @author: SH
     The homepage of the application.
     """
+    searchForm = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
     amt = usd(user.cash)
@@ -89,7 +90,7 @@ def index():
 
     stocks = Portfolio.query.all()
 
-    return render_template('index.html', temp=temp, data=data, stocks=stocks)
+    return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
 
 
 @app.route("/search", methods=["GET"])
@@ -138,6 +139,8 @@ def dashboard():
     Functionality for the user dashboard/portfolio function.
     """
 
+    searchForm = SearchForm()
+
     info = {}
     stocks = Portfolio.query.all()
 
@@ -163,7 +166,7 @@ def dashboard():
             info["g_total"] = usd(grand_total)
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
-    return render_template("portfolio.html", stocks=stocks, info=info)
+    return render_template("portfolio.html", stocks=stocks, info=info, searchForm=searchForm)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -172,7 +175,8 @@ def buy():
     @author: EM
     Functionality for the user buy function.
     """
-    form = BuyForm()
+    buyForm = BuyForm()
+    searchForm = SearchForm()
 
     if request.method == "POST":
         # Get form information
@@ -225,7 +229,7 @@ def buy():
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
-    return render_template("buy.html", form=form)
+    return render_template("buy.html", buyForm=buyForm, searchForm=searchForm)
 
     # Just show the index page for now.
     # return redirect(url_for("index"))
@@ -243,7 +247,8 @@ def sell():
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
 
-    form = SellForm()
+    sellForm = SellForm()
+    searchForm = SearchForm()
 
     if request.method == "POST":
         # Get form information
@@ -308,7 +313,7 @@ def sell():
 
         # return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
 
-    return render_template("sell.html", form=form)
+    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
 
 @app.route("/history")
 def history():
@@ -316,6 +321,7 @@ def history():
     @author: EM
     Functionality for the history function.
     """
+    searchForm = SearchForm()
     data = {}
     info = {}
 
@@ -333,11 +339,14 @@ def history():
         # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
 
-    return render_template("history.html", history=history, info=info, message="This is a record of all your transactions.")
+    return render_template("history.html", history=history, searchForm=searchForm, info=info, message="This is a record of all your transactions.")
 
 @app.route("/summary")
 def summary():
-    """ Functionality for the summary function. """
+    """
+    Functionality for the summary function.
+    """
+    searchForm = SearchForm()
     # graph stuff
     temp = 'tmp.csv'
     # Showing open positions for the loggedin user
@@ -352,7 +361,7 @@ def summary():
             # "symbol": current_stock["symbol"]
         }
 
-    return render_template("index.html", temp=temp, data=stocks, message="This is a summary of your profile.")
+    return render_template("index.html", temp=temp, searchForm=searchForm, data=stocks, message="This is a summary of your profile.")
 
 @app.route("/register")
 def register():
