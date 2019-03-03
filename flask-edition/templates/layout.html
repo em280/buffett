@@ -82,8 +82,9 @@
       <form
         class="form-inline w-100"
         action="{{ url_for('search') }}"
-        method="GET"
+        method="POST"
       >
+        {{ searchForm.csrf_token }}
         {{ searchForm.hidden_tag() }}
 
         {{ searchForm.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="stock-options", placeholder="Search") }}
