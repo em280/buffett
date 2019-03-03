@@ -10,13 +10,11 @@ Sell Stocks - Buffet Stock Market Game
           action="{{ url_for('sell') }}"
           method="POST"
         >
-        {{ form.hidden_tag() }}
+        {{ sellForm.hidden_tag() }}
 
-        {{ form.symbol.label }}:
-        {{ form.symbol }}
-        {{ form.shares.label }}:
-        {{ form.shares }}
-        {{ form.submit(class="btn-primary") }}
+        {{ sellForm.symbol(placeholder="Symbol") }}
+        {{ sellForm.shares(placeholder="Shares") }}
+        {{ sellForm.submit(class="btn-primary") }}
         </form>
 </main>
 

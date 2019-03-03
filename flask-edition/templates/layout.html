@@ -66,9 +66,9 @@
         action="{{ url_for('search') }}"
         method="GET"
       >
-        {{ form.hidden_tag() }}
+        {{ searchForm.hidden_tag() }}
 
-        {{ form.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="stock-options", placeholder="Search") }}
+        {{ searchForm.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="stock-options", placeholder="Search") }}
 
         <datalist id="stock-options"> </datalist>
 

@@ -10,13 +10,11 @@ Buy Stocks - Buffet Stock Market Game
           action="{{ url_for('buy') }}"
           method="POST"
         >
-        {{ form.hidden_tag() }}
+        {{ buyForm.hidden_tag() }}
 
-        {{ form.symbol.label }}:
-        {{ form.symbol }}
-        {{ form.shares.label }}:
-        {{ form.shares }}
-        {{ form.submit(class="btn-primary") }}
+        {{ buyForm.symbol(placeholder="Symbol") }}
+        {{ buyForm.shares(placeholder="Shares") }}
+        {{ buyForm.submit(class="btn-primary") }}
         </form>
 </main>
 
