@@ -4,6 +4,7 @@ Join Buffet - Buffet Stock Market Game
 {% endblock %} 
 {% block body %}
 
+<<<<<<< Updated upstream
 <nav class="navbar navbar-light fixed-top bg-light flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
           >Buffett</a>
@@ -15,6 +16,21 @@ Join Buffet - Buffet Stock Market Game
           </ul>
 </nav>
         
+=======
+<nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
+        <ul class="navbar-nav px-30 navbar-brand col-sm-3 col-md-2 mr-0">
+                <li class="nav-item text-nowrap ">Buffet</li>
+        </ul>
+
+        <ul class="navbar-nav navbar-dark px-3">
+                <li class="nav-item text-nowrap">
+                    {% block a %}
+                  <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+                    {% endblock %}
+                </li>
+        </ul>
+</nav>
+>>>>>>> Stashed changes
 
 <main class="container signup-section">
     <div class="row">
