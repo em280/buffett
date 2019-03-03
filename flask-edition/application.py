@@ -51,7 +51,6 @@ db.init_app(app)
 #@loginRequire
 def index():
     """
-    @author: SA - loginRequire implemented.
     @author: SH
     The homepage of the application.
     """
@@ -63,7 +62,7 @@ def index():
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
 
     # obtaining graph information
-    get_month_chart(symbol,1)
+    get_month_chart(symbol,3)
 
     temp = 'tmp.csv'
     data = {}
@@ -90,22 +89,30 @@ def index():
 
     stocks = Portfolio.query.all()
 
+    company_info = get_company_info(symbol)
+
+    
+
     return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
 
 
-@app.route("/search", methods=["GET"])
+@app.route("/search", methods=["GET", "POST"])
 def search():
     """
     @author: SH
     Functionality for the search function.
     """
+    searchForm = SearchForm()
+
+    symbol = None
+    if searchForm.validate_on_submit():
+        symbol = searchForm.search.data.upper()
+
     users = User.query.all()
     user = User.query.first()
     amt = usd(user.cash)
-    symbol = request.args.get("name")
 
 
-    symbol = symbol.upper()
     get_month_chart(symbol,1)
     f = 'tmp.csv'
 
@@ -117,12 +124,10 @@ def search():
     data["current_price"] = current_price
 
     return render_template('index.html',
-                           temp=f, data=data, users=users, user=user)
+                           temp=f, searchForm=searchForm, data=data, users=users, user=user)
 
 
 @app.route("/tmp.csv")
-
-
 def get_file():
     """
     author: SH
@@ -477,6 +482,23 @@ def leaderboard():
     @author: SH
     '''
     pass
+
+@app.context_processor
+def graph_processor():
+    def index_data():
+        user = User.query.first()
+        amt = usd(user.cash)
+        symbol = "MSFT"
+        current_price = usd(get_current_share_quote(symbol)['latestPrice'])
+
+        data = {}
+        data["symbol"] = symbol.upper()
+        data["amount"] = amt
+        data["current_price"] = current_price
+        data["stock_info"] = stock_info
+
+        return data
+    return {'data': index_data}
 
 @app.route("/home")
 def home():
