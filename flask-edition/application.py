@@ -260,10 +260,10 @@ def sell():
     sellForm = SellForm()
     searchForm = SearchForm()
 
-    if request.method == "POST":
+    if sellForm.validate_on_submit():
         # Get form information
-        symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"])
+        symbol = sellForm.symbol.data.upper()
+        noOfShares = int(sellForm.shares.data)
 
         # contact API
         company_info = get_company_info(symbol)
@@ -318,7 +318,7 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
+                        data=data, sellForm=sellForm, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
 
 
         # return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
