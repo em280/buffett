@@ -60,18 +60,18 @@
       >
 
       <!-- Begin implementation of the search functionality -->
-      <form class="form-inline w-100" action="{{ url_for('search') }}" method="GET">
-        <input
-          class="form-control form-control-dark w-100"
-          type="text"
-          name="name"
-          id="searchBoxStocks"
-          placeholder="Search"
-          aria-label="Search"
-          list="stock-options"
-        />
+      <!-- Search should only allow searching for symbols at the moment -->
+      <form
+        class="form-inline w-100"
+        action="{{ url_for('search') }}"
+        method="GET"
+      >
+        {{ form.hidden_tag() }}
+
+        {{ form.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="stock-options", placeholder="Search") }}
 
         <datalist id="stock-options"> </datalist>
+
       </form>
       <!-- End of search functionality implementation -->
 

@@ -27,3 +27,6 @@ class SellForm(Form):
     symbol = StringField("Symbol", validators=[DataRequired("Please enter a valid symbol.")])
     shares = IntegerField("Shares", validators=[DataRequired("Please provide the number of shares to buy."), Length(max=2, message="Number of shares must be 2 digits or less.")])
     submit = SubmitField("Sell")
+
+class SearchForm(Form):
+    search = StringField("Search", validators=[DataRequired("Please enter a valid symbol.")])

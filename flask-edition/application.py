@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, s
 from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
-from forms import SignupForm, LoginForm, BuyForm, SellForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 
 import csv
 import os
@@ -55,6 +55,7 @@ def index():
     @author: SH
     The homepage of the application.
     """
+    form = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
     amt = usd(user.cash)
@@ -89,7 +90,7 @@ def index():
 
     stocks = Portfolio.query.all()
 
-    return render_template('index.html', temp=temp, data=data, stocks=stocks)
+    return render_template('index.html', temp=temp, data=data, stocks=stocks, form=form)
 
 
 @app.route("/search", methods=["GET"])
