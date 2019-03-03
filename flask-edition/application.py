@@ -51,7 +51,6 @@ db.init_app(app)
 #@loginRequire
 def index():
     """
-    @author: SA - loginRequire implemented.
     @author: SH
     The homepage of the application.
     """
@@ -63,7 +62,7 @@ def index():
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
 
     # obtaining graph information
-    get_month_chart(symbol,1)
+    get_month_chart(symbol,3)
 
     temp = 'tmp.csv'
     data = {}
@@ -89,6 +88,10 @@ def index():
     data["stock_info"] = stock_info
 
     stocks = Portfolio.query.all()
+
+    company_info = get_company_info(symbol)
+
+    
 
     return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
 

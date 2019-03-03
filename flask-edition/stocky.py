@@ -91,9 +91,6 @@ def to_csv(data):
 		counter = counter + 1
 		csvw.writerow([rows['date'], rows['close'], rows['open'], rows['high'], rows['low']])
 
-def get_company_info(symbol):
-	'''
-	Returns general information about comapny
-	'''
-
-
+data = get_company_info('aapl')
+print(data)
+print(data['exchange'])
