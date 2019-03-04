@@ -16,6 +16,15 @@ endblock %} {% block body %}
 
       <!-- This is for testing BEGIN-->
       <div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
         {{ message }}
       </div>
       <!-- This is for testing END-->
@@ -55,7 +64,8 @@ endblock %} {% block body %}
 
 <script>
   /* Author: SH */
-  Plotly.d3.csv("{{ temp | safe }}", function(err, rows) {
+  let c = 0;
+  Plotly.d3.csv("{{ f | safe }}", function(err, rows) {
     function unpack(rows, key) {
       return rows.map(function(row) {
         return row[key];
@@ -79,6 +89,8 @@ endblock %} {% block body %}
 };
 
 var data = [trace];
+console.log("you are here")
+c += 1;
 
 var layout = {
   dragmode: 'zoom',

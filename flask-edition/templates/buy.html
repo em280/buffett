@@ -17,6 +17,9 @@ Buy Stocks - Buffet Stock Market Game
         {{ buyForm.shares(placeholder="Shares") }}
         {{ buyForm.submit(class="btn-primary") }}
         </form>
+        {% if error %}
+    <p class=error><strong>Error:</strong> {{ error }}
+  {% endif %}
 </main>
 
 {% endblock %}

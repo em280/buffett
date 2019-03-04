@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_file
+from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, send_file
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
@@ -109,12 +109,22 @@ def search():
     if searchForm.validate_on_submit():
         symbol = searchForm.search.data.upper()
 
+    print("#########")
+    print(searchForm.search.data)
     users = User.query.all()
     user = User.query.first()
     amt = usd(user.cash)
 
+    if symbol is None:
+        flash('You were successfully logged in')
+        return redirect(url_for("index"))
 
-    get_month_chart(symbol,1)
+    if len(symbol) > 4:
+        flash('You were successfully logged in')
+        return redirect(url_for("index"))
+
+
+    get_month_chart(symbol,3)
     f = 'tmp.csv'
 
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
@@ -123,9 +133,10 @@ def search():
     data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
+    print(symbol)
 
     return render_template('index.html',
-                           temp=f, searchForm=searchForm, data=data, users=users, user=user)
+                           f=f, searchForm=searchForm, data=data, users=users, user=user)
 
 
 @app.route("/tmp.csv")
@@ -234,6 +245,8 @@ def buy():
             for stock in ptf:
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
+
+        flash('You were successfully logged in')
 
         return render_template('index.html',
                         data=data, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
