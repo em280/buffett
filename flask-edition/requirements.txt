@@ -5,3 +5,4 @@ numpy
 requests
 flask-wtf
 flask-session
+passlib

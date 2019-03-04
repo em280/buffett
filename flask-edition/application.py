@@ -4,6 +4,7 @@ from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
+from passlib.hash import sha256_crypt
 
 import csv
 import os
@@ -425,7 +426,6 @@ def main():
 def signup():
     """
     @author: EM
-    @author: SA
     """
     form = SignupForm()
 
