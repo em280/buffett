@@ -91,7 +91,7 @@ def index():
 
     company_info = get_company_info(symbol)
 
-    
+
 
     return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
 
@@ -183,10 +183,15 @@ def buy():
     buyForm = BuyForm()
     searchForm = SearchForm()
 
-    if request.method == "POST":
+    if buyForm.validate_on_submit():
+
+
+    # if request.method == "POST":
         # Get form information
-        symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"])
+        # symbol = request.form["symbol"]
+        symbol = buyForm.symbol.data.upper()
+        noOfShares = int(buyForm.shares.data)
+        # noOfShares = int(request.form["shares"])
 
         # contact API
         company_info = get_company_info(symbol)
@@ -230,7 +235,7 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+                        data=data, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
@@ -255,10 +260,10 @@ def sell():
     sellForm = SellForm()
     searchForm = SearchForm()
 
-    if request.method == "POST":
+    if sellForm.validate_on_submit():
         # Get form information
-        symbol = request.form["symbol"]
-        noOfShares = int(request.form["shares"])
+        symbol = sellForm.symbol.data.upper()
+        noOfShares = int(sellForm.shares.data)
 
         # contact API
         company_info = get_company_info(symbol)
@@ -288,7 +293,6 @@ def sell():
             else:
                 db.session.delete(portf)
                 db.session.commit()
-            # Portfolio().add_portfolio_stock(userid, symbol.upper(), -noOfShares)
         else:
             # no such stock exist
             pass
@@ -313,10 +317,7 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
-
-
-        # return render_template("index.html", data=data, temp=temp, message="You have sold one of your shares.")
+                        data=data, sellForm=sellForm, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
 
     return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
 
@@ -395,8 +396,8 @@ def unregister():
 
 @app.route("/test")
 def test():
-    temp = Portfolio.query.all()
-    # temp = User.query.all()
+    # temp = Portfolio.query.all()
+    temp = User.query.all()
     return render_template("test.html", temp=temp)
 
 @app.route("/initdb")
@@ -427,18 +428,14 @@ def signup():
     """
     form = SignupForm()
 
-    if request.method == "POST":
-        if form.validate() == False:
-            return render_template("signup.html", form=form)
-        else:
-            # Adding a new user to the database
-            new_user = User(username=form.user_name.data, password=form.password.data)
-            db.session.add(new_user)
-            db.session.commit()
-            # User().add_user()
+    if form.validate_on_submit():
+        # Adding a new user to the database
+        new_user = User(username=form.user_name.data, password=form.password.data)
+        db.session.add(new_user)
+        db.session.commit()
 
-            session["user_name"] = new_user.user_name
-            return redirect(url_for("index"))
+        session["user_name"] = new_user.username
+        return redirect(url_for("index"))
     # Else the form was submitted via get
     return render_template("signup.html", form=form)
 
@@ -450,23 +447,20 @@ def login():
     """
     form = LoginForm()
 
-    if request.method == "POST":
-        if form.validate() == False:
-            return render_template("login.html", form=form)
+    if form.validate_on_submit():
+        username = form.user_name.data
+        password = form.password.data
+
+        user = User.query.filter_by(username=username).first()
+        if user is not None:
+        # if user is not None and user.check_password(password):
+            session["user_name"] = form.user_name.data
+            return redirect(url_for("index"))
         else:
-            username = form.user_name.data
-            password = form.password.data
+            redirect(url_for("login"))
 
-            user = User.query.filter_by(username=username).first()
-            if user is not None and user.check_password(password):
-                session["user_name"] = form.user_name.data
-                return redirect(url_for("index"))
-            else:
-                redirect(url_for("login"))
-
-    elif request.method == "GET":
-        # rendering login page
-        return render_template("login.html", form=form)
+    # rendering login page
+    return render_template("login.html", form=form)
 
 @app.route("/logout")
 def logout():

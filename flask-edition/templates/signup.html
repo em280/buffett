@@ -1,15 +1,20 @@
-{% extends "base.html" %} 
-{% block title %} 
+{% extends "base.html" %}
+{% block title %}
 Join Buffet - Buffet Stock Market Game
-{% endblock %} 
+{% endblock %}
 {% block body %}
 <!-- author: SA -->
 
 <nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
       >Buffett</a>
+<<<<<<< HEAD
         
         <!-- links directing user to login -->
+=======
+
+
+>>>>>>> 0d4764ad5dd01fea57d938213fbcc17676e0fa93
         <ul class="navbar-nav navbar-dark px-3">
                 <li class="nav-item text-nowrap">
                     {% block a %}
@@ -30,12 +35,12 @@ Join Buffet - Buffet Stock Market Game
     </div>
     <!-- Sign up implementation-->
     <form action="/signup" method="POST">
+                    {{ form.csrf_token }}
                     {{ form.hidden_tag() }}
         <div class="row top top-placement">
-            <div class="w-30 mx-auto">    
+            <div class="w-30 mx-auto">
 
                     <div class="form-group">
-                        {{ form.user_name.label }}
 
                         {% if form.user_name.errors %}
                             {% for error in form.user_name.errors %}
@@ -43,11 +48,10 @@ Join Buffet - Buffet Stock Market Game
                             {% endfor %}
                         {% endif %}
 
-                        {{ form.user_name }}
+                        {{ form.user_name(placeholder="Username") }}
                     </div>
 
                     <div class="form-group">
-                        {{ form.password.label }}
 
                         {% if form.password.errors %}
                             {% for error in form.password.errors %}
@@ -55,14 +59,14 @@ Join Buffet - Buffet Stock Market Game
                             {% endfor %}
                         {% endif %}
 
-                        {{ form.password }}
+                        {{ form.password(placeholder="Password") }}
                     </div>
 
                     {{ form.submit(class="btn-primary") }}
             </div>
-        </div>        
+        </div>
     </form>
-    
+
 </main>
 
 {% endblock %}
