@@ -6,3 +6,5 @@ requests
 flask-wtf
 flask-session
 passlib
+pandas
+pandas-datareader
