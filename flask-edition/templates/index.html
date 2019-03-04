@@ -12,7 +12,12 @@ endblock %} {% block body %}
         </h5>
       </div>
 
+      <p> <b> Exchange: </b>{{data["exchange"]}} <br>
+      <b> Industry: </b> {{data["industry"]}} <br>
+      <b> Description: </b> {{data["description"]}}</p>
+
       {% block buy %} {% endblock %}
+
 
       <!-- This is for testing BEGIN-->
       <div>
@@ -65,7 +70,7 @@ endblock %} {% block body %}
 <script>
   /* Author: SH */
   let c = 0;
-  Plotly.d3.csv("{{ f | safe }}", function(err, rows) {
+  Plotly.d3.csv("{{ temp | safe }}", function(err, rows) {
     function unpack(rows, key) {
       return rows.map(function(row) {
         return row[key];
@@ -104,7 +109,9 @@ var layout = {
 
     Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
   });
+
 </script>
+
 
 <!-- Autocomplete
 Author: SH -->
