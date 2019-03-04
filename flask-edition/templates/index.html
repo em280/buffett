@@ -16,7 +16,7 @@ endblock %} {% block body %}
 
       <!-- This is for testing BEGIN-->
       <div>
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% with messages = get_flashed_messages() %}
   {% if messages %}
     <ul class=flashes>
     {% for message in messages %}

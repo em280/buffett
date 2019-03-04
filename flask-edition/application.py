@@ -25,6 +25,14 @@ import plotly.graph_objs as go
 # import chartjs
 import numpy as np
 
+########
+import datetime as dt
+# import matplotlib.pyplot as plt
+# from matplotlib import style
+import pandas as pd
+import pandas_datareader.data as web
+######
+
 # The name of this application is app
 app = Flask(__name__)
 
@@ -55,6 +63,9 @@ def index():
     @author: SH
     The homepage of the application.
     """
+    start = dt.datetime(2000, 1, 1)
+    end = dt.datetime(2016, 12, 31)
+    
     searchForm = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
@@ -92,6 +103,11 @@ def index():
 
     company_info = get_company_info(symbol)
 
+    df = web.DataReader(symbol, "yahoo", start, end)
+    df.to_csv("tmp.csv")
+
+    df = pd.read_csv("tmp.csv", parse_dates=True, index_col=0)
+
 
 
     return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
@@ -103,6 +119,15 @@ def search():
     @author: SH
     Functionality for the search function.
     """
+
+
+    # style.use("ggplot")
+
+    start = dt.datetime(2000, 1, 1)
+    end = dt.datetime(2016, 12, 31)
+
+
+
     searchForm = SearchForm()
 
     symbol = None
@@ -116,16 +141,20 @@ def search():
     amt = usd(user.cash)
 
     if symbol is None:
-        flash('You were successfully logged in')
+        flash('Please make sure you have provided the right symbol')
         return redirect(url_for("index"))
 
     if len(symbol) > 4:
         flash('You were successfully logged in')
         return redirect(url_for("index"))
 
+    df = web.DataReader("TSLA", "yahoo", start, end)
+    df.to_csv("tmp.csv")
+
+    df = pd.read_csv("tmp.csv", parse_dates=True, index_col=0)
 
     get_month_chart(symbol,3)
-    f = 'tmp.csv'
+    f = "tmp.csv"
 
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
@@ -246,7 +275,7 @@ def buy():
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
-        flash('You were successfully logged in')
+        flash(f"You have bought some shares worth {usd(current_price)}.")
 
         return render_template('index.html',
                         data=data, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
