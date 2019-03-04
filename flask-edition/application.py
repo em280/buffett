@@ -149,7 +149,7 @@ def search():
     data['sector'] = company_in['sector']
 
     return render_template('index.html',
-                           f=f, searchForm=searchForm, data=data, users=users, user=user)
+                           temp=f, searchForm=searchForm, data=data, users=users, user=user)
 
 
 @app.route("/tmp.csv")

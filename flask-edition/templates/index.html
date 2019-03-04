@@ -70,7 +70,7 @@ endblock %} {% block body %}
 <script>
   /* Author: SH */
   let c = 0;
-  Plotly.d3.csv("{{ f | safe }}", function(err, rows) {
+  Plotly.d3.csv("{{ temp | safe }}", function(err, rows) {
     function unpack(rows, key) {
       return rows.map(function(row) {
         return row[key];
