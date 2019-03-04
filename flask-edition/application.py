@@ -181,7 +181,7 @@ def search():
                            temp=f, searchForm=searchForm, data=data, users=users, user=user)
 
 
-@app.route("/tmp.csv")
+# @app.route("/tmp.csv")
 def get_file():
     """
     author: SH
