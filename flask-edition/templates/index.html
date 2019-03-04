@@ -12,7 +12,12 @@ endblock %} {% block body %}
         </h5>
       </div>
 
+      <p> <b> Exchange: </b>{{data["exchange"]}} <br>
+      <b> Industry: </b> {{data["industry"]}} <br>
+      <b> Description: </b> {{data["description"]}}</p>
+
       {% block buy %} {% endblock %}
+
 
       <!-- This is for testing BEGIN-->
       <div>
@@ -104,7 +109,9 @@ var layout = {
 
     Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
   });
+
 </script>
+
 
 <!-- Autocomplete
 Author: SH -->

@@ -133,7 +133,13 @@ def search():
     data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
-    print(symbol)
+    
+    company_in = get_company_info(symbol)
+
+    data['exchange'] = company_in['exchange']
+    data['industry'] = company_in['industry']
+    data['description'] = company_in['description']
+    data['sector'] = company_in['sector']
 
     return render_template('index.html',
                            f=f, searchForm=searchForm, data=data, users=users, user=user)
