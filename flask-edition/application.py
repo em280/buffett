@@ -90,6 +90,13 @@ def index():
 
     stocks = Portfolio.query.all()
 
+    company_in = get_company_info(symbol)
+
+    data['exchange'] = company_in['exchange']
+    data['industry'] = company_in['industry']
+    data['description'] = company_in['description']
+    data['sector'] = company_in['sector']
+
     company_info = get_company_info(symbol)
 
 
