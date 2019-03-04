@@ -425,6 +425,7 @@ def main():
 def signup():
     """
     @author: EM
+    @author: SA
     """
     form = SignupForm()
 
