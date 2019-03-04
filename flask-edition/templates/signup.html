@@ -3,13 +3,13 @@
 Join Buffet - Buffet Stock Market Game
 {% endblock %} 
 {% block body %}
-
+<!-- author: SA -->
 
 <nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
       >Buffett</a>
         
-
+        <!-- links directing user to login -->
         <ul class="navbar-nav navbar-dark px-3">
                 <li class="nav-item text-nowrap">
                     {% block a %}
@@ -28,7 +28,7 @@ Join Buffet - Buffet Stock Market Game
             </div>
         </div>
     </div>
-
+    <!-- Sign up implementation-->
     <form action="/signup" method="POST">
                     {{ form.hidden_tag() }}
         <div class="row top top-placement">
