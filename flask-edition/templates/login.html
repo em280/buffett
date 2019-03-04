@@ -61,7 +61,12 @@ Join Buffet - Buffet Stock Market Game
                             {{ form.password(placeholder="Password") }}
                     </div>
                             {{ form.submit(class="btn-primary") }}
+
+                            {% if error %}
+                        <p class=error><strong>Error:</strong> {{ error }}
+                      {% endif %}
                 </div>
+
             </div>
         </form>
 </main>

@@ -65,7 +65,7 @@ def index():
     """
     start = dt.datetime(2000, 1, 1)
     end = dt.datetime(2016, 12, 31)
-    
+
     searchForm = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
@@ -169,7 +169,7 @@ def search():
     data["symbol"] = symbol.upper()
     data["amount"] = amt
     data["current_price"] = current_price
-    
+
     company_in = get_company_info(symbol)
 
     data['exchange'] = company_in['exchange']
@@ -491,6 +491,7 @@ def signup():
         db.session.commit()
 
         session["user_name"] = new_user.username
+        flash('You were successfully logged in')
         return redirect(url_for("index"))
     # Else the form was submitted via get
     return render_template("signup.html", form=form)
@@ -511,6 +512,7 @@ def login():
         if user is not None:
         # if user is not None and user.check_password(password):
             session["user_name"] = form.user_name.data
+            flash('You were successfully logged in')
             return redirect(url_for("index"))
         else:
             redirect(url_for("login"))
