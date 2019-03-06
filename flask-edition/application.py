@@ -75,11 +75,6 @@ def index():
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
 
     # obtaining graph information
-    # get_month_chart(symbol,3)
-    # temp = 'tmp.csv'
-    # temp = get_month_chart(symbol,3)
-    # print(get_month_chart(symbol,3))
-
     graphdata = plotter(symbol)
 
     data = {}
@@ -132,8 +127,6 @@ def search():
     if searchForm.validate_on_submit():
         symbol = searchForm.search.data.upper()
 
-    print("#########")
-    print(searchForm.search.data)
     users = User.query.all()
     user = User.query.first()
     amt = usd(user.cash)
@@ -142,12 +135,14 @@ def search():
         flash('Please make sure you have provided the right symbol')
         return redirect(url_for("index"))
 
+    # Edit this accordingly for symbols longer than 4 characters
     if len(symbol) > 4:
         flash('You were successfully logged in')
         return redirect(url_for("index"))
 
-    get_month_chart(symbol,3)
-    f = "tmp.csv"
+    # obtaining graph information
+    graphdata = plotter(symbol)
+    print(symbol, graphdata)
 
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
@@ -163,8 +158,7 @@ def search():
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
 
-    return render_template('index.html',
-                           temp=f, searchForm=searchForm, data=data, users=users, user=user)
+    return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata)
 
 
 @app.route("/tmp.csv")
