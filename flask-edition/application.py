@@ -142,7 +142,6 @@ def search():
 
     # obtaining graph information
     graphdata = plotter(symbol)
-    print(symbol, graphdata)
 
     current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
@@ -159,16 +158,6 @@ def search():
     data['sector'] = company_in['sector']
 
     return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata)
-
-
-@app.route("/tmp.csv")
-def get_file():
-    """
-    author: SH
-
-    Returns file with stock information
-    """
-    return send_file("tmp.csv")
 
 
 @app.route("/dashboard")
@@ -390,7 +379,8 @@ def summary():
     """
     searchForm = SearchForm()
     # graph stuff
-    temp = 'tmp.csv'
+    symbol = "MSFT"
+    graphdata = plotter(symbol)
     # Showing open positions for the loggedin user
     stocks = Portfolio.query.all()
     data = {}
@@ -403,7 +393,7 @@ def summary():
             # "symbol": current_stock["symbol"]
         }
 
-    return render_template("index.html", temp=temp, searchForm=searchForm, data=stocks, message="This is a summary of your profile.")
+    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=stocks, message="This is a summary of your profile.")
 
 @app.route("/register")
 def register():
@@ -432,6 +422,11 @@ def unregister():
 
 @app.route("/plot")
 def plotter2():
+    """
+    @author: EM
+    This function does not contribute to the application and therefore should be ignored.
+    It it solely for testing purposes.
+    """
     start = dt.datetime(2018, 1, 1)
 
     df = web.DataReader("TSLA", "iex", start)
@@ -471,6 +466,11 @@ def plotter2():
 
 @app.route("/test")
 def test():
+    """
+    @author: EM
+    This function does not contribute to the application and therefore should be ignored.
+    It it solely for testing purposes.
+    """
     # temp = Portfolio.query.all()
     temp = User.query.all()
     # return render_template("test.html", temp=temp)
