@@ -1,5 +1,8 @@
 """
 @author: EM
+
+This is a helper file for the application,
+it consists of functional utilities needed by the application.
 """
 
 from flask import redirect
@@ -29,11 +32,20 @@ def login_require(f):
     return decorated_function
 
 def plotter(symbol):
-    start = dt.datetime(2018, 1, 1)
+    """
+    @author: EM
+    Prepare data to be used for plotting to the webpage depending on the symbol supplied.
+
+    """
+    # The start date of the data to be fetched from the API
+    # The end date is defaulted to today's date
+    start = dt.datetime(2016, 1, 1)
+
+    # Currently the data manipulated goes back 3 months from the current date
+    n_data = 60 # for 60 days / or 3 months
 
     df = web.DataReader(symbol, "iex", start)
     df.to_csv("iex.csv")
-    # df = pd.read_csv("graph.csv", parse_dates=True, index_col=0)
     df = pd.read_csv("iex.csv")
 
     df = df.set_index(df.date)
@@ -45,18 +57,18 @@ def plotter(symbol):
     lopen = []
     lclose = []
 
-    lt = df.tail(30).index.values
+    lt = df.tail(n_data).index.values
 
     for i in lt:
         d = datetime.strptime(i, "%Y-%m-%d")
         d = datetime.strftime(d, "%Y-%m-%d")
         ldate.append(d)
 
-    for k in range(30):
-        lhigh.append(df.tail(30)["high"][k])
-        llow.append(df.tail(30)["low"][k])
-        lopen.append(df.tail(30)["open"][k])
-        lclose.append(df.tail(30)["close"][k])
+    for k in range(n_data):
+        lhigh.append(df.tail(n_data)["high"][k])
+        llow.append(df.tail(n_data)["low"][k])
+        lopen.append(df.tail(n_data)["open"][k])
+        lclose.append(df.tail(n_data)["close"][k])
 
     data["date"] = ldate
     data["high"] = lhigh
