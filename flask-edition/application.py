@@ -31,6 +31,9 @@ import datetime as dt
 # from matplotlib import style
 import pandas as pd
 import pandas_datareader.data as web
+
+import pandas_datareader as pdr
+from datetime import datetime
 ######
 
 # The name of this application is app
@@ -54,7 +57,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
-
+#################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
 #@loginRequire
@@ -63,8 +66,6 @@ def index():
     @author: SH
     The homepage of the application.
     """
-    start = dt.datetime(2000, 1, 1)
-    end = dt.datetime(2016, 12, 31)
 
     searchForm = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
@@ -74,9 +75,13 @@ def index():
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
 
     # obtaining graph information
-    get_month_chart(symbol,3)
+    # get_month_chart(symbol,3)
+    # temp = 'tmp.csv'
+    # temp = get_month_chart(symbol,3)
+    # print(get_month_chart(symbol,3))
 
-    temp = 'tmp.csv'
+    graphdata = plotter(symbol)
+
     data = {}
     stock_info = []
     info = {}
@@ -110,14 +115,8 @@ def index():
 
     company_info = get_company_info(symbol)
 
-    df = web.DataReader(symbol, "yahoo", start, end)
-    df.to_csv("tmp.csv")
 
-    df = pd.read_csv("tmp.csv", parse_dates=True, index_col=0)
-
-
-
-    return render_template('index.html', temp=temp, data=data, stocks=stocks, searchForm=searchForm)
+    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -126,14 +125,6 @@ def search():
     @author: SH
     Functionality for the search function.
     """
-
-
-    # style.use("ggplot")
-
-    start = dt.datetime(2000, 1, 1)
-    end = dt.datetime(2016, 12, 31)
-
-
 
     searchForm = SearchForm()
 
@@ -154,11 +145,6 @@ def search():
     if len(symbol) > 4:
         flash('You were successfully logged in')
         return redirect(url_for("index"))
-
-    df = web.DataReader("TSLA", "yahoo", start, end)
-    df.to_csv("tmp.csv")
-
-    df = pd.read_csv("tmp.csv", parse_dates=True, index_col=0)
 
     get_month_chart(symbol,3)
     f = "tmp.csv"
@@ -181,7 +167,7 @@ def search():
                            temp=f, searchForm=searchForm, data=data, users=users, user=user)
 
 
-# @app.route("/tmp.csv")
+@app.route("/tmp.csv")
 def get_file():
     """
     author: SH
@@ -450,11 +436,98 @@ def unregister():
     User().remove_user(2)
     return "A user has been unregistered." # Update this function for when user was not removed
 
+@app.route("/plot")
+def plotter2():
+    start = dt.datetime(2018, 1, 1)
+
+    df = web.DataReader("TSLA", "iex", start)
+    df.to_csv("iex.csv")
+    # df = pd.read_csv("graph.csv", parse_dates=True, index_col=0)
+    df = pd.read_csv("iex.csv")
+
+    df = df.set_index(df.date)
+
+    data = {}
+    ldate = []
+    lhigh = []
+    llow = []
+    lopen = []
+    lclose = []
+
+    lt = df.tail(30).index.values
+
+    for i in lt:
+        d = datetime.strptime(i, "%Y-%m-%d")
+        d = datetime.strftime(d, "%Y-%m-%d")
+        ldate.append(d)
+
+    for k in range(30):
+        lhigh.append(df.tail(30)["high"][k])
+        llow.append(df.tail(30)["low"][k])
+        lopen.append(df.tail(30)["open"][k])
+        lclose.append(df.tail(30)["close"][k])
+
+    data["date"] = ldate
+    data["high"] = lhigh
+    data["low"] = llow
+    data["open"] = lopen
+    data["close"] = lclose
+
+    return render_template("test2.html", data=data)
+
 @app.route("/test")
 def test():
     # temp = Portfolio.query.all()
     temp = User.query.all()
-    return render_template("test.html", temp=temp)
+    # return render_template("test.html", temp=temp)
+
+    start = dt.datetime(2000, 1, 1)
+    end = dt.datetime(2016, 12, 31)
+    df = web.DataReader("TSLA", "yahoo", start, end)
+    df.to_csv("tsla.csv")
+    df = pd.read_csv("tsla.csv", parse_dates=True, index_col=0)
+    df = pd.read_csv("tsla.csv")
+    # # data = df.head(30).to_dict()
+    # print(df.tail(30))
+    # print(df.tail(30)["Date"])
+
+    # df.Date = pd.to_datetime(df.Date, format="%Y-%m-%d")
+    df = df.set_index(df.Date)
+    # print(df.tail(30))
+
+
+    data = {}
+    l = []
+    lhigh = []
+    llow = []
+    lopen = []
+    lclose = []
+    # data["date"] = df.tail(30)["Date"]
+    lt = df.tail(30).index.values
+    for i in lt:
+        # l.append(datetime.strptime(i, "%Y-%m-%d"))
+        d = datetime.strptime(i, "%Y-%m-%d")
+        d = datetime.strftime(d, "%Y-%m-%d")
+        # l.append(d.date())
+        l.append(d)
+        # print(i, "printer", type(i))
+    for k in range(30):
+        # print(l[k].date(), type(l[k].date()))
+        lhigh.append(df.tail(30)["High"][k])
+        llow.append(df.tail(30)["Low"][k])
+        lopen.append(df.tail(30)["Open"][k])
+        lclose.append(df.tail(30)["Close"][k])
+    # data["date"] = df.tail(30).index.values
+    data["date"] = l
+    # data["date"] = pd.to_datetime(df.tail(30).index.values, format="%Y-%m-%d")
+    # data["close"] = df.tail(30)["Close"].values
+    data["high"] = lhigh
+    data["low"] = llow
+    data["open"] = lopen
+    data["close"] = lclose
+
+    # return render_template("test.html", data=data)
+    return render_template("test2.html", data=data)
 
 @app.route("/initdb")
 def main():

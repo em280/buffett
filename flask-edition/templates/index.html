@@ -22,14 +22,14 @@ endblock %} {% block body %}
       <!-- This is for testing BEGIN-->
       <div>
         {% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
         {{ message }}
       </div>
       <!-- This is for testing END-->
@@ -66,51 +66,45 @@ endblock %} {% block body %}
 
 <!-- Graphs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 
-<script>
-  /* Author: SH */
-  let c = 0;
-  Plotly.d3.csv("{{ temp | safe }}", function(err, rows) {
-    function unpack(rows, key) {
-      return rows.map(function(row) {
-        return row[key];
-      });
+
+  <script>
+    /* Author: SH */
+  // JAVASCRIPT CODE GOES HERE
+
+  var trace = {
+    x: {{ graphdata["date"] | safe }},
+    close: {{ graphdata["close"] }},
+    high: {{ graphdata["high"] }},
+    low: {{ graphdata["low"] }},
+    open: {{ graphdata["open"] }},
+
+    // cutomise colors
+    increasing: {line: {color: 'black'}},
+    decreasing: {line: {color: 'red'}},
+
+    type: 'candlestick',
+    xaxis: 'x',
+    yaxis: 'y'
+  };
+
+  var data = [trace];
+
+  var layout = {
+    dragmode: 'zoom',
+    showlegend: false,
+    xaxis: {
+      rangeslider: {
+       visible: false
+     }
     }
+  };
 
-    var trace = {
-  x: unpack(rows, 'timestamp'),
-  close: unpack(rows, 'close'),
-  high: unpack(rows, 'high'),
-  low: unpack(rows, 'low'),
-  open: unpack(rows, 'open'),
+  Plotly.plot('chartDIV', data, layout);
 
-  // cutomise colors
-  increasing: {line: {color: 'green'}},
-  decreasing: {line: {color: 'red'}},
+  </script>
 
-  type: 'candlestick',
-  xaxis: 'x',
-  yaxis: 'y'
-};
-
-var data = [trace];
-console.log("you are here")
-c += 1;
-
-var layout = {
-  dragmode: 'zoom',
-  showlegend: false,
-  xaxis: {
-    rangeslider: {
-     visible: false
-   }
-  }
-};
-
-    Plotly.newPlot("chartDIV", data, layout, { showSendToCloud: false });
-  });
-
-</script>
 
 
 <!-- Autocomplete

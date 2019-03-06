@@ -1,0 +1,44 @@
+
+  <!DOCTYPE html>
+    <head>
+      <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+    Plotly chart will be drawn inside this div
+    <div id="plotly-div"></div>
+      <script>
+      // JAVASCRIPT CODE GOES HERE
+
+      var trace = {
+        x: {{ data["date"] | safe }},
+        close: {{ data["close"] }},
+        high: {{ data["high"] }},
+        low: {{ data["low"] }},
+        open: {{ data["open"] }},
+
+        // cutomise colors
+        increasing: {line: {color: 'black'}},
+        decreasing: {line: {color: 'red'}},
+
+        type: 'candlestick',
+        xaxis: 'x',
+        yaxis: 'y'
+      };
+
+      var data = [trace];
+
+      var layout = {
+        dragmode: 'zoom',
+        showlegend: false,
+        xaxis: {
+          rangeslider: {
+      		 visible: false
+      	 }
+        }
+      };
+
+      Plotly.plot('plotly-div', data, layout);
+
+      </script>
+    </body>
+ </html>
