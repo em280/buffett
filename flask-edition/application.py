@@ -110,8 +110,9 @@ def index():
 
     company_info = get_company_info(symbol)
 
+    quotes = search_autocomplete()
 
-    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata)
+    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -521,7 +522,7 @@ def test():
     data["close"] = lclose
 
     # return render_template("test.html", data=data)
-    return render_template("test2.html", data=data)
+    return render_template("test2.html", graphdata=data)
 
 @app.route("/initdb")
 def main():
@@ -541,7 +542,8 @@ def main():
     # return "db initialized"
     # testing
     temp = User.query.all()
-    return render_template("test.html", temp=temp, msg="db initialized")
+    # return render_template("test.html", temp=temp, msg="db initialized")
+    return "db initialized"
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -601,23 +603,6 @@ def leaderboard():
     @author: SH
     '''
     pass
-
-@app.context_processor
-def graph_processor():
-    def index_data():
-        user = User.query.first()
-        amt = usd(user.cash)
-        symbol = "MSFT"
-        current_price = usd(get_current_share_quote(symbol)['latestPrice'])
-
-        data = {}
-        data["symbol"] = symbol.upper()
-        data["amount"] = amt
-        data["current_price"] = current_price
-        data["stock_info"] = stock_info
-
-        return data
-    return {'data': index_data}
 
 @app.route("/home")
 def home():

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
+<html>
 <!-- author: SA -->
 <!-- layout.html uses Jinja2 template engine -->
-<html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -78,7 +78,8 @@
       >
 
       <!-- Begin implementation of the search functionality -->
-      <!-- Search should only allow searching for symbols at the moment -->
+      <!-- @author: EM
+            Implementation of autocomplete with the help of Jinja2 and backend python -->
       <form
         class="form-inline w-100"
         action="{{ url_for('search') }}"
@@ -87,9 +88,13 @@
         {{ searchForm.csrf_token }}
         {{ searchForm.hidden_tag() }}
 
-        {{ searchForm.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="stock-options", placeholder="Search") }}
+        {{ searchForm.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="quotes", placeholder="Search") }}
 
-        <datalist id="stock-options"> </datalist>
+        <datalist id="quotes">
+          {% for item in quotes %}
+                  <option value="{{ item }}">
+          {% endfor %}
+        </datalist>
 
       </form>
       <!-- End of search functionality implementation -->

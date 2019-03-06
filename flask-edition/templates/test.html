@@ -26,8 +26,8 @@
       type: "scatter",
       mode: "lines",
       name: 'AAPL High',
-      x: {{ data["date"] | safe }},
-      y: {{ data["high"] }},
+      x: {{ graphdata["date"] | safe }},
+      y: {{ graphdata["high"] }},
       line: {color: '#17BECF'}
     };
 
