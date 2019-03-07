@@ -28,11 +28,8 @@ import numpy as np
 
 ########
 import datetime as dt
-# import matplotlib.pyplot as plt
-# from matplotlib import style
 import pandas as pd
 import pandas_datareader.data as web
-
 import pandas_datareader as pdr
 from datetime import datetime
 ######
@@ -111,6 +108,7 @@ def index():
 
     company_info = get_company_info(symbol)
 
+    # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes)
@@ -161,6 +159,7 @@ def search():
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
 
+    # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
     return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
