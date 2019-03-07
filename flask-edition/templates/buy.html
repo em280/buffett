@@ -10,16 +10,29 @@ Buy Stocks - Buffet Stock Market Game
           action="{{ url_for('buy') }}"
           method="POST"
         >
-        {{ buyForm.csrf_token }}
-        {{ buyForm.hidden_tag() }}
+          <div class="form-group">
 
-        {{ buyForm.symbol(placeholder="Symbol") }}
-        {{ buyForm.shares(placeholder="Shares") }}
-        {{ buyForm.submit(class="btn-primary") }}
+              {{ buyForm.csrf_token }}
+              {{ buyForm.hidden_tag() }}
+      
+              {{ buyForm.symbol(placeholder="Symbol") }}        
+              {{ buyForm.shares(placeholder="Shares") }}
+              {{ buyForm.submit(class="btn-primary") }}
+
+          </div>
         </form>
-        {% if error %}
-    <p class=error><strong>Error:</strong> {{ error }}
-  {% endif %}
+
+        {% if buyForm.shares.errors %}
+          {% for error in buyForm.shares.errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+          {% endfor %}
+        {% endif %}
+
 </main>
 
 {% endblock %}

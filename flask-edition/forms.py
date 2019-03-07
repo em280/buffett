@@ -21,7 +21,7 @@ class LoginForm(Form):
 
 class BuyForm(Form):
     symbol = StringField("Symbol", validators=[DataRequired("Please enter a valid symbol.")])
-    shares = IntegerField("Shares", validators=[DataRequired("Please provide the number of shares to buy.")])
+    shares = IntegerField("Shares", validators=[DataRequired("Please provide a number of shares to buy.")])
     submit = SubmitField("Buy")
 
 class SellForm(Form):
