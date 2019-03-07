@@ -16,21 +16,17 @@
       </tr>
     </thead>
     <tbody>
-      {% for p in portfolio %}
-
-
+      {% for stock in portfolio %}
         <tr>
-          {% set rowloop = loop %}
-            {% for stock in stocks %}
-          <td>{{ stock.symbol }}</td>
-          <td>{{ p["companyName"] }}</td>
-          <td>{{ stock.quantity }}</td>
-          <td>{{ info[stock.symbol + "price"] }}</td>
-          <td>{{ info[stock.symbol + "total"] }}</td>
-          {% endfor %}
-        </tr>
 
-      {% endfor %}
+            <td>{{ stock["symbol"] }}</td>
+            <td>{{ stock["companyName"] }}</td>
+            <td>{{ stock["shares"] }}</td>
+            <td>{{ info[stock["symbol"] + "price"] }}</td>
+            <td>{{ info[stock["symbol"] + "total"] }}</td>
+
+        </tr>
+        {% endfor %}
       <tr>
         <td>AMOUNT</td>
         <td></td>

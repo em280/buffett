@@ -198,7 +198,7 @@ def dashboard():
             info["g_total"] = usd(grand_total)
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
-    return render_template("portfolio.html", stocks=stocks, info=info, portfolio=portfolio, searchForm=searchForm)
+    return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -261,10 +261,17 @@ def buy():
         # Putting together a summary of the users current transaction
         data = {}
         data["symbol"] = symbol.upper()
-        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
+
+        company_in = get_company_info(symbol)
+
+        data['exchange'] = company_in['exchange']
+        data['industry'] = company_in['industry']
+        data['description'] = company_in['description']
+        data['sector'] = company_in['sector']
+        data['companyName'] = company_in['companyName']
 
         # Prepare some information to show the user thier portfolio
         stocks = Portfolio.query.all()
@@ -274,9 +281,9 @@ def buy():
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
-        flash(f"You have bought some shares worth {usd(current_price)}!")
+        flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!")
         return render_template('index.html',
-                        data=data, searchForm=searchForm, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.", graphdata=graphdata)
+                        data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
