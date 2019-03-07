@@ -148,8 +148,7 @@ def search():
     data['exchange'] = company_in['exchange']
     data['industry'] = company_in['industry']
     data['description'] = company_in['description']
-    data['sector'] = company_in['sector']
-    data['companyName'] = company_in['companyName']
+    data['news'] = 'general'
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()

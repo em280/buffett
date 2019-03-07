@@ -91,3 +91,8 @@ def to_csv(data):
 		counter = counter + 1
 		csvw.writerow([rows['date'], rows['close'], rows['open'], rows['high'], rows['low']])
 		# print(rows['close'])
+
+def get_company_name(symbol):
+	data = get_company_info(symbol)
+	return data['companyName']
+	
