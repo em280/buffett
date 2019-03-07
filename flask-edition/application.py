@@ -600,7 +600,7 @@ def signup():
 
     if signupForm.validate_on_submit():
         # Adding a new user to the database
-        new_user = User(username=form.username.data, password=form.password.data)
+        new_user = User(username=signupForm.username.data, password=signupForm.password.data)
         db.session.add(new_user)
         db.session.commit()
 
@@ -635,7 +635,7 @@ def login():
             redirect(url_for("login"))
 
     # rendering login page
-    return render_template("login.html", form=loginForm, error=error)
+    return render_template("login.html", form=loginForm)
 
 @app.route("/logout")
 def logout():

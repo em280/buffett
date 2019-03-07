@@ -5,7 +5,7 @@ Join Buffet - Buffet Stock Market Game
 {% block body %}
 <!-- author: SA -->
 
-<nav class="navbar navbar-dark fixed-top bg-primary flex-md-nowrap p-0 shadow">
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
       >Buffett</a>
 
@@ -13,7 +13,7 @@ Join Buffet - Buffet Stock Market Game
         <ul class="navbar-nav navbar-dark px-3">
                 <li class="nav-item text-nowrap">
                     {% block a %}
-                  <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
+                  <a class="nav-link" href="{{ url_for('signup') }}" style="color:#ffd700;">Sign up</a>
                     {% endblock %}
                 </li>
         </ul>
@@ -31,61 +31,60 @@ Join Buffet - Buffet Stock Market Game
         </div>
     </div>
 
-        <!-- Login implementation-->
-        <form action="/login" method="POST">
-            {{
-              form.csrf_token
-            }}
-            {{ form.hidden_tag() }}
-            <div class="row top top-placement">
-                <div class="w-30 mx-auto ">
+      <!-- Login implementation-->
+      <!-- @author: EM -->
+      <form action="/login" method="POST">
+          {{
+            form.csrf_token
+          }}
+          {{ form.hidden_tag() }}
 
-                    <div class="form-group">
+                  <div class="form-group">
 
-                            {% if form.username.errors %}
-                                {% for error in form.username.errors %}
-                                    <p class="error-message">{{ error }}</p>
-                                {% endfor %}
-                            {% endif %}
+                          {% if form.username.errors %}
+                              {% for error in form.username.errors %}
+                                  <p class="error-message">{{ error }}</p>
+                              {% endfor %}
+                          {% endif %}
 
-                            {{ form.username(placeholder="Username") }}
+                          {{ form.username(placeholder="Username", class="form-control") }}
+                  </div>
+                  
+                  <div class="form-group">
+
+                          {% if form.password.errors %}
+                              {% for error in form.password.errors %}
+                                  <p class="error-message">{{ error }}</p>
+                              {% endfor %}
+                          {% endif %}
+
+                          {{ form.password(placeholder="Password", class="form-control") }}
+                  </div>
+
+                  {{ form.submit(class="btn btn-primary") }}
+
+                  {% if error %}
+                    <p class=error><strong>Error:</strong> {{ error }}
+                  {% endif %}
+
+                    <div>
+                      {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                          <ul class=flashes>
+                          {% for message in messages %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                              {{ message }}
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                          {% endfor %}
+                          </ul>
+                        {% endif %}
+                      {% endwith %}
                     </div>
-                    <div class="form-group">
+      </form>
 
-                            {% if form.password.errors %}
-                                {% for error in form.password.errors %}
-                                    <p class="error-message">{{ error }}</p>
-                                {% endfor %}
-                            {% endif %}
-
-                            {{ form.password(placeholder="Password") }}
-                    </div>
-                            {{ form.submit(class="btn-primary") }}
-
-                            {% if error %}
-                        <p class=error><strong>Error:</strong> {{ error }}
-                      {% endif %}
-                </div>
-
-            </div>
-        </form>
-
-        <div>
-          {% with messages = get_flashed_messages() %}
-            {% if messages %}
-              <ul class=flashes>
-              {% for message in messages %}
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                  {{ message }}
-                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          {% endwith %}
-        </div>
 </main>
 
 {% endblock %}
