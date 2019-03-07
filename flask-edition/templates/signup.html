@@ -45,7 +45,7 @@ Join Buffet - Buffet Stock Market Game
                         {{ form.username(placeholder="Username", class="form-control") }}
                     </div>
 
-                    <div>
+                    <div class="form-group">
 
                         {% if form.password.errors %}
                             {% for error in form.password.errors %}
@@ -58,31 +58,31 @@ Join Buffet - Buffet Stock Market Game
                         {{ form.password(placeholder="Password", class="form-control") }}
                     </div>
 
-                    <div class="form-control">
+                    <div class="form-group">
 
                         {{ form.confirm(placeholder="Retype Password", class="form-control") }}
                     </div>
 
-                      {{ form.submit(class="btn btn-primary") }}
+                    {{ form.submit(class="btn btn-primary") }}
 
                     {% if error %}
-                      <p class=error><strong>Error:</strong> {{ error }}
-                    {% endif %}
-
-              <div>
-                {% with messages = get_flashed_messages() %}
-                  {% if messages %}
-                    <div class=flashes>
-                    {% for message in messages %}
-                      <div class="alert alert-warning alert-dismissible" role="alert">
-                        {{ message }}
-                      </div>
-                    {% endfor %}
-                    </div>
-                  {% endif %}
-                {% endwith %}
-              </div>
+                <p class=error><strong>Error:</strong> {{ error }}
+              {% endif %}
     </form>
+
+    <div>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
 
 </main>
 
