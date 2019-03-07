@@ -57,7 +57,7 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-# @login_required # This line can be commented out when you are testing out the application.
+@login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -595,19 +595,20 @@ def signup():
     """
     @author: EM
     """
-    form = SignupForm()
+    signupForm = SignupForm()
+    error = None
 
-    if form.validate_on_submit():
+    if signupForm.validate_on_submit():
         # Adding a new user to the database
-        new_user = User(username=form.user_name.data, password=form.password.data)
+        new_user = User(username=form.username.data, password=form.password.data)
         db.session.add(new_user)
         db.session.commit()
 
-        session["user_name"] = new_user.username
-        flash('You were successfully logged in')
-        return redirect(url_for("index"))
+        session["username"] = new_user.username
+        flash('You were successfully registered!')
+        return redirect(url_for("dashboard"))
     # Else the form was submitted via get
-    return render_template("signup.html", form=form)
+    return render_template("signup.html", form=signupForm, error=error)
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -615,23 +616,26 @@ def login():
     @author: EM
     @author: SA
     """
-    form = LoginForm()
+    loginForm = LoginForm()
+    error = None
 
-    if form.validate_on_submit():
-        username = form.user_name.data
-        password = form.password.data
+    if loginForm.validate_on_submit():
+        username = loginForm.username.data
+        password = loginForm.password.data
 
         user = User.query.filter_by(username=username).first()
         if user is not None:
         # if user is not None and user.check_password(password):
-            session["user_name"] = form.user_name.data
+            session["username"] = loginForm.username.data
             flash('You were successfully logged in')
             return redirect(url_for("index"))
         else:
+            # error = "Invalid credentials"
+            flash("You have entered an incorrect username or password.")
             redirect(url_for("login"))
 
     # rendering login page
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=loginForm, error=error)
 
 @app.route("/logout")
 def logout():

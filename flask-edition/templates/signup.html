@@ -36,20 +36,22 @@ Join Buffet - Buffet Stock Market Game
 
                     <div class="form-group">
 
-                        {% if form.user_name.errors %}
-                            {% for error in form.user_name.errors %}
+                        {% if form.username.errors %}
+                            {% for error in form.username.errors %}
                                 <p class="error-message">{{ error }}</p>
                             {% endfor %}
                         {% endif %}
 
-                        {{ form.user_name(placeholder="Username") }}
+                        {{ form.username(placeholder="Username") }}
                     </div>
 
                     <div class="form-group">
 
                         {% if form.password.errors %}
                             {% for error in form.password.errors %}
-                                <p class="error-message">{{ error }}</p>
+                                <p class="alert alert-warning alert-dismissible" role="alert">{{ error }}<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button></p>
                             {% endfor %}
                         {% endif %}
 
@@ -69,6 +71,20 @@ Join Buffet - Buffet Stock Market Game
             </div>
         </div>
     </form>
+
+    <div>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+          {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+    </div>
 
 </main>
 
