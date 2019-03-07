@@ -42,8 +42,8 @@ def plotter(symbol):
     start = dt.datetime(2016, 1, 1)
 
     # Currently the data manipulated goes back 3 months from the current date
-    # n_data = 60 # for 60 days / or 3 months
-    n_data = 30 # for 30 days / or 1 month
+    n_data = 60 # for 60 days / or 3 months
+    # n_data = 30 # for 30 days / or 1 month
 
     df = web.DataReader(symbol, "iex", start)
     df.to_csv("iex.csv")

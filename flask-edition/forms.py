@@ -21,12 +21,12 @@ class LoginForm(FlaskForm):
 
 class BuyForm(FlaskForm):
     symbol = StringField("Symbol", validators=[DataRequired("Please enter a valid symbol.")])
-    shares = IntegerField("Shares", validators=[DataRequired("Please provide a number of shares to buy.")])
+    shares = IntegerField("Shares", validators=[DataRequired("Please provide a number greater than zero of shares to buy.")])
     submit = SubmitField("Buy")
 
 class SellForm(FlaskForm):
     symbol = StringField("Symbol", validators=[DataRequired("Please enter a valid symbol.")])
-    shares = IntegerField("Shares", validators=[DataRequired("Please provide the number of shares to buy.")])
+    shares = IntegerField("Shares", validators=[DataRequired("Please provide a number greater than zero of shares to sell.")])
     submit = SubmitField("Sell")
 
 class SearchForm(FlaskForm):

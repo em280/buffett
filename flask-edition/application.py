@@ -214,6 +214,9 @@ def buy():
             return redirect(url_for("buy"))
 
         noOfShares = int(buyForm.shares.data)
+        if noOfShares < 1:
+            flash("Please enter a number greater than zero to buy some stocks.")
+            return redirect(url_for("buy"))
 
         # contact API
         company_info = get_company_info(symbol)
