@@ -5,7 +5,7 @@ This is a helper file for the application,
 it consists of functional utilities needed by the application.
 """
 
-from flask import redirect
+from flask import redirect, url_for
 from functools import wraps
 
 import datetime as dt
@@ -22,13 +22,14 @@ def usd(value):
     return f"${value:,.2f}"
 
 def login_require(f):
+    """
+    @author: EM
+
+    Login is required for any route that is visited by the user.
+    """
     @wraps(f)
     def decorated_function(*args,**kwargs):
-        """
-        @author: SA
-        Login is required to progress to next page.
-        """
-        return redirect("/login")
+        return redirect(url_for("login"))
     return decorated_function
 
 def plotter(symbol):
@@ -102,6 +103,8 @@ def quote_validate(symbol):
     """
     @author: EM
     Look up and confirm quote for symbol.
+
+    This function is undergoing serious changes and should not be relied on at the moment.
     """
 
     # Reject symbol if it starts with caret
