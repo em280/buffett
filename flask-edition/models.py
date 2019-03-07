@@ -1,5 +1,6 @@
 """
 @author: EM
+A simple database implementation for the application.
 """
 
 import os
@@ -48,6 +49,7 @@ class User(db.Model):
 class Portfolio(db.Model):
     """
     A representation of the portfolio table in the database.
+    This is to keep record of what the user has bought and sold.
     """
     __tablename__ = "portfolio"
     id = db.Column(db.Integer, primary_key=True)
