@@ -16,15 +16,18 @@
             </tr>
           </thead>
           <tbody>
+            {% for item in hist %}
+            {% set rowloop=loop %}
             {% for stock in history %}
             <tr>
               <td>{{ stock.symbol }}</td>
-              <td>{{ info[stock.symbol] }}</td>
+              <td>{{ item["companyName"] }}</td>
               <td>{{ stock.quantity }}</td>
               <td>{{ info[stock.symbol + "price"] }}</td>
               <!-- The time below has been formatted to exclude the microsecond portion -->
               <td>{{ stock.transaction_date.strftime("%Y-%I-%d %I:%M:%S") }}</td>
             </tr>
+            {% endfor %}
             {% endfor %}
           </tbody>
         </table>

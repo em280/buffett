@@ -19,7 +19,7 @@ endblock %} {% block body %}
 
       {% block buy %} {% endblock %}
 
-      
+
     </main>
   </div>
 </div>
@@ -78,7 +78,7 @@ endblock %} {% block body %}
   var data = [trace];
 
   var layout = {
-    title: "{{ data["symbol"] }}",
+    title: "{{ data["companyName"] }} ({{ data["symbol"] }})",
     dragmode: 'zoom',
     showlegend: false,
     xaxis: {

@@ -86,7 +86,6 @@ def index():
             grand_total = user.cash + total_share_price
             info["grand_total"] = usd(grand_total)
             info["total_share_price"] = usd(total_share_price)
-            # info["company_name"] = get_company_info(stock.symbol)["companyName"]
             stock_info.append(info)
             index = index + 1
 
@@ -104,8 +103,7 @@ def index():
     data['industry'] = company_in['industry']
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
-
-    company_info = get_company_info(symbol)
+    data['companyName'] = company_in['companyName']
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
@@ -151,6 +149,7 @@ def search():
     data['industry'] = company_in['industry']
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
+    data['companyName'] = company_in['companyName']
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
@@ -167,8 +166,17 @@ def dashboard():
 
     searchForm = SearchForm()
 
+    data = {}
     info = {}
+    portfolio = []
     stocks = Portfolio.query.all()
+
+    for stock in stocks:
+        temp = {}
+        temp["symbol"] = stock.symbol
+        temp["shares"] = stock.quantity
+        temp["companyName"] = get_company_info(stock.symbol)["companyName"]
+        portfolio.append(temp)
 
     user = User.query.first()
     amt = usd(user.cash)
@@ -177,11 +185,9 @@ def dashboard():
 
     for item in stocks:
         company_info = get_company_info(item.symbol)
-        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
         info[item.symbol+"total"] = current_price * item.quantity
 
@@ -192,7 +198,7 @@ def dashboard():
             info["g_total"] = usd(grand_total)
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
-    return render_template("portfolio.html", stocks=stocks, info=info, searchForm=searchForm)
+    return render_template("portfolio.html", stocks=stocks, info=info, portfolio=portfolio, searchForm=searchForm)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -219,7 +225,6 @@ def buy():
 
         # contact API
         company_info = get_company_info(symbol)
-        # company_name = company_info["companyName"]
         # confirm the symbol exists in the database
         if type(get_current_share_quote(symbol)) is not dict:
             flash(get_current_share_quote(symbol))
@@ -261,6 +266,7 @@ def buy():
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
 
+        # Prepare some information to show the user thier portfolio
         stocks = Portfolio.query.all()
         ptf = Portfolio.query.filter_by(userid=int(1)).all()
         if ptf is not None:
@@ -268,7 +274,7 @@ def buy():
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
-        flash(f"You have bought some shares worth {usd(current_price)}.")
+        flash(f"You have bought some shares worth {usd(current_price)}!")
         return render_template('index.html',
                         data=data, searchForm=searchForm, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.", graphdata=graphdata)
 
@@ -339,7 +345,6 @@ def sell():
 
         data = {}
         data["symbol"] = symbol.upper()
-        # data["company_name"] = company_name
         data["noOfShares"] = noOfShares
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
@@ -377,10 +382,19 @@ def history():
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
-        # info[item.symbol] = company_name
         info[item.symbol+"price"] = usd(current_price)
 
-    return render_template("history.html", history=history, searchForm=searchForm, info=info, message="This is a record of all your transactions.")
+    hist = []
+    stocks = History.query.all()
+
+    for stock in stocks:
+        temp = {}
+        temp["symbol"] = stock.symbol
+        temp["shares"] = stock.quantity
+        temp["companyName"] = get_company_info(stock.symbol)["companyName"]
+        hist.append(temp)
+
+    return render_template("history.html", history=history, searchForm=searchForm, info=info, hist=hist)
 
 @app.route("/summary")
 def summary():
@@ -403,7 +417,16 @@ def summary():
             # "symbol": current_stock["symbol"]
         }
 
-    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=stocks, message="This is a summary of your profile.")
+    company_in = get_company_info(symbol)
+    data["companyName"] = get_company_info(symbol)["companyName"]
+    data["symbol"] = symbol.upper()
+    data['exchange'] = company_in['exchange']
+    data['industry'] = company_in['industry']
+    data['description'] = company_in['description']
+    data['sector'] = company_in['sector']
+    data["current_price"] = usd(get_current_share_quote(stock.symbol)["latestPrice"])
+
+    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
 
 @app.route("/register")
 def register():
