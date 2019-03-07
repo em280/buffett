@@ -39,7 +39,6 @@ class User(db.Model):
         usr = User.query.get(int(id))
         if not usr:
             return False
-        # usr = User.query.get(int(id))
         db.session.delete(usr)
         db.session.commit()
 
@@ -52,20 +51,17 @@ class Portfolio(db.Model):
     """
     __tablename__ = "portfolio"
     id = db.Column(db.Integer, primary_key=True)
-    usr_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    userid = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    # transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
-    
 
-    def add_portfolio_stock(self, usr_id, symbol, quantity):
+
+    def add_portfolio_stock(self, userid, symbol, quantity):
         """ Add a user's stock to their portfolio. """
-        ptf = Portfolio(usr_id=int(usr_id), symbol=symbol, quantity=int(quantity))
+        ptf = Portfolio(userid=int(userid), symbol=symbol, quantity=int(quantity))
         db.session.add(ptf)
         db.session.commit()
-
-    # maybe update the portfolio as well
 
     def get_portfolio_stocks(self, id):
         """
@@ -74,17 +70,7 @@ class Portfolio(db.Model):
         usr = User.query.get(int(id))
         if not usr:
             return False
-        return Portfolio.query.filter_by(usr_id=int(id)).all()
-
-    # def remove_portfolio_stock(self, symbol):
-    #     """
-    #     Remove a user's stock from the portfolio table.
-    #     """
-    #     ptf = Portfolio.query.get(symbol)
-    #     if not ptf:
-    #         return False
-    #     db.session.delete(ptf)
-    #     db.session.commit()
+        return Portfolio.query.filter_by(userid=int(id)).all()
 
     def __repr__(self):
         return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}')"
@@ -92,18 +78,15 @@ class Portfolio(db.Model):
 class History(db.Model):
     __tablename__ = "history"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    userid = db.Column(db.Integer, db.ForeignKey("user.id"))
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
-    # transaction_type = db.Column(db.Integer, unique=False)
-    # transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
 
-    def add_hist(self, usrid, symbol, quantity):
-        hist = History(user_id=int(usrid), symbol=symbol, quantity=int(quantity))
+    def add_hist(self, userid, symbol, quantity):
+        hist = History(userid=int(userid), symbol=symbol, quantity=int(quantity))
         db.session.add(hist)
         db.session.commit()
 
     def __repr__(self):
-        # return f"<User {self.id}, '{self.username}', {self.cash}>"
-        return f"<History {self.id}, {self.user_id}, '{self.symbol}', {self.quantity}, '{self.transaction_date}' >"
+        return f"<History {self.id}, {self.userid}, '{self.symbol}', {self.quantity}, '{self.transaction_date}' >"

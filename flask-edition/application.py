@@ -23,7 +23,6 @@ import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
-# import chartjs
 import numpy as np
 
 ########
@@ -79,7 +78,7 @@ def index():
     stock_info = []
     info = {}
 
-    ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
+    ptf = Portfolio.query.filter_by(userid=int(1)).all()
     if ptf is not None:
         index = 0
         for stock in ptf:
@@ -200,7 +199,7 @@ def dashboard():
 def buy():
     """
     @author: EM
-    Functionality for the user buy function.
+    Functionality for the user to buy some stocks.
     """
     buyForm = BuyForm()
     searchForm = SearchForm()
@@ -221,6 +220,7 @@ def buy():
         # contact API
         company_info = get_company_info(symbol)
         # company_name = company_info["companyName"]
+        # confirm the symbol exists in the database
         if type(get_current_share_quote(symbol)) is not dict:
             flash(get_current_share_quote(symbol))
             return redirect(url_for("buy"))
@@ -230,25 +230,30 @@ def buy():
         # obtaining graph information
         graphdata = plotter(symbol)
 
-        # some arithmetic
-        total_cost = (float(noOfShares) * current_price)
-
         # Query database
+        # Based on the id of the currently logged in user , obtain this id from the session variable
         userid = 1
         user = User.query.get(userid)
-        usercash = user.cash
 
-        if usercash > total_cost:
+        total_cost = (float(noOfShares) * current_price)
+        # Check if the user can afford the stocks they want to buy
+        if total_cost > user.cash:
+            # send the user to thier dashboard
+            flash("Check that you have enough money to buy stocks.")
+            return redirect(url_for("dashboard"))
+        else:
             # update cash for user in the database
-            user.cash = usercash - total_cost
+            user.cash -= total_cost
             # update portfolio table
-            Portfolio().add_portfolio_stock(userid, symbol.upper(), noOfShares)
-
+            portf = Portfolio(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            db.session.add(portf)
             # update history table
-            History().add_hist(userid, symbol.upper(), noOfShares)
-
+            hist = History(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            db.session.add(hist)
+            # commit the changes made to the database
             db.session.commit()
 
+        # Putting together a summary of the users current transaction
         data = {}
         data["symbol"] = symbol.upper()
         # data["company_name"] = company_name
@@ -257,14 +262,13 @@ def buy():
         data["amount"] = usd(user.cash)
 
         stocks = Portfolio.query.all()
-        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
+        ptf = Portfolio.query.filter_by(userid=int(1)).all()
         if ptf is not None:
             for stock in ptf:
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
         flash(f"You have bought some shares worth {usd(current_price)}.")
-
         return render_template('index.html',
                         data=data, searchForm=searchForm, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.", graphdata=graphdata)
 
@@ -301,13 +305,16 @@ def sell():
         # obtaining graph information
         graphdata = plotter(symbol)
 
-        # some arithmetic
-        total_cost = (float(noOfShares) * current_price)
-
         # Query database
+        # Based on the id of the currently logged in user , obtain this id from the session variable
         userid = 1
         user = User.query.get(userid)
-        # Not necessary to check for users balance
+
+        total_cost = (float(noOfShares) * current_price)
+        # Check if the user can afford the stocks they want to buy
+        if total_cost > user.cash:
+            # send the user to thier dashboard
+            return redirect(url_for("dashboard"))
         # update cash for user in the database
         user.cash = user.cash + total_cost
 
@@ -338,7 +345,7 @@ def sell():
         data["amount"] = usd(user.cash)
 
         stocks = Portfolio.query.all()
-        ptf = Portfolio.query.filter_by(usr_id=int(1)).all()
+        ptf = Portfolio.query.filter_by(userid=int(1)).all()
         if ptf is not None:
             for stock in ptf:
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
