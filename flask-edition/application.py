@@ -8,6 +8,7 @@ from passlib.hash import sha256_crypt
 
 import csv
 import os
+import re
 
 # importing tools for sessions
 from flask_session import Session
@@ -127,6 +128,8 @@ def search():
     symbol = None
     if searchForm.validate_on_submit():
         symbol = searchForm.search.data.upper()
+        symbol = str(re.split(" ", symbol, 1)[0])
+        print(symbol, "printer")
 
     users = User.query.all()
     user = User.query.first()
@@ -158,7 +161,9 @@ def search():
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
 
-    return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata)
+    quotes = search_autocomplete()
+
+    return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
 
 
 @app.route("/dashboard")
