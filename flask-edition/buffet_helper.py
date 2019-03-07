@@ -97,3 +97,29 @@ def search_autocomplete():
     for q in range(len(symbols)):
         values.append(data["symbols"][q].ljust(30 - len(data["symbols"][q])) + data["names"][q])
     return values
+
+def quote_validate(symbol):
+    """
+    @author: EM
+    Look up and confirm quote for symbol.
+    """
+
+    # Reject symbol if it starts with caret
+    if symbol.startswith("^"):
+        return None
+
+    # Reject symbol if it contains comma
+    if "," in symbol:
+        return None
+
+    # Query IEX for quote
+    symbols = web.get_iex_symbols().symbol.values.tolist()
+
+    # Ensure stock exists
+    try:
+        symb = [symbol for q in symbols if symbol == q]
+    except:
+        return None
+
+    # Return stock's (uppercased) symbol (as a str)
+    return str(symb).upper()

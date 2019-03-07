@@ -212,19 +212,25 @@ def buy():
     searchForm = SearchForm()
 
     if buyForm.validate_on_submit():
-
-
-    # if request.method == "POST":
         # Get form information
-        # symbol = request.form["symbol"]
         symbol = buyForm.symbol.data.upper()
+        is_symbol = quote_validate(symbol)
+        if is_symbol is None:
+            flash("Please enter a valid symbol to buy some stocks.")
+            return redirect(url_for("buy"))
+
+        print(int(buyForm.shares.data), "printer")
         noOfShares = int(buyForm.shares.data)
-        # noOfShares = int(request.form["shares"])
+        print(noOfShares, "printing")
 
         # contact API
         company_info = get_company_info(symbol)
         # company_name = company_info["companyName"]
-        current_price = get_current_share_quote(symbol)['latestPrice']
+        if type(get_current_share_quote(symbol)) is not dict:
+            flash(get_current_share_quote(symbol))
+            return redirect(url_for("buy"))
+        else:
+            current_price = get_current_share_quote(symbol)['latestPrice']
 
         # obtaining graph information
         graphdata = plotter(symbol)
