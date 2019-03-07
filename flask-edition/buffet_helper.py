@@ -21,7 +21,7 @@ def usd(value):
     """
     return f"${value:,.2f}"
 
-def login_require(f):
+def login_required(f):
     """
     @author: EM
 

@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, send_file
+from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file
 
 from stocky import * # Import all the functions
 from models import * # Import all the models
@@ -57,7 +57,7 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-#@loginRequire
+# @login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -112,6 +112,7 @@ def index():
 
 
 @app.route("/search", methods=["GET", "POST"])
+# @login_required
 def search():
     """
     @author: SH
@@ -157,6 +158,7 @@ def search():
 
 
 @app.route("/dashboard")
+# @login_required
 def dashboard():
     """
     @author: EM
@@ -201,6 +203,7 @@ def dashboard():
 
 
 @app.route("/buy", methods=["GET", "POST"])
+# @login_required
 def buy():
     """
     @author: EM
@@ -290,6 +293,7 @@ def buy():
 
 
 @app.route("/sell", methods=["GET", "POST"])
+# @login_required
 def sell():
     """
     @author: EM
@@ -368,6 +372,7 @@ def sell():
     return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
 
 @app.route("/history")
+# @login_required
 def history():
     """
     @author: EM
@@ -403,6 +408,7 @@ def history():
     return render_template("history.html", history=history, searchForm=searchForm, info=info, hist=hist)
 
 @app.route("/summary")
+# @login_required
 def summary():
     """
     Functionality for the summary function.
@@ -636,6 +642,7 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")
+@login_required
 def leaderboard():
     '''
     @author: SH
