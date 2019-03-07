@@ -226,8 +226,8 @@ def buy():
         # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
-        # graph stuff
-        temp = 'tmp.csv'
+        # obtaining graph information
+        graphdata = plotter(symbol)
 
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
@@ -265,14 +265,11 @@ def buy():
         flash(f"You have bought some shares worth {usd(current_price)}.")
 
         return render_template('index.html',
-                        data=data, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.")
+                        data=data, searchForm=searchForm, stocks=stocks, message=f"You have bought some shares worth {usd(current_price)}.", graphdata=graphdata)
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
     return render_template("buy.html", buyForm=buyForm, searchForm=searchForm)
-
-    # Just show the index page for now.
-    # return redirect(url_for("index"))
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -300,8 +297,8 @@ def sell():
         # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
-        # graph stuff
-        temp = 'tmp.csv'
+        # obtaining graph information
+        graphdata = plotter(symbol)
 
         # some arithmetic
         total_cost = (float(noOfShares) * current_price)
@@ -347,7 +344,7 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, sellForm=sellForm, searchForm=searchForm, temp=temp, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.")
+                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.", graphdata=graphdata)
 
     return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
 
