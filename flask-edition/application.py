@@ -120,14 +120,13 @@ def search():
     @author: SH
     Functionality for the search function.
     """
-
+    # Initiliase the form and relevant local variables
     searchForm = SearchForm()
-
     symbol = None
+
     if searchForm.validate_on_submit():
         symbol = searchForm.search.data.upper()
         symbol = str(re.split(" ", symbol, 1)[0])
-        print(symbol, "printer")
 
     users = User.query.all()
     user = User.query.first()
@@ -135,11 +134,6 @@ def search():
 
     if symbol is None:
         flash('Please make sure you have provided the right symbol')
-        return redirect(url_for("index"))
-
-    # Edit this accordingly for symbols longer than 4 characters
-    if len(symbol) > 4:
-        flash('You were successfully logged in')
         return redirect(url_for("index"))
 
     # obtaining graph information
@@ -219,9 +213,7 @@ def buy():
             flash("Please enter a valid symbol to buy some stocks.")
             return redirect(url_for("buy"))
 
-        print(int(buyForm.shares.data), "printer")
         noOfShares = int(buyForm.shares.data)
-        print(noOfShares, "printing")
 
         # contact API
         company_info = get_company_info(symbol)
