@@ -217,12 +217,12 @@ def buy():
         symbol = buyForm.symbol.data.upper()
         is_symbol = quote_validate(symbol)
         if is_symbol is None:
-            flash("Please enter a valid symbol to buy some stocks.")
+            flash("Please enter a valid symbol to buy some stocks.", "warning")
             return redirect(url_for("buy"))
 
         noOfShares = int(buyForm.shares.data)
         if noOfShares < 1:
-            flash("Please enter a number greater than zero to buy some stocks.")
+            flash("Please enter a number greater than zero to buy some stocks.", "warning")
             return redirect(url_for("buy"))
 
         # contact API
@@ -234,6 +234,7 @@ def buy():
         else:
             current_price = get_current_share_quote(symbol)['latestPrice']
 
+        # Now it is certain the user has entered the correct data
         # obtaining graph information
         graphdata = plotter(symbol)
 
