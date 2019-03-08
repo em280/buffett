@@ -18,9 +18,9 @@ def search_headlines(company):
 	date = (dt.datetime.now() - dt.timedelta(days=7)).date()
 	base = "https://newsapi.org/v2/everything"
 	
-	payload = {'apiKey' : 'ca4b323cc91f4bf0a4da4f28f70f26f5', 'q' : company, 'sortBy' : 'popularity', 'from' : date, 'sources' : 'the-washington-post, bloomberg, the-wall-street-journal'} 
+	payload = {'apiKey' : 'ca4b323cc91f4bf0a4da4f28f70f26f5', 'q' : company, 'sortBy' : 'popularity', 'from' : date, 'sources' : 'the-washington-post, the-wall-street-journal'} 
 	
 	response = requests.get(base, params=payload)
 	
 	return response.json()
-	
+
