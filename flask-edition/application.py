@@ -1,31 +1,33 @@
 from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file
 
+# BEGIN : Imports for utility functions implemented by the buffet members
 from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
+from newslib import *
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
+# END : Imports for utility funtions
 from passlib.hash import sha256_crypt
 
 import csv
 import os
 import re
-
-# importing tools for sessions
-from flask_session import Session
-from tempfile import mkdtemp
-# end import for sessions
-
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-
 import json
 import plotly
 import plotly.plotly as py
 import plotly.graph_objs as go
 import numpy as np
 
-from newslib import *
+# importing tools for sessions
+from flask_session import Session
+from tempfile import mkdtemp
+# end import for sessions
+
+# Imports for database functionality
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
+# End of imports for database functionality
 
 ########
 import datetime as dt
@@ -65,7 +67,7 @@ def index():
     @author: SH
     The homepage of the application.
     """
-
+    # Initialise a search form 
     searchForm = SearchForm()
     # Obtain data about current user // this will be implemented properly in sprint 2
     user = User.query.first()
@@ -136,46 +138,47 @@ def search():
         symbol = searchForm.search.data.upper()
         symbol = str(re.split(" ", symbol, 1)[0])
 
-    users = User.query.all()
-    user = User.query.first()
-    amt = usd(user.cash)
+        users = User.query.all()
+        user = User.query.first()
+        amt = usd(user.cash)
 
-    if symbol is None:
-        flash('Please make sure you have provided the right symbol')
-        return redirect(url_for("index"))
+        if symbol is None:
+            flash('Please make sure you have provided the right symbol')
+            return redirect(url_for("index"))
 
-    # obtaining graph information
-    graphdata = plotter(symbol)
+        # obtaining graph information
+        graphdata = plotter(symbol)
 
-    current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
+        current_price = get_current_share_quote(symbol)['latestPrice'] # This line needs to be corrected
 
-    data = {}
-    data["symbol"] = symbol.upper()
-    data["amount"] = amt
-    data["current_price"] = current_price
+        data = {}
+        data["symbol"] = symbol.upper()
+        data["amount"] = amt
+        data["current_price"] = current_price
 
-    company_in = get_company_info(symbol)
+        company_in = get_company_info(symbol)
 
-    data['exchange'] = company_in['exchange']
-    data['industry'] = company_in['industry']
-    data['description'] = company_in['description']
-    c_name = get_company_name(symbol)
+        data['exchange'] = company_in['exchange']
+        data['industry'] = company_in['industry']
+        data['description'] = company_in['description']
+        c_name = get_company_name(symbol)
 
-    news = search_headlines(c_name)
+        news = search_headlines(c_name)
 
-    data['ns1'] = news['articles'][0]['title']
-    data['ns1_url'] = news['articles'][0]['url']
-    data['ns2'] = news['articles'][1]['title']
-    data['ns1_url'] = news['articles'][1]['url']
-    data['ns3'] = news['articles'][2]['title']
-    data['ns3_url'] = news['articles'][2]['url']
+        data['ns1'] = news['articles'][0]['title']
+        data['ns1_url'] = news['articles'][0]['url']
+        data['ns2'] = news['articles'][1]['title']
+        data['ns1_url'] = news['articles'][1]['url']
+        data['ns3'] = news['articles'][2]['title']
+        data['ns3_url'] = news['articles'][2]['url']
 
 
 
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
+        # calling the utility function for autocomplete
+        quotes = search_autocomplete()
 
-    return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
+        return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
+    return redirect(url_for("index"))
 
 
 @app.route("/dashboard")
