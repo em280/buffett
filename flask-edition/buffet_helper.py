@@ -100,7 +100,7 @@ def search_autocomplete():
     values = []
 
     for q in range(len(symbols)):
-        values.append(data["symbols"][q].ljust(30 - len(data["symbols"][q])) + data["names"][q])
+        values.append(data["symbols"][q] + data["names"][q])
     return values
 
 def quote_validate(symbol):
