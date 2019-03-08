@@ -16,11 +16,11 @@ def get_general_headlines():
 	
 def search_headlines(company):
 	date = (dt.datetime.now() - dt.timedelta(days=7)).date()
-	api_url = requests.get("https://newsapi.org/v2/everything?q={}&sortBy=popularity&from={}&apiKey=ca4b323cc91f4bf0a4da4f28f70f26f5".format(company, date))
+	base = "https://newsapi.org/v2/everything"
 	
-	return api_url.json()
+	payload = {'apiKey' : 'ca4b323cc91f4bf0a4da4f28f70f26f5', 'q' : company, 'sortBy' : 'popularity', 'from' : date, 'sources' : 'the-washington-post, bloomberg, the-wall-street-journal'} 
 	
-news = get_general_headlines()
-
-
-print(news['articles'][0]['url'])
+	response = requests.get(base, params=payload)
+	
+	return response.json()
+	
