@@ -3,26 +3,51 @@
 Buffet - Buffet Stock Market Game
 {% endblock %}
 {% block body %}
-<!-- author: SA -->
 
-<!-- links directing user to login or signup -->
-<ul class="nav justify-content-end">
-    <li class="nav-item">
-      <a class="nav-link active" href="{{ url_for('login') }}">Login</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ url_for('signup') }}">Sign up</a>
-    </li>
-</ul>
+  <!-- begin -->
+  <div id="carouselHomeIndicators" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselHomeIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselHomeIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselHomeIndicators" data-slide-to="2"></li>
+    </ol>
 
-  <header class="image">
-    <div class="image-bg">
-      <div class="row text-center">
-        <div class="w-50 mx-auto">
-          <h1>Buffet Stock Market Game</h1>
+    <div class="carousel-inner" role="listbox">
+        <!-- slide 1 -->
+        <div class="carousel-item active" style="background-image: url(../static/img/img00.jpg);">
+          <div class="carousel-caption text-center">
+            <h1>Buffet Stock Market Game</h1>
+            <h3></h3>
+            <a class="btn btn-outline-light btn-lg" href="#">Join Now</a>
+          </div>
         </div>
-      </div>
+    
+        <div class="carousel-item" style="background-image: url(../static/img/img11.jpg);">
+          <div class="carousel-caption text-center">
+              <h1>Buffet Stock Market Game</h1>
+              <h3></h3>
+              <a class="btn btn-outline-light btn-lg" href="#">Join Now</a>
+            </div>
+        </div>
+
+        <div class="carousel-item" style="background-image: url(../static/img/img22.jpg);">
+          <div class="carousel-caption text-center">
+              <h1>Buffet Stock Market Game</h1>
+              <h3></h3>
+              <a class="btn btn-outline-light btn-lg" href="#">Join Now</a>
+            </div>
+        </div>
     </div>
-  </header>
+
+    <a class="carousel-control-prev" href="#carouselHomeIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </a>
+
+    <a class="carousel-control-next" href="#carouselHomeIndicators" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      </a>
+
+  </div>
+  <!-- end -->
 
 {% endblock %}
