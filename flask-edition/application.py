@@ -159,7 +159,18 @@ def search():
     data['exchange'] = company_in['exchange']
     data['industry'] = company_in['industry']
     data['description'] = company_in['description']
-    data['news'] = 'general'
+    c_name = get_company_name(symbol)
+
+    news = search_headlines(c_name)
+
+    data['ns1'] = news['articles'][0]['title']
+    data['ns1_url'] = news['articles'][0]['url']
+    data['ns2'] = news['articles'][1]['title']
+    data['ns1_url'] = news['articles'][1]['url']
+    data['ns3'] = news['articles'][2]['title']
+    data['ns3_url'] = news['articles'][2]['url']
+
+
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
