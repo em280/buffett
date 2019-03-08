@@ -57,7 +57,7 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-@login_required # This line can be commented out when you are testing out the application.
+# @login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -465,116 +465,12 @@ def unregister():
     User().remove_user(2)
     return "A user has been unregistered." # Update this function for when user was not removed
 
-@app.route("/plot")
-def plotter2():
-    """
-    @author: EM
-    This function does not contribute to the application and therefore should be ignored.
-    It it solely for testing purposes.
-    """
-    start = dt.datetime(2018, 1, 1)
-
-    df = web.DataReader("TSLA", "iex", start)
-    df.to_csv("iex.csv")
-    # df = pd.read_csv("graph.csv", parse_dates=True, index_col=0)
-    df = pd.read_csv("iex.csv")
-
-    df = df.set_index(df.date)
-
-    data = {}
-    ldate = []
-    lhigh = []
-    llow = []
-    lopen = []
-    lclose = []
-
-    lt = df.tail(30).index.values
-
-    for i in lt:
-        d = datetime.strptime(i, "%Y-%m-%d")
-        d = datetime.strftime(d, "%Y-%m-%d")
-        ldate.append(d)
-
-    for k in range(30):
-        lhigh.append(df.tail(30)["high"][k])
-        llow.append(df.tail(30)["low"][k])
-        lopen.append(df.tail(30)["open"][k])
-        lclose.append(df.tail(30)["close"][k])
-
-    data["date"] = ldate
-    data["high"] = lhigh
-    data["low"] = llow
-    data["open"] = lopen
-    data["close"] = lclose
-
-    return render_template("test2.html", data=data)
-
-@app.route("/test")
-def test():
-    """
-    @author: EM
-    This function does not contribute to the application and therefore should be ignored.
-    It it solely for testing purposes.
-    """
-    # temp = Portfolio.query.all()
-    temp = User.query.all()
-    # return render_template("test.html", temp=temp)
-
-    start = dt.datetime(2000, 1, 1)
-    end = dt.datetime(2016, 12, 31)
-    df = web.DataReader("TSLA", "yahoo", start, end)
-    df.to_csv("tsla.csv")
-    df = pd.read_csv("tsla.csv", parse_dates=True, index_col=0)
-    df = pd.read_csv("tsla.csv")
-    # # data = df.head(30).to_dict()
-    # print(df.tail(30))
-    # print(df.tail(30)["Date"])
-
-    # df.Date = pd.to_datetime(df.Date, format="%Y-%m-%d")
-    df = df.set_index(df.Date)
-    # print(df.tail(30))
-
-
-    data = {}
-    l = []
-    lhigh = []
-    llow = []
-    lopen = []
-    lclose = []
-    # data["date"] = df.tail(30)["Date"]
-    lt = df.tail(30).index.values
-    for i in lt:
-        # l.append(datetime.strptime(i, "%Y-%m-%d"))
-        d = datetime.strptime(i, "%Y-%m-%d")
-        d = datetime.strftime(d, "%Y-%m-%d")
-        # l.append(d.date())
-        l.append(d)
-        # print(i, "printer", type(i))
-    for k in range(30):
-        # print(l[k].date(), type(l[k].date()))
-        lhigh.append(df.tail(30)["High"][k])
-        llow.append(df.tail(30)["Low"][k])
-        lopen.append(df.tail(30)["Open"][k])
-        lclose.append(df.tail(30)["Close"][k])
-    # data["date"] = df.tail(30).index.values
-    data["date"] = l
-    # data["date"] = pd.to_datetime(df.tail(30).index.values, format="%Y-%m-%d")
-    # data["close"] = df.tail(30)["Close"].values
-    data["high"] = lhigh
-    data["low"] = llow
-    data["open"] = lopen
-    data["close"] = lclose
-
-    # return render_template("test.html", data=data)
-    return render_template("test2.html", graphdata=data)
-
 @app.route("/initdb")
 def main():
     # Create a database with tables
     # This method will only be called at the beginning of the program
     # to initiate the database and never again.
     db.create_all()
-
     # Register some stub users
     f = open("users.csv")
     reader = csv.reader(f)
@@ -583,10 +479,6 @@ def main():
         db.session.add(user)
         print("A stub user has been added.")
     db.session.commit()
-    # return "db initialized"
-    # testing
-    temp = User.query.all()
-    # return render_template("test.html", temp=temp, msg="db initialized")
     return "db initialized"
 
 
@@ -599,13 +491,18 @@ def signup():
     error = None
 
     if signupForm.validate_on_submit():
+        # The user has supplied credentials that meet the expected input
+        # Obtain form data
+        username = signupForm.username.data
+        password = signupForm.password.data
+        passhash = sha256_crypt.encrypt(password)
+
         # Adding a new user to the database
-        new_user = User(username=signupForm.username.data, password=signupForm.password.data)
-        db.session.add(new_user)
+        db.session.add(User(username=username, password=passhash))
         db.session.commit()
 
-        session["username"] = new_user.username
-        flash('You were successfully registered!')
+        session["username"] = username
+        flash(f"Welcome {username}, you were successfully registered!", "success")
         return redirect(url_for("dashboard"))
     # Else the form was submitted via get
     return render_template("signup.html", form=signupForm, error=error)
@@ -623,6 +520,7 @@ def login():
         username = loginForm.username.data
         password = loginForm.password.data
 
+        # This line needs to be changed to account for users with the same name
         user = User.query.filter_by(username=username).first()
         if user is not None:
         # if user is not None and user.check_password(password):
@@ -630,7 +528,6 @@ def login():
             flash('You were successfully logged in')
             return redirect(url_for("index"))
         else:
-            # error = "Invalid credentials"
             flash("You have entered an incorrect username or password.")
             redirect(url_for("login"))
 
@@ -642,7 +539,7 @@ def logout():
     """
     @author: EM
     """
-    session.pop("user_name", None)
+    session.pop("username", None)
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")

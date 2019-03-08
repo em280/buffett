@@ -5,13 +5,14 @@ This is a helper file for forms and form validation.
 """
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import DataRequired, Length, EqualTo
 
 class SignupForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired("Please enter your username.")])
+    username = StringField("Username", validators=[DataRequired("Please enter your username."), Length(min=4, max=25)])
     password = PasswordField("Password", validators=[DataRequired("Please provide a password."), Length(min=8, message="Passwords must be 8 characters or more."), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField("Confirm Password")
+    accept_tac = BooleanField("I accept the Terms and conditions", validators=[DataRequired()])
     submit = SubmitField("Sign up")
 
 class LoginForm(FlaskForm):
