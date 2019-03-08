@@ -1,10 +1,10 @@
-.image .image-bg {
-  width: 100%;
-  height: auto;
-  padding: 100px 0;
-  text-align: center;
-  color: white;
-  /* background: url(../img/intro-bg.jpg) no-repeat bottom center scroll; */
-  background-color: black;
+body {
+  overflow-x: hidden;
   background-size: cover;
+  background-position: center;
+}
+
+/* Slider */
+.carousel-item {
+  height: 100vh;
 }
