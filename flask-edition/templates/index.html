@@ -13,10 +13,15 @@ endblock %} {% block body %}
         </h5>
       </div>
 
+      <h3> General Information: </h3>
       <p> <b> Exchange: </b>{{data["exchange"]}} <br>
       <b> Industry: </b> {{data["industry"]}} <br>
       <b> Description: </b> {{data["description"]}}</p>
 
+      <h3> News: </h3>
+      <a href="{{data['ns1_url']}}"> {{data["ns1"]}} </a><br>
+      <a href="{{data['ns2_url']}}"> {{data["ns2"]}} </a><br>
+      <a href="{{data['ns3_url']}}"> {{data["ns3"]}} </a>
       {% block buy %} {% endblock %}
 
 

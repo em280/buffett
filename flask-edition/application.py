@@ -25,6 +25,8 @@ import plotly.plotly as py
 import plotly.graph_objs as go
 import numpy as np
 
+from newslib import *
+
 ########
 import datetime as dt
 import pandas as pd
@@ -105,6 +107,14 @@ def index():
     data['sector'] = company_in['sector']
     data['companyName'] = company_in['companyName']
 
+    news = get_general_headlines()
+
+    data['ns1'] = news['articles'][0]['title']
+    data['ns1_url'] = news['articles'][0]['url']
+    data['ns2'] = news['articles'][1]['title']
+    data['ns1_url'] = news['articles'][1]['url']
+    data['ns3'] = news['articles'][2]['title']
+    data['ns3_url'] = news['articles'][2]['url']
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 

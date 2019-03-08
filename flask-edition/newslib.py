@@ -20,4 +20,7 @@ def search_headlines(company):
 	
 	return api_url.json()
 	
-print(search_headlines('apple'))
+news = get_general_headlines()
+
+
+print(news['articles'][0]['url'])

@@ -95,4 +95,4 @@ def to_csv(data):
 def get_company_name(symbol):
 	data = get_company_info(symbol)
 	return data['companyName']
-	
+
