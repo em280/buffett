@@ -61,18 +61,26 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-# @login_required # This line can be commented out when you are testing out the application.
+@login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
     The homepage of the application.
     """
-    # Initialise a search form 
+    # Initialise a search form and relevant variables
     searchForm = SearchForm()
-    # Obtain data about current user // this will be implemented properly in sprint 2
-    user = User.query.first()
-    amt = usd(user.cash)
+    current_user = None
     symbol = "MSFT"
+
+    # Obtain data about current user using their session data
+    username = session["username"]
+    # Query the database with the given username
+    current_user = User.query.filter_by(username=username).first()
+    # user = User.query.first()
+    current_user_amount = usd(current_user.cash)
+    symbol = Portfolio.query.first().symbol
+
+
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
 
     # obtaining graph information
@@ -82,12 +90,12 @@ def index():
     stock_info = []
     info = {}
 
-    ptf = Portfolio.query.filter_by(userid=int(1)).all()
+    ptf = Portfolio.query.filter_by(userid=current_user.id).all()
     if ptf is not None:
         index = 0
         for stock in ptf:
             total_share_price = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
-            grand_total = user.cash + total_share_price
+            grand_total = current_user.cash + total_share_price
             info["grand_total"] = usd(grand_total)
             info["total_share_price"] = usd(total_share_price)
             stock_info.append(info)
@@ -95,7 +103,7 @@ def index():
 
 
     data["symbol"] = symbol.upper()
-    data["amount"] = amt
+    data["amount"] = current_user_amount
     data["current_price"] = current_price
     data["stock_info"] = stock_info
 
@@ -268,7 +276,7 @@ def buy():
         # Check if the user can afford the stocks they want to buy
         if total_cost > user.cash:
             # send the user to thier dashboard
-            flash("Check that you have enough money to buy stocks.")
+            flash("Check that you have enough money to buy stocks.", "warning")
             return redirect(url_for("dashboard"))
         else:
             # update cash for user in the database
@@ -305,7 +313,7 @@ def buy():
                 grand_total = user.cash + (stock.quantity * get_current_share_quote(stock.symbol)['latestPrice'])
                 data["grand_total"] = usd(grand_total)
 
-        flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!")
+        flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!", "success")
         return render_template('index.html',
                         data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
@@ -545,9 +553,9 @@ def login():
         # This line needs to be changed to account for users with the same name
         user = User.query.filter_by(username=username).first()
         if user is not None:
-        # if user is not None and user.check_password(password):
+            session["looged_in"] = True
             session["username"] = loginForm.username.data
-            flash('You were successfully logged in')
+            flash(f"{session['username'].upper()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
         else:
             flash("You have entered an incorrect username or password.")
@@ -561,7 +569,13 @@ def logout():
     """
     @author: EM
     """
+    session.clear()
     session.pop("username", None)
+    if "username" in session:
+        flash("You are still somehow logged in")
+    else:
+        session["logged_in"] = False
+        flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")

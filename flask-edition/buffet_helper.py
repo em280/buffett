@@ -5,7 +5,7 @@ This is a helper file for the application,
 it consists of functional utilities needed by the application.
 """
 
-from flask import redirect, url_for, request
+from flask import redirect, url_for, request, session
 from functools import wraps
 
 import datetime as dt
@@ -30,7 +30,8 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
         # return redirect(url_for("login"))
-        if g.user is None:
+        # if session["username"] is None:
+        if "username" not in session:
             # return redirect(url_for('login', next=request.url))
             return redirect(url_for("login"))
         return f(*args, **kwargs)
