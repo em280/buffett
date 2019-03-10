@@ -78,7 +78,8 @@ def index():
     current_user = User.query.filter_by(username=username).first()
     # user = User.query.first()
     current_user_amount = usd(current_user.cash)
-    symbol = Portfolio.query.first().symbol
+    if Portfolio.query.filter_by(userid=current_user.id).first() is not None:
+        symbol = Portfolio.query.filter_by(userid=current_user.id).first().symbol
 
 
     current_price = usd(get_current_share_quote(symbol)['latestPrice'])
