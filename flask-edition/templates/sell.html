@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "index.html" %}
 {% block title %}
 Sell Stocks - Buffet Stock Market Game
 {% endblock %}
@@ -10,12 +10,28 @@ Sell Stocks - Buffet Stock Market Game
           action="{{ url_for('sell') }}"
           method="POST"
         >
-        {{ sellForm.hidden_tag() }}
 
-        {{ sellForm.symbol(placeholder="Symbol") }}
-        {{ sellForm.shares(placeholder="Shares") }}
-        {{ sellForm.submit(class="btn-primary") }}
+        <div class="form-group">
+          {{ sellForm.hidden_tag() }}
+
+          {{ sellForm.symbol(placeholder="Symbol") }}
+          {{ sellForm.shares(placeholder="Shares") }}
+          {{ sellForm.submit(class="btn-primary") }}
+        </div>
+
         </form>
+
+        {% if sellForm.shares.errors %}
+          {% for error in sellForm.shares.errors %}
+              <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ error }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+          {% endfor %}
+        {% endif %}
+
 </main>
 
 {% endblock %}

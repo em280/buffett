@@ -122,12 +122,8 @@ def quote_validate(symbol):
 
     # Query IEX for quote
     symbols = web.get_iex_symbols().symbol.values.tolist()
-
-    # Ensure stock exists
-    try:
-        symb = [symbol for q in symbols if symbol == q]
-    except:
+    if symbol in symbols:
+        return symbol.upper()
+    else:
         return None
-
-    # Return stock's (uppercased) symbol (as a str)
-    return str(symb).upper()
+        

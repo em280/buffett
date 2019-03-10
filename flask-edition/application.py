@@ -241,6 +241,7 @@ def buy():
     @author: EM
     Functionality for the user to buy some stocks.
     """
+    # Initialise the relevant forms
     buyForm = BuyForm()
     searchForm = SearchForm()
 
@@ -249,7 +250,7 @@ def buy():
         symbol = buyForm.symbol.data.upper()
         is_symbol = quote_validate(symbol)
         if is_symbol is None:
-            flash("Please enter a valid symbol to buy some stocks.", "warning")
+            flash("Please enter a valid quote to buy some shares.", "warning")
             return redirect(url_for("buy"))
 
         noOfShares = int(buyForm.shares.data)
@@ -338,19 +339,23 @@ def sell():
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
 
-    # Initialise the relevant forms
+    # Initialise the relevant forms and relevant variables
     sellForm = SellForm()
     searchForm = SearchForm()
+    error = None
 
     # Validate that the sell form was submitted via post and that the contents of the form were valid
     if sellForm.validate_on_submit():
         # Get form information
         symbol = sellForm.symbol.data.upper()
+        is_symbol = quote_validate(symbol)
+        if is_symbol is None:
+            flash("Please enter a valid quote to sell some shares.", "warning")
+            return redirect(url_for("sell"))
         noOfShares = int(sellForm.shares.data)
 
         # contact API
         company_info = get_company_info(symbol)
-        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(symbol)['latestPrice']
 
         # obtaining graph information
@@ -380,13 +385,21 @@ def sell():
 
         # update portfolio table if the user is able to sell the shares
         # if number of shares is 2 or more then update row otherwise just delete the row
-        portf = Portfolio.query.get(userid)
+        portf = Portfolio.query.filter_by(userid=userid,symbol=symbol).first()
         if portf is not None:
             if portf.quantity > 1:
-                Portfolio.quantity = portf.quantity - noOfShares
+                # update the number of shares in the users portfolio
+                portf.quantity = portf.quantity - noOfShares
+                # update the users cash value
+                user.cash = user.cash + total_cost
+                # Commit the above changes to the database
                 db.session.commit()
             else:
+                # update the number of shares in the users portfolio
                 db.session.delete(portf)
+                # update the users cash value
+                user.cash = user.cash + total_cost
+                # Commit the above changes to the database
                 db.session.commit()
             flash(f"You have sold some shares worth {usd(current_price)}.", "success")
         else:
@@ -403,6 +416,14 @@ def sell():
         data["current_price"] = usd(current_price)
         data["amount"] = usd(user.cash)
 
+        company_in = get_company_info(symbol)
+
+        data['exchange'] = company_in['exchange']
+        data['industry'] = company_in['industry']
+        data['description'] = company_in['description']
+        data['sector'] = company_in['sector']
+        data['companyName'] = company_in['companyName']
+
         stocks = Portfolio.query.all()
         ptf = Portfolio.query.filter_by(userid=int(1)).all()
         if ptf is not None:
@@ -413,7 +434,7 @@ def sell():
         return render_template('index.html',
                         data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
-    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
+    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error)
 
 @app.route("/history")
 # @login_required
@@ -443,7 +464,7 @@ def history():
         temp["current_price"] = usd(get_current_share_quote(stock.symbol)['latestPrice'])
         temp["transaction_date"] = stock.transaction_date
         hist.append(temp)
-        
+
     return render_template("history.html", searchForm=searchForm, hist=hist)
 
 @app.route("/summary")
