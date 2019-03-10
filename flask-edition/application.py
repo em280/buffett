@@ -372,6 +372,12 @@ def sell():
             flash("You attempted to sell a share you do not currently own.", "warning")
             return redirect(url_for("sell"))
 
+        # Query the database to confirm the user is selling the proper amount of shares
+        # In other words, the user must not sell 3 shares if they only own 1 share for a particular stock
+        if share.quantity < noOfShares:
+            flash("You attempted to sell more shares than you currently own.", "warning")
+            return redirect(url_for("sell"))
+
         # update portfolio table if the user is able to sell the shares
         # if number of shares is 2 or more then update row otherwise just delete the row
         portf = Portfolio.query.get(userid)
@@ -420,8 +426,7 @@ def history():
     """
     # Initialise the search form and relevant variables
     searchForm = SearchForm()
-    history_data = {}
-    info = {}
+    hist = []
 
     history = History.query.all()
     if history is None:
@@ -429,25 +434,17 @@ def history():
         flash("You currently have no record on any transactions.", "info")
         return redirect(url_for("index"))
 
-    # It appears that the user has records in their history table
-    for item in history:
-        company_info = get_company_info(item.symbol)
-        current_price = get_current_share_quote(item.symbol)['latestPrice']
-
-        # record the name and current price of this stock
-        info[item.symbol+"price"] = usd(current_price)
-
-    hist = []
-    stocks = History.query.all()
-
-    for stock in stocks:
+    # It appears that the user has records in their history table therefore prepare this data and present it to the user
+    for stock in history:
         temp = {}
         temp["symbol"] = stock.symbol
         temp["shares"] = stock.quantity
         temp["companyName"] = get_company_info(stock.symbol)["companyName"]
+        temp["current_price"] = usd(get_current_share_quote(stock.symbol)['latestPrice'])
+        temp["transaction_date"] = stock.transaction_date
         hist.append(temp)
-
-    return render_template("history.html", history=history, searchForm=searchForm, info=info, hist=hist)
+        
+    return render_template("history.html", searchForm=searchForm, hist=hist)
 
 @app.route("/summary")
 # @login_required
