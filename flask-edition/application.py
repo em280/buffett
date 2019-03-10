@@ -61,7 +61,7 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-@login_required # This line can be commented out when you are testing out the application.
+# @login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -73,11 +73,13 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
+    session["username"] = "bob" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
     # user = User.query.first()
     current_user_amount = usd(current_user.cash)
+    # Attempt to overwrite the default value for symbol if the user has bought any stocks before
     if Portfolio.query.filter_by(userid=current_user.id).first() is not None:
         symbol = Portfolio.query.filter_by(userid=current_user.id).first().symbol
 
@@ -194,7 +196,7 @@ def dashboard():
     @author: EM
     Functionality for the user dashboard/portfolio function.
     """
-
+    # Initialise the form and relevant variables
     searchForm = SearchForm()
 
     data = {}
@@ -336,9 +338,11 @@ def sell():
     # Update cash/value of user [the stock is sold at its current price]
     # return success or failure message
 
+    # Initialise the relevant forms
     sellForm = SellForm()
     searchForm = SearchForm()
 
+    # Validate that the sell form was submitted via post and that the contents of the form were valid
     if sellForm.validate_on_submit():
         # Get form information
         symbol = sellForm.symbol.data.upper()
@@ -354,35 +358,38 @@ def sell():
 
         # Query database
         # Based on the id of the currently logged in user , obtain this id from the session variable
-        userid = 1
+        # Temporary variables for testing purposes
+        session["username"] = "bob" # This line should be removed before production
+        current_user = User.query.filter_by(username=session["username"]).first()
+        userid = current_user.id
         user = User.query.get(userid)
 
+        # Calculate the total cost of shares the user wants to sell based on the current price
         total_cost = (float(noOfShares) * current_price)
-        # Check if the user can afford the stocks they want to buy
-        if total_cost > user.cash:
-            # send the user to thier dashboard
-            return redirect(url_for("dashboard"))
-        # update cash for user in the database
-        user.cash = user.cash + total_cost
+        # Query the database to confirm the user owns a particular share they wish to sell
+        share = Portfolio.query.filter_by(symbol=symbol).first()
+        if share is None:
+            flash("You attempted to sell a share you do not currently own.", "warning")
+            return redirect(url_for("sell"))
 
-        # update portfolio table
-        # if number of shares is 2 or more then update row else delete row
+        # update portfolio table if the user is able to sell the shares
+        # if number of shares is 2 or more then update row otherwise just delete the row
         portf = Portfolio.query.get(userid)
         if portf is not None:
-            if portf.quantity >= 2:
+            if portf.quantity > 1:
                 Portfolio.quantity = portf.quantity - noOfShares
                 db.session.commit()
             else:
                 db.session.delete(portf)
                 db.session.commit()
+            flash(f"You have sold some shares worth {usd(current_price)}.", "success")
         else:
             # no such stock exist
-            pass
+            flash("You attempted to sell a share you do not currently own.", "warning")
+            return redirect(url_for("sell"))
 
         # update history table
         History().add_hist(userid, symbol.upper(), -noOfShares)
-
-        db.session.commit()
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -398,7 +405,7 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, message=f"You have sold some shares worth {usd(current_price)}.", graphdata=graphdata)
+                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
     return render_template("sell.html", sellForm=sellForm, searchForm=searchForm)
 
@@ -408,19 +415,23 @@ def history():
     """
     @author: EM
     Functionality for the history function.
+
+    This will show all the transactions that the user has made over time
     """
+    # Initialise the search form and relevant variables
     searchForm = SearchForm()
-    data = {}
+    history_data = {}
     info = {}
 
     history = History.query.all()
     if history is None:
         # Just show the index page for now.
+        flash("You currently have no record on any transactions.", "info")
         return redirect(url_for("index"))
 
+    # It appears that the user has records in their history table
     for item in history:
         company_info = get_company_info(item.symbol)
-        # company_name = company_info["companyName"]
         current_price = get_current_share_quote(item.symbol)['latestPrice']
 
         # record the name and current price of this stock
@@ -442,8 +453,10 @@ def history():
 # @login_required
 def summary():
     """
+    @author: EM
     Functionality for the summary function.
     """
+    # Initialise the search form for this route
     searchForm = SearchForm()
     # graph stuff
     symbol = "MSFT"
@@ -454,12 +467,6 @@ def summary():
     for stock in stocks:
         current_stock = get_company_info(stock.symbol)
 
-        postion = {
-            # "company_name": current_stock["companyName"],
-            "current_price": get_current_share_quote(stock.symbol)["latestPrice"],
-            # "symbol": current_stock["symbol"]
-        }
-
     company_in = get_company_info(symbol)
     data["companyName"] = get_company_info(symbol)["companyName"]
     data["symbol"] = symbol.upper()
@@ -467,7 +474,7 @@ def summary():
     data['industry'] = company_in['industry']
     data['description'] = company_in['description']
     data['sector'] = company_in['sector']
-    data["current_price"] = usd(get_current_share_quote(stock.symbol)["latestPrice"])
+    data["current_price"] = usd(get_current_share_quote(symbol)["latestPrice"])
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
 
