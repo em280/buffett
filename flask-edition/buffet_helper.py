@@ -5,7 +5,7 @@ This is a helper file for the application,
 it consists of functional utilities needed by the application.
 """
 
-from flask import redirect, url_for, request
+from flask import redirect, url_for, request, session
 from functools import wraps
 
 import datetime as dt
@@ -30,7 +30,8 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args,**kwargs):
         # return redirect(url_for("login"))
-        if g.user is None:
+        # if session["username"] is None:
+        if "username" not in session:
             # return redirect(url_for('login', next=request.url))
             return redirect(url_for("login"))
         return f(*args, **kwargs)
@@ -121,12 +122,8 @@ def quote_validate(symbol):
 
     # Query IEX for quote
     symbols = web.get_iex_symbols().symbol.values.tolist()
-
-    # Ensure stock exists
-    try:
-        symb = [symbol for q in symbols if symbol == q]
-    except:
+    if symbol in symbols:
+        return symbol.upper()
+    else:
         return None
-
-    # Return stock's (uppercased) symbol (as a str)
-    return str(symb).upper()
+        

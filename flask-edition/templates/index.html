@@ -18,12 +18,15 @@ endblock %} {% block body %}
       <b> Industry: </b> {{data["industry"]}} <br>
       <b> Description: </b> {{data["description"]}}</p>
 
-      <h3> News: </h3>
-      <a href="{{data['ns1_url']}}"> {{data["ns1"]}} </a><br>
-      <a href="{{data['ns2_url']}}"> {{data["ns2"]}} </a><br>
-      <a href="{{data['ns3_url']}}"> {{data["ns3"]}} </a>
-      {% block buy %} {% endblock %}
+      {% if data["ns1"] is defined %}
+        <h3> News: </h3>
+        <a href="{{data['ns1_url']}}"> {{data["ns1"]}} </a><br>
+        <a href="{{data['ns2_url']}}"> {{data["ns2"]}} </a><br>
+        <a href="{{data['ns3_url']}}"> {{data["ns3"]}} </a>
+      {% endif %}
 
+
+      {% block buy %} {% endblock %}
 
     </main>
   </div>

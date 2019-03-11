@@ -69,11 +69,11 @@ Join Buffet - Buffet Stock Market Game
               {% endif %}
             </div>
 
-              {% with messages = get_flashed_messages() %}
+              {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                   <div class=flashes>
-                  {% for message in messages %}
-                    <div class="alert alert-danger alert-dismissible fade show form-group" role="alert">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show form-group" role="alert">
                       {{ message }}
                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
