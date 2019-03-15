@@ -13,6 +13,7 @@ import pandas as pd
 import pandas_datareader.data as web
 import pandas_datareader as pdr
 from datetime import datetime
+import time
 
 def usd(value):
     """
@@ -126,4 +127,11 @@ def quote_validate(symbol):
         return symbol.upper()
     else:
         return None
-        
+
+def clock():
+    """
+    @author: SA
+
+    Function that displays the clock and tells the time.
+    """        
+    pass
