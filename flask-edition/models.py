@@ -3,12 +3,11 @@
 A simple database implementation for the application.
 """
 
-import os
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
+import os
 import datetime
 
 db = SQLAlchemy()
@@ -57,6 +56,9 @@ class Portfolio(db.Model):
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    transaction_type = db.Column(db.String, nullable=False)
+
+    __table_args__ = ( db.CheckConstraint(transaction_type.in_(["buy", "sell"])), )
 
 
     def add_portfolio_stock(self, userid, symbol, quantity):
@@ -75,7 +77,7 @@ class Portfolio(db.Model):
         return Portfolio.query.filter_by(userid=int(id)).all()
 
     def __repr__(self):
-        return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}')"
+        return f"Portfolio('{self.id}', '{self.symbol}', '{self.quantity}', '{self.transaction_date}', '{self.transaction_type}')"
 
 class History(db.Model):
     __tablename__ = "history"
@@ -84,11 +86,14 @@ class History(db.Model):
     symbol = db.Column(db.String, nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     transaction_date = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
+    transaction_type = db.Column(db.String, nullable=False)
 
-    def add_hist(self, userid, symbol, quantity):
-        hist = History(userid=int(userid), symbol=symbol, quantity=int(quantity))
+    __table_args__ = ( db.CheckConstraint(transaction_type.in_(["buy", "sell"])), )
+
+    def add_hist(self, userid, symbol, quantity, transaction_type):
+        hist = History(userid=int(userid), symbol=symbol, quantity=int(quantity), transaction_type=transaction_type)
         db.session.add(hist)
         db.session.commit()
 
     def __repr__(self):
-        return f"<History {self.id}, {self.userid}, '{self.symbol}', {self.quantity}, '{self.transaction_date}' >"
+        return f"<History {self.id}, {self.userid}, '{self.symbol}', {self.quantity}, '{self.transaction_date}', '{self.transaction_type}' >"

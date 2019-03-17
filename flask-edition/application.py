@@ -53,7 +53,7 @@ Session(app)
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
 # PostgreSQL or MySQL shall be used for production
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database_test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffet.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
@@ -286,10 +286,10 @@ def buy():
             # update cash for user in the database
             user.cash -= total_cost
             # update portfolio table
-            portf = Portfolio(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            portf = Portfolio(userid=userid, symbol=symbol.upper(), quantity=noOfShares, transaction_type="buy")
             db.session.add(portf)
             # update history table
-            hist = History(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            hist = History(userid=userid, symbol=symbol.upper(), quantity=noOfShares, transaction_type="buy")
             db.session.add(hist)
             # commit the changes made to the database
             db.session.commit()
@@ -408,7 +408,7 @@ def sell():
             return redirect(url_for("sell"))
 
         # update history table
-        History().add_hist(userid, symbol.upper(), -noOfShares)
+        History().add_hist(userid, symbol.upper(), -noOfShares, "sell")
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -463,6 +463,7 @@ def history():
         temp["companyName"] = get_company_info(stock.symbol)["companyName"]
         temp["current_price"] = usd(get_current_share_quote(stock.symbol)['latestPrice'])
         temp["transaction_date"] = stock.transaction_date
+        temp["transaction_type"] = stock.transaction_type
         hist.append(temp)
 
     return render_template("history.html", searchForm=searchForm, hist=hist)
