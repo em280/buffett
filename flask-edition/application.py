@@ -9,6 +9,8 @@ from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import 
 # END : Imports for utility funtions
 from passlib.hash import sha256_crypt
 
+from auth_phone import *
+
 import csv
 import os
 import re
@@ -294,6 +296,8 @@ def buy():
             # commit the changes made to the database
             db.session.commit()
 
+            send_buy_confirmation(symbol, noOfShares)
+
         # Putting together a summary of the users current transaction
         data = {}
         data["symbol"] = symbol.upper()
@@ -318,6 +322,8 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!", "success")
+
+
         return render_template('index.html',
                         data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
