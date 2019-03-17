@@ -606,12 +606,18 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")
-@login_required
+# @login_required
 def leaderboard():
-    '''
-    @author: SH
-    '''
-    pass
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+
+    # Prepare info for leaderboard display
+    users = User.query.all()
+    
+    return render_template("leaderboard.html", searchForm=searchForm)
 
 @app.route("/home")
 def home():

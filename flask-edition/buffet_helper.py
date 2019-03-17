@@ -90,7 +90,6 @@ def search_autocomplete():
     """
     @author: EM
     Functionality to return all the symbols that are supported by IEX API.
-
     """
     symbols = web.get_iex_symbols().symbol.values
     names = web.get_iex_symbols().name.values
@@ -104,6 +103,9 @@ def search_autocomplete():
     for q in range(len(symbols)):
         values.append(data["symbols"][q] + " " + data["names"][q])
     return values
+
+def prepare_leaderboard():
+    pass
 
 def quote_validate(symbol):
     """
