@@ -612,12 +612,27 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")
-@login_required
+# @login_required
 def leaderboard():
-    '''
-    @author: SH
-    '''
-    pass
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+    data = []
+
+    # Prepare info for leaderboard display
+    users = User.query.all()
+    # Day Change = (open price - close price) * number of shares owned
+    # It is assumed that all the users reinvest their paid dividends by buying more shares and/or increasing thier capital
+    # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
+    for user in users:
+        temp = {}
+        temp["userName"] = user.username
+        temp["netValue"] = user.cash
+        data.append(temp)
+
+    return render_template("leaderboard.html", searchForm=searchForm, data=data)
 
 @app.route("/home")
 def home():
