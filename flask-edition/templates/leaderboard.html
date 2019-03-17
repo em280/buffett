@@ -13,7 +13,18 @@ Game {% endblock %} {% block body %}
         <th># of Trades</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+      {% for value in data %}
+      <tr>
+        <td></td>
+        <td>{{ value.userName }}</td>
+        <td>{{ value.netValue }}</td>
+        <td></td>
+        <td></td>
+        <td></td>
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 </div>
 {% endblock %}
