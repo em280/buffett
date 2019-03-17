@@ -32,22 +32,9 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <style>
-      .chart {
-        margin-top: 30px;
-        text-align: center;
-      }
-      .btn {
-        margin-bottom: 10px;
-      }
-      .login {
-        font-size:30pt;
-        text-align: center;
-      }
-      .top-placement {
-        margin-top:40px;
-      }
-    </style>
+
+    <!-- Importing a custom css file -- layout.css -->
+    <link href="../static/css/layout.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -62,8 +49,6 @@
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
     ></script>
-
-
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -193,16 +178,19 @@
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
+                <button id="share" class="btn btn-sm btn-outline-secondary">Share</button>
+                <button id="export" class="btn btn-sm btn-outline-secondary">Export</button>
               </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+              <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span> This week
               </button>
             </div>
           </div>
+
+    <!-- This block below contains the main content rendered to the page -->
     {% block body %} {% endblock %}
 
+    <!-- Implementation of the footer -->
     <footer class="footer mt-auto py-3">
       <div class="container">
         <p class="text-muted">&#169; Buffet Group</p>
