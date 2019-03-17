@@ -511,7 +511,7 @@ def register():
 
     # testing
     temp = User.query.all()
-    return render_template("test.html", temp=temp)
+    return "render"
 
 @app.route("/unregister")
 def unregister():
@@ -529,13 +529,16 @@ def main():
     # to initiate the database and never again.
     db.create_all()
     # Register some stub users
+    register()
     f = open("users.csv")
     reader = csv.reader(f)
-    for name, passcode in reader:
-        user = User(username=name, password=passcode)
-        db.session.add(user)
-        print("A stub user has been added.")
-    db.session.commit()
+    users = User.query.all()
+    if users is None:
+        for name, passcode in reader:
+            user = User(username=name, password=passcode)
+            db.session.add(user)
+            print("A stub user has been added.")
+        db.session.commit()
     return "db initialized"
 
 
