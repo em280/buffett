@@ -611,6 +611,8 @@ def leaderboard():
     data = []
     vals = []
 
+    # total_gain = 0
+
     # Prepare info for leaderboard display
     users = User.query.all()
     # Day Change = (open price - close price) * number of shares owned
@@ -623,25 +625,49 @@ def leaderboard():
         temp["netValue"] = usd(user.cash)
         temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
 
+        i = 0
+        total_gain = 0
+        total_by_price = 0
         for stock in portfolio:
-            tmp = {}
             open_price = prepare_leaderboard(stock.symbol)["open_price"][-1]
             close_price = prepare_leaderboard(stock.symbol)["close_price"][-1]
             shares_owned = Portfolio.query.filter_by(userid=user.id, symbol=stock.symbol).first().quantity
             day_change = (close_price - open_price) * shares_owned
+            
             vals.append(day_change)
-            # tmp[""]
-            print(open_price, "printer")
-            print(shares_owned, "printer2")
-            print(day_change, "printer daychange")
 
             temp["dayChange"] = f"{sum(vals):.2f}"
-        data.append(temp)
 
-    print(vals, "printer vals")
-    print(sum(vals))
-    
-    print(data[-1])
+            
+            # if i < len(portfolio) - 1:
+            # Multiply the number of shares you own of each stock by its dividends per share only if it pays a dividend
+            # access the amount key
+            dividend = requests.get(f"https://api.iextrading.com/1.0/stock/{stock.symbol.lower()}/dividends/1m").json()
+            if len(dividend) > 0:
+                total_gain += stock.quantity * dividend["amount"]
+                print(total_gain, "printing")
+            print(dividend, "dividend")
+
+            # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
+            
+            total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            print(total_by_price, "printing total by price")
+            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            print(total_gain, "printer gain")
+
+            if i == len(portfolio) - 1:
+                # total_initial = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+                # print(total_initial, "printer initial")
+                # print(total_gain - total_initial)
+                total_change = (total_gain / total_by_price) * 100
+                temp["totalChange"] = total_change
+            i = i + 1
+
+        # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()
+        # https://api.iextrading.com/1.0/stock/aapl/dividends/1m
+        
+        data.append(temp)
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data)
 

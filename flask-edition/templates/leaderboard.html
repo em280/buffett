@@ -19,8 +19,14 @@ Game {% endblock %} {% block body %}
         <td>{{ loop.index }}</td>
         <td>{{ value.userName }}</td>
         <td>{{ value.netValue }}</td>
-        <td style="color: darkgreen;">{{ value.dayChange }}</td>
-        <td></td>
+        <td style="color: darkgreen;">
+          {% if value.dayChange is defined %} {{ value.dayChange }} {% else %}
+          0.0 {% endif %}
+        </td>
+        <td>
+          {% if value.totalChange is defined %} {{ value.totalChange }} {% else
+          %} 0.0 {% endif %}
+        </td>
         <td>{{ value.numberOfTrades }}</td>
       </tr>
       {% endfor %}
