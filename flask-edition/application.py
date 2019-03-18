@@ -609,7 +609,6 @@ def gainers():
     searchForm = SearchForm()
 
     data = get_gainers()
-    print(data)
 
     return render_template("gainers.html", searchForm=searchForm)
 
