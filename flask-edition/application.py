@@ -509,8 +509,8 @@ def register():
     # Register some stub users
     f = open("users.csv")
     reader = csv.reader(f)
-    for name, passcode in reader:
-        user = User(username=name, password=passcode)
+    for name, passcode, number in reader:
+        user = User(username=name, password=passcode, phone_number=number)
         db.session.add(user)
         print("A stub user has been added.")
     db.session.commit()
@@ -540,8 +540,8 @@ def main():
     reader = csv.reader(f)
     users = User.query.all()
     if users is None:
-        for name, passcode in reader:
-            user = User(username=name, password=passcode)
+        for name, passcode, number in reader:
+            user = User(username=name, password=passcode, phone_number=number)
             db.session.add(user)
             print("A stub user has been added.")
         db.session.commit()
