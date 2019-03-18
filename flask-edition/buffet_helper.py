@@ -104,8 +104,33 @@ def search_autocomplete():
         values.append(data["symbols"][q] + " " + data["names"][q])
     return values
 
-def prepare_leaderboard():
-    pass
+def prepare_leaderboard(symbol=None):
+    """
+    @author: EM
+    Functionality to do some arithmetic for the leaderboard display
+    """
+    data = {}
+    if symbol is not None:
+        df = web.DataReader(symbol, "iex", dt.date(2019, 3, 11)) # Edit this line for when the market is closed
+        # df = web.DataReader(symbol, "iex", dt.date.today())
+        # df = df.head(1)
+        open_price = df["open"].values
+        close_price = df["close"].values
+        print("values", open_price)
+        data["open_price"] = open_price
+        data["close_price"] = close_price
+        print(dt.date.today())
+        print(df.head())
+        print(symbol)
+        return data
+
+def get_gainers():
+    symbol = "MSFT"
+    df = web.DataReader(symbol, "iex", dt.date.today())
+    data = {}
+    data["info"] = df.values
+
+    return data
 
 def quote_validate(symbol):
     """

@@ -3,11 +3,12 @@
 A simple database implementation for the application.
 """
 
+import os
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-import os
 import datetime
 
 db = SQLAlchemy()
@@ -21,6 +22,7 @@ class User(db.Model):
     username = db.Column(db.String, nullable=False)
     password = db.Column(db.String, nullable=False)
     cash = db.Column(db.Integer, default=10000)
+    phone_number = db.Column(db.String(10), nullable=False)
 
     def add_user(self, name, password):
         usr = User(username=name, password=password)

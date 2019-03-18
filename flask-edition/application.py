@@ -5,11 +5,10 @@ from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
 from newslib import *
+from auth_phone import *
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 # END : Imports for utility funtions
 from passlib.hash import sha256_crypt
-
-from auth_phone import *
 
 import csv
 import os
@@ -296,7 +295,8 @@ def buy():
             # commit the changes made to the database
             db.session.commit()
 
-            send_buy_confirmation(symbol, noOfShares)
+            # Notify the user about their recent trade
+            # send_buy_confirmation(symbol, noOfShares)
 
         # Putting together a summary of the users current transaction
         data = {}
@@ -503,30 +503,12 @@ def summary():
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
 
-@app.route("/register")
-def register():
-    """ Functionality for the user register function. """
-    # Register some stub users
-    f = open("users.csv")
-    reader = csv.reader(f)
-    for name, passcode in reader:
-        user = User(username=name, password=passcode)
-        db.session.add(user)
-        print("A stub user has been added.")
-    db.session.commit()
-
-    # testing
-    temp = User.query.all()
-    return "render"
-
 @app.route("/unregister")
 def unregister():
     """
     Functionality for the user unregister function.
     """
-    # Unregister a user based on their id
-    User().remove_user(2)
-    return "A user has been unregistered." # Update this function for when user was not removed
+    pass
 
 @app.route("/initdb")
 def main():
@@ -535,16 +517,17 @@ def main():
     # to initiate the database and never again.
     db.create_all()
     # Register some stub users
-    register()
     f = open("users.csv")
     reader = csv.reader(f)
     users = User.query.all()
-    if users is None:
-        for name, passcode in reader:
-            user = User(username=name, password=passcode)
+
+    if len(users) == 0:
+        for name, passcode, number in reader:
+            user = User(username=name, password=passcode, phone_number=number)
             db.session.add(user)
             print("A stub user has been added.")
         db.session.commit()
+
     return "db initialized"
 
 
@@ -552,6 +535,8 @@ def main():
 def signup():
     """
     @author: EM
+
+    This is an implementation of user registration for the buffet application.
     """
     signupForm = SignupForm()
     error = None
@@ -562,9 +547,10 @@ def signup():
         username = signupForm.username.data
         password = signupForm.password.data
         passhash = sha256_crypt.encrypt(password)
+        phone_number = signupForm.phone_number.data
 
         # Adding a new user to the database
-        db.session.add(User(username=username, password=passhash))
+        db.session.add(User(username=username, password=passhash, phone_number=phone_number))
         db.session.commit()
 
         session["username"] = username
@@ -614,6 +600,28 @@ def logout():
         flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
+@app.route("/gainers")
+def gainers():
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+
+    data = get_gainers()
+    print(data)
+
+    return render_template("gainers.html", searchForm=searchForm)
+
+@app.route("/losers")
+def losers():
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+    return render_template("losers.html", searchForm=searchForm)
+
 @app.route("/leaderboard")
 # @login_required
 def leaderboard():
@@ -623,6 +631,9 @@ def leaderboard():
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
     data = []
+    vals = []
+
+    # total_gain = 0
 
     # Prepare info for leaderboard display
     users = User.query.all()
@@ -631,8 +642,53 @@ def leaderboard():
     # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
     for user in users:
         temp = {}
-        temp["userName"] = user.username
-        temp["netValue"] = user.cash
+        portfolio = Portfolio.query.filter_by(userid=user.id).all()
+        temp["userName"] = user.username.title()
+        temp["netValue"] = usd(user.cash)
+        temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
+
+        i = 0
+        total_gain = 0
+        total_by_price = 0
+        for stock in portfolio:
+            open_price = prepare_leaderboard(stock.symbol)["open_price"][-1]
+            close_price = prepare_leaderboard(stock.symbol)["close_price"][-1]
+            shares_owned = Portfolio.query.filter_by(userid=user.id, symbol=stock.symbol).first().quantity
+            day_change = (close_price - open_price) * shares_owned
+            
+            vals.append(day_change)
+
+            temp["dayChange"] = f"{sum(vals):.2f}"
+
+            
+            # if i < len(portfolio) - 1:
+            # Multiply the number of shares you own of each stock by its dividends per share only if it pays a dividend
+            # access the amount key
+            dividend = requests.get(f"https://api.iextrading.com/1.0/stock/{stock.symbol.lower()}/dividends/1m").json()
+            if len(dividend) > 0:
+                total_gain += stock.quantity * dividend["amount"]
+                print(total_gain, "printing")
+            print(dividend, "dividend")
+
+            # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
+            
+            total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            print(total_by_price, "printing total by price")
+            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+            print(total_gain, "printer gain")
+
+            if i == len(portfolio) - 1:
+                # total_initial = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
+                # print(total_initial, "printer initial")
+                # print(total_gain - total_initial)
+                total_change = (total_gain / total_by_price) * 100
+                temp["totalChange"] = total_change
+            i = i + 1
+
+        # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()
+        # https://api.iextrading.com/1.0/stock/aapl/dividends/1m
+        
         data.append(temp)
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data)
