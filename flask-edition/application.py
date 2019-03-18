@@ -562,9 +562,10 @@ def signup():
         username = signupForm.username.data
         password = signupForm.password.data
         passhash = sha256_crypt.encrypt(password)
+        phone_number = signupForm.phone_number.data
 
         # Adding a new user to the database
-        db.session.add(User(username=username, password=passhash))
+        db.session.add(User(username=username, password=passhash, phone_number=phone_number))
         db.session.commit()
 
         session["username"] = username
