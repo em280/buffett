@@ -1,32 +1,31 @@
-{% extends "layout.html" %}
-{% block title %}
- History - Buffet Stock Market Game
-{% endblock %}
-{% block body %}
-    <h2>History</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>Symbol</th>
-              <th>Name</th>
-              <th>Shares</th>
-              <th>Price</th>
-              <th>Transaction Date</th>
-            </tr>
-          </thead>
-          <tbody>
-              {% for stock in hist %}
-              <tr>
-                <td>{{ stock.symbol }}</td>
-                <td>{{ stock.companyName }}</td>
-                <td>{{ stock.shares }}</td>
-                <td>{{ stock.current_price }}</td>
-                <!-- The time below has been formatted to exclude the microsecond portion -->
-                <td>{{ stock.transaction_date.strftime("%Y-%I-%d %I:%M:%S") }}</td>
-              </tr>
-              {% endfor %}
-          </tbody>
-        </table>
-      </div>
+{% extends "layout.html" %} {% block title %} History - Buffet Stock Market Game
+{% endblock %} {% block body %}
+<h2>History</h2>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Shares</th>
+        <th>Price</th>
+        <th>Transaction Date</th>
+        <th>Transaction Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stock in hist %}
+      <tr>
+        <td>{{ stock.symbol }}</td>
+        <td>{{ stock.companyName }}</td>
+        <td>{{ stock.shares }}</td>
+        <td>{{ stock.current_price }}</td>
+        <!-- The time below has been formatted to exclude the microsecond portion -->
+        <td>{{ stock.transaction_date.strftime("%Y-%I-%d %I:%M:%S") }}</td>
+        <td>{{ stock.transaction_type }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

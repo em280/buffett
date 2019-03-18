@@ -9,6 +9,8 @@ from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import 
 # END : Imports for utility funtions
 from passlib.hash import sha256_crypt
 
+from auth_phone import *
+
 import csv
 import os
 import re
@@ -53,7 +55,7 @@ Session(app)
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
 # PostgreSQL or MySQL shall be used for production
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///database_test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffet.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
@@ -286,13 +288,15 @@ def buy():
             # update cash for user in the database
             user.cash -= total_cost
             # update portfolio table
-            portf = Portfolio(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            portf = Portfolio(userid=userid, symbol=symbol.upper(), quantity=noOfShares, transaction_type="buy")
             db.session.add(portf)
             # update history table
-            hist = History(userid=userid, symbol=symbol.upper(), quantity=noOfShares)
+            hist = History(userid=userid, symbol=symbol.upper(), quantity=noOfShares, transaction_type="buy")
             db.session.add(hist)
             # commit the changes made to the database
             db.session.commit()
+
+            send_buy_confirmation(symbol, noOfShares)
 
         # Putting together a summary of the users current transaction
         data = {}
@@ -318,6 +322,8 @@ def buy():
                 data["grand_total"] = usd(grand_total)
 
         flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!", "success")
+
+
         return render_template('index.html',
                         data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
@@ -408,7 +414,7 @@ def sell():
             return redirect(url_for("sell"))
 
         # update history table
-        History().add_hist(userid, symbol.upper(), -noOfShares)
+        History().add_hist(userid, symbol.upper(), -noOfShares, "sell")
 
         data = {}
         data["symbol"] = symbol.upper()
@@ -463,6 +469,7 @@ def history():
         temp["companyName"] = get_company_info(stock.symbol)["companyName"]
         temp["current_price"] = usd(get_current_share_quote(stock.symbol)['latestPrice'])
         temp["transaction_date"] = stock.transaction_date
+        temp["transaction_type"] = stock.transaction_type
         hist.append(temp)
 
     return render_template("history.html", searchForm=searchForm, hist=hist)
@@ -510,7 +517,7 @@ def register():
 
     # testing
     temp = User.query.all()
-    return render_template("test.html", temp=temp)
+    return "render"
 
 @app.route("/unregister")
 def unregister():
@@ -528,13 +535,16 @@ def main():
     # to initiate the database and never again.
     db.create_all()
     # Register some stub users
+    register()
     f = open("users.csv")
     reader = csv.reader(f)
-    for name, passcode in reader:
-        user = User(username=name, password=passcode)
-        db.session.add(user)
-        print("A stub user has been added.")
-    db.session.commit()
+    users = User.query.all()
+    if users is None:
+        for name, passcode in reader:
+            user = User(username=name, password=passcode)
+            db.session.add(user)
+            print("A stub user has been added.")
+        db.session.commit()
     return "db initialized"
 
 
@@ -605,12 +615,27 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/leaderboard")
-@login_required
+# @login_required
 def leaderboard():
-    '''
-    @author: SH
-    '''
-    pass
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+    data = []
+
+    # Prepare info for leaderboard display
+    users = User.query.all()
+    # Day Change = (open price - close price) * number of shares owned
+    # It is assumed that all the users reinvest their paid dividends by buying more shares and/or increasing thier capital
+    # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
+    for user in users:
+        temp = {}
+        temp["userName"] = user.username
+        temp["netValue"] = user.cash
+        data.append(temp)
+
+    return render_template("leaderboard.html", searchForm=searchForm, data=data)
 
 @app.route("/home")
 def home():

@@ -32,22 +32,6 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <style>
-      .chart {
-        margin-top: 30px;
-        text-align: center;
-      }
-      .btn {
-        margin-bottom: 10px;
-      }
-      .login {
-        font-size:30pt;
-        text-align: center;
-      }
-      .top-placement {
-        margin-top:40px;
-      }
-    </style>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
@@ -63,12 +47,22 @@
       src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
     ></script>
 
+    <!-- Importing a custom css file -- layout.css -->
+    <link href="../static/css/layout.css" rel="stylesheet" />
 
-
+    <!-- Importing jQuery and jQueryUI via cdn links -->
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"></script>
 
     <!-- Plotly.js -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Importing custom JavaScript files into the application -->
+    <script src="../static/js/layout.js"></script>
+
   </head>
   <body class="d-flex flex-column h-100">
 
@@ -117,26 +111,6 @@
                   <span class="sr-only">(current)</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span> US Stocks
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span> UK Stocks
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span> German Stocks
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  <span data-feather="bar-chart-2"></span> Dutch Stocks
-                </a>
-              </li>
             </ul>
 
             <ul class="nav flex-column">
@@ -161,6 +135,12 @@
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('summary') }}">
                   <span data-feather="file-text"></span> Summary
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('leaderboard') }}">
+                  <span data-feather="bar-chart-2"></span> Leaderboard
                 </a>
               </li>
             </ul>
@@ -193,16 +173,19 @@
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-secondary">Share</button>
-                <button class="btn btn-sm btn-outline-secondary">Export</button>
+                <button id="share" class="btn btn-sm btn-outline-secondary">Share</button>
+                <button id="export" class="btn btn-sm btn-outline-secondary">Export</button>
               </div>
-              <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
+              <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span> This week
               </button>
             </div>
           </div>
+
+    <!-- This block below contains the main content rendered to the page -->
     {% block body %} {% endblock %}
 
+    <!-- Implementation of the footer -->
     <footer class="footer mt-auto py-3">
       <div class="container">
         <p class="text-muted">&#169; Buffet Group</p>
