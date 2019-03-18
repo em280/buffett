@@ -19,7 +19,7 @@ Game {% endblock %} {% block body %}
         <td>{{ loop.index }}</td>
         <td>{{ value.userName }}</td>
         <td>{{ value.netValue }}</td>
-        <td></td>
+        <td style="color: darkgreen;">{{ value.dayChange }}</td>
         <td></td>
         <td>{{ value.numberOfTrades }}</td>
       </tr>

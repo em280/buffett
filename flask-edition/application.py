@@ -609,6 +609,7 @@ def leaderboard():
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
     data = []
+    vals = []
 
     # Prepare info for leaderboard display
     users = User.query.all()
@@ -617,10 +618,30 @@ def leaderboard():
     # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
     for user in users:
         temp = {}
+        portfolio = Portfolio.query.filter_by(userid=user.id).all()
         temp["userName"] = user.username.title()
         temp["netValue"] = usd(user.cash)
         temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
+
+        for stock in portfolio:
+            tmp = {}
+            open_price = prepare_leaderboard(stock.symbol)["open_price"][-1]
+            close_price = prepare_leaderboard(stock.symbol)["close_price"][-1]
+            shares_owned = Portfolio.query.filter_by(userid=user.id, symbol=stock.symbol).first().quantity
+            day_change = (close_price - open_price) * shares_owned
+            vals.append(day_change)
+            # tmp[""]
+            print(open_price, "printer")
+            print(shares_owned, "printer2")
+            print(day_change, "printer daychange")
+
+            temp["dayChange"] = f"{sum(vals):.2f}"
         data.append(temp)
+
+    print(vals, "printer vals")
+    print(sum(vals))
+    
+    print(data[-1])
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data)
 
