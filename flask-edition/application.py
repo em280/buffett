@@ -5,11 +5,10 @@ from stocky import * # Import all the functions
 from models import * # Import all the models
 from buffet_helper import * # Import all the helper functions
 from newslib import *
+from auth_phone import *
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 # END : Imports for utility funtions
 from passlib.hash import sha256_crypt
-
-from auth_phone import *
 
 import csv
 import os
@@ -296,7 +295,8 @@ def buy():
             # commit the changes made to the database
             db.session.commit()
 
-            send_buy_confirmation(symbol, noOfShares)
+            # Notify the user about their recent trade
+            # send_buy_confirmation(symbol, noOfShares)
 
         # Putting together a summary of the users current transaction
         data = {}
@@ -527,7 +527,7 @@ def main():
             db.session.add(user)
             print("A stub user has been added.")
         db.session.commit()
-        
+
     return "db initialized"
 
 
@@ -617,8 +617,9 @@ def leaderboard():
     # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
     for user in users:
         temp = {}
-        temp["userName"] = user.username
-        temp["netValue"] = user.cash
+        temp["userName"] = user.username.title()
+        temp["netValue"] = usd(user.cash)
+        temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
         data.append(temp)
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data)

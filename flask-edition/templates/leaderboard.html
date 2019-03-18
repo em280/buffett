@@ -16,12 +16,12 @@ Game {% endblock %} {% block body %}
     <tbody>
       {% for value in data %}
       <tr>
-        <td></td>
+        <td>{{ loop.index }}</td>
         <td>{{ value.userName }}</td>
         <td>{{ value.netValue }}</td>
         <td></td>
         <td></td>
-        <td></td>
+        <td>{{ value.numberOfTrades }}</td>
       </tr>
       {% endfor %}
     </tbody>
