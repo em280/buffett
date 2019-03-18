@@ -503,30 +503,12 @@ def summary():
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
 
-@app.route("/register")
-def register():
-    """ Functionality for the user register function. """
-    # Register some stub users
-    f = open("users.csv")
-    reader = csv.reader(f)
-    for name, passcode, number in reader:
-        user = User(username=name, password=passcode, phone_number=number)
-        db.session.add(user)
-        print("A stub user has been added.")
-    db.session.commit()
-
-    # testing
-    temp = User.query.all()
-    return "render"
-
 @app.route("/unregister")
 def unregister():
     """
     Functionality for the user unregister function.
     """
-    # Unregister a user based on their id
-    User().remove_user(2)
-    return "A user has been unregistered." # Update this function for when user was not removed
+    pass
 
 @app.route("/initdb")
 def main():
@@ -535,16 +517,17 @@ def main():
     # to initiate the database and never again.
     db.create_all()
     # Register some stub users
-    register()
     f = open("users.csv")
     reader = csv.reader(f)
     users = User.query.all()
-    if users is None:
+
+    if len(users) == 0:
         for name, passcode, number in reader:
             user = User(username=name, password=passcode, phone_number=number)
             db.session.add(user)
             print("A stub user has been added.")
         db.session.commit()
+        
     return "db initialized"
 
 
@@ -552,6 +535,8 @@ def main():
 def signup():
     """
     @author: EM
+
+    This is an implementation of user registration for the buffet application.
     """
     signupForm = SignupForm()
     error = None
