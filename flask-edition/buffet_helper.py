@@ -124,6 +124,14 @@ def prepare_leaderboard(symbol=None):
         print(symbol)
         return data
 
+def get_gainers():
+    symbol = "MSFT"
+    df = web.DataReader(symbol, "iex", dt.date.today())
+    data = {}
+    data["info"] = df.values
+
+    return data
+
 def quote_validate(symbol):
     """
     @author: EM

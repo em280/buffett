@@ -600,6 +600,28 @@ def logout():
         flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
+@app.route("/gainers")
+def gainers():
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+
+    data = get_gainers()
+    print(data)
+
+    return render_template("gainers.html", searchForm=searchForm)
+
+@app.route("/losers")
+def losers():
+    """
+    @author: EM
+    """
+    # Initiliase the form and relevant local variables
+    searchForm = SearchForm()
+    return render_template("losers.html", searchForm=searchForm)
+
 @app.route("/leaderboard")
 # @login_required
 def leaderboard():
