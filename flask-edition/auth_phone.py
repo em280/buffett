@@ -20,13 +20,13 @@ def send_auth_code():
 
 def send_buy_confirmation(symbol, amount):
 	message = client.messages.create(
-		to="+447427039469", 
+		to="+447427039469",
 		from_="+447427564225",
 		body="Hey just confirming that, you successfully bought {} shares of {}".format(amount, symbol))
 
 
 def send_sell_confirmation(symbol, amount):
 	message = client.messages.create(
-			to="+447427039469", 
+			to="+447427039469",
 			from_="+447427564225",
 			body="Hey just confirming that, you successfully sold {} shares of {}".format(amount, symbol))

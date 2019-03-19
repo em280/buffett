@@ -654,12 +654,12 @@ def leaderboard():
             close_price = prepare_leaderboard(stock.symbol)["close_price"][-1]
             shares_owned = Portfolio.query.filter_by(userid=user.id, symbol=stock.symbol).first().quantity
             day_change = (close_price - open_price) * shares_owned
-            
+
             vals.append(day_change)
 
             temp["dayChange"] = f"{sum(vals):.2f}"
 
-            
+
             # if i < len(portfolio) - 1:
             # Multiply the number of shares you own of each stock by its dividends per share only if it pays a dividend
             # access the amount key
@@ -670,7 +670,7 @@ def leaderboard():
             print(dividend, "dividend")
 
             # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
-            
+
             total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
             print(total_by_price, "printing total by price")
             # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
@@ -687,7 +687,7 @@ def leaderboard():
 
         # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()
         # https://api.iextrading.com/1.0/stock/aapl/dividends/1m
-        
+
         data.append(temp)
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data)
