@@ -10,5 +10,9 @@ body {
 }
 
 .signup-section {
-  margin: 4em auto;
+  margin: 8em auto;
+}
+
+#login-sect {
+  margin: 10em auto;
 }

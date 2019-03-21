@@ -573,16 +573,23 @@ def login():
         username = loginForm.username.data
         password = loginForm.password.data
 
-        # This line needs to be changed to account for users with the same name
-        # In other words verification shall be done checking both the username and password
-        user = User.query.filter_by(username=username).first()
+        usr = User.query.all()
+        user = None
+        for u in usr:
+            un = u.username
+            ph = u.password
+            print(un,ph)
+            if pbkdf2_sha256.verify(password, ph) == True:
+                user = u
+                break
+
         if user is not None:
             session["looged_in"] = True
             session["username"] = loginForm.username.data
             flash(f"{session['username'].upper()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
         else:
-            flash("You have entered an incorrect username or password.")
+            flash("You have entered an incorrect username or password.", "danger")
             redirect(url_for("login"))
 
     # rendering login page
