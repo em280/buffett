@@ -116,12 +116,9 @@ def prepare_leaderboard(symbol=None):
         # df = df.head(1)
         open_price = df["open"].values
         close_price = df["close"].values
-        print("values", open_price)
         data["open_price"] = open_price
         data["close_price"] = close_price
-        print(dt.date.today())
-        print(df.head())
-        print(symbol)
+        
         return data
 
 def get_gainers():
@@ -160,5 +157,5 @@ def clock():
     @author: SA
 
     Function that displays the clock and tells the time.
-    """        
+    """
     pass

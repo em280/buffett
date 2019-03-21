@@ -633,7 +633,7 @@ def leaderboard():
     vals = []
 
     # Prepare info for leaderboard display
-    users = User.query.all()
+    users = User.query.order_by(User.cash.desc()).all()
     # Day Change = (open price - close price) * number of shares owned
     # It is assumed that all the users reinvest their paid dividends by buying more shares and/or increasing thier capital
     # Therefore, Total Change = (total gains / initial investment value) * 100 expressed as a %
