@@ -632,8 +632,6 @@ def leaderboard():
     data = []
     vals = []
 
-    # total_gain = 0
-
     # Prepare info for leaderboard display
     users = User.query.all()
     # Day Change = (open price - close price) * number of shares owned
@@ -666,16 +664,10 @@ def leaderboard():
             dividend = requests.get(f"https://api.iextrading.com/1.0/stock/{stock.symbol.lower()}/dividends/1m").json()
             if len(dividend) > 0:
                 total_gain += stock.quantity * dividend["amount"]
-                print(total_gain, "printing")
-            print(dividend, "dividend")
 
             # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
 
             total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
-            print(total_by_price, "printing total by price")
-            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
-            # total_gain += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
-            print(total_gain, "printer gain")
 
             if i == len(portfolio) - 1:
                 # total_initial = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
