@@ -8,7 +8,8 @@ from newslib import *
 from auth_phone import *
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 # END : Imports for utility funtions
-from passlib.hash import sha256_crypt
+# import the desired hasher
+from passlib.hash import pbkdf2_sha256
 
 import csv
 import os
@@ -523,7 +524,7 @@ def main():
 
     if len(users) == 0:
         for name, passcode, number in reader:
-            user = User(username=name, password=passcode, phone_number=number)
+            user = User(username=name, password=pbkdf2_sha256.hash(passcode), phone_number=number)
             db.session.add(user)
             print("A stub user has been added.")
         db.session.commit()
@@ -546,7 +547,7 @@ def signup():
         # Obtain form data
         username = signupForm.username.data
         password = signupForm.password.data
-        passhash = sha256_crypt.encrypt(password)
+        passhash = pbkdf2_sha256.hash(password)
         phone_number = signupForm.phone_number.data
 
         # Adding a new user to the database
@@ -573,6 +574,7 @@ def login():
         password = loginForm.password.data
 
         # This line needs to be changed to account for users with the same name
+        # In other words verification shall be done checking both the username and password
         user = User.query.filter_by(username=username).first()
         if user is not None:
             session["looged_in"] = True
@@ -657,8 +659,6 @@ def leaderboard():
 
             temp["dayChange"] = f"{sum(vals):.2f}"
 
-
-            # if i < len(portfolio) - 1:
             # Multiply the number of shares you own of each stock by its dividends per share only if it pays a dividend
             # access the amount key
             dividend = requests.get(f"https://api.iextrading.com/1.0/stock/{stock.symbol.lower()}/dividends/1m").json()
@@ -670,9 +670,6 @@ def leaderboard():
             total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
 
             if i == len(portfolio) - 1:
-                # total_initial = stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
-                # print(total_initial, "printer initial")
-                # print(total_gain - total_initial)
                 total_change = (total_gain / total_by_price) * 100
                 temp["totalChange"] = total_change
             i = i + 1
