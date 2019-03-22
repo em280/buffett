@@ -12,7 +12,7 @@ import datetime as dt
 import pandas as pd
 import pandas_datareader.data as web
 import pandas_datareader as pdr
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 
 def usd(value):
@@ -118,14 +118,27 @@ def prepare_leaderboard(symbol=None):
         close_price = df["close"].values
         data["open_price"] = open_price
         data["close_price"] = close_price
-        
+
         return data
 
-def get_gainers():
-    symbol = "MSFT"
-    df = web.DataReader(symbol, "iex", dt.date.today())
+def get_gainers_losers(symbols):
+    """
+    @author: EM
+    """
+    t3m = timedelta(days=60)
+    today = datetime.today()
+    t3m_ago = today - t3m
+
     data = {}
-    data["info"] = df.values
+    symbol_cur_price = []
+
+    # Retrieve current price
+    for s in symbols:
+        df = web.DataReader(s, "iex", today)
+        # data[s] = df.loc[today.date().strftime('%Y-%m-%d')]
+
+        # datetime.strptime(today, '%Y-%m-%d')
+
 
     return data
 

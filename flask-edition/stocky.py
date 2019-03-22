@@ -57,9 +57,10 @@ def get_month_chart(symbol, num_of_months):
 		num_of_months = '{}m'.format(num_of_months)
 	api_url = '{}stock/{}/chart/{}'.format(base_api_link, symbol, num_of_months)
 
-	to_csv(process_api_call(api_url))
+	# to_csv(process_api_call(api_url))
 
-	return "tmp.csv"
+	# return "tmp.csv"
+	return process_api_call(api_url)
 
 def get_current_share_quote(symbol):
 	'''
@@ -95,4 +96,3 @@ def to_csv(data):
 def get_company_name(symbol):
 	data = get_company_info(symbol)
 	return data['companyName']
-

@@ -371,7 +371,8 @@ def sell():
         # Query database
         # Based on the id of the currently logged in user , obtain this id from the session variable
         # Temporary variables for testing purposes
-        session["username"] = "bob" # This line should be removed before production
+        if session["username"] is None:
+            session["username"] = "bob" # This line should be removed before production
         current_user = User.query.filter_by(username=session["username"]).first()
         userid = current_user.id
         user = User.query.get(userid)
@@ -596,6 +597,7 @@ def login():
     return render_template("login.html", form=loginForm)
 
 @app.route("/logout")
+# @login_required
 def logout():
     """
     @author: EM
@@ -610,25 +612,73 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/gainers")
+# @login_required
 def gainers():
     """
     @author: EM
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
+    temp = []
+    stocks_symbols = []
+    ptf = Portfolio.query.all()
 
-    data = get_gainers()
+    for stock in ptf:
+        stocks_symbols.append(stock.symbol)
 
-    return render_template("gainers.html", searchForm=searchForm)
+    # Remove duplicates
+    stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
+
+    for q in stocks_symbols_d:
+        d = {}
+        d["symbol"] = q
+        d["companyName"] = get_company_name(q)
+        d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
+        d["change"] = get_month_chart(q,3)[-1]["change"]
+        d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
+        if d["change"] > 0:
+            temp.append(d)
+
+    print(temp, "kkkkkkk")
+
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("gainers.html", searchForm=searchForm, data=temp, quotes=quotes)
 
 @app.route("/losers")
+# @login_required
 def losers():
     """
     @author: EM
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
-    return render_template("losers.html", searchForm=searchForm)
+
+    temp = []
+    stocks_symbols = []
+    ptf = Portfolio.query.all()
+
+    for stock in ptf:
+        stocks_symbols.append(stock.symbol)
+
+    # Remove duplicates
+    stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
+
+    for q in stocks_symbols_d:
+        d = {}
+        d["symbol"] = q
+        d["companyName"] = get_company_name(q)
+        d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
+        d["change"] = get_month_chart(q,3)[-1]["change"]
+        d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
+        if d["change"] < 0:
+            temp.append(d)
+
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("losers.html", searchForm=searchForm, data=temp, quotes=quotes)
 
 @app.route("/leaderboard")
 # @login_required
@@ -669,8 +719,9 @@ def leaderboard():
             # Multiply the number of shares you own of each stock by its dividends per share only if it pays a dividend
             # access the amount key
             dividend = requests.get(f"https://api.iextrading.com/1.0/stock/{stock.symbol.lower()}/dividends/1m").json()
-            if len(dividend) > 0:
-                total_gain += stock.quantity * dividend["amount"]
+            if len(dividend) != 0:
+                for v in dividend:
+                    total_gain += stock.quantity * v["amount"]
 
             # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
 
@@ -678,7 +729,7 @@ def leaderboard():
 
             if i == len(portfolio) - 1:
                 total_change = (total_gain / total_by_price) * 100
-                temp["totalChange"] = total_change
+                temp["totalChange"] = f"{total_change:.2f}"
             i = i + 1
 
         # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()

@@ -12,7 +12,19 @@
         <th>% Change</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody>
+
+      {% for val in data %}
+      <tr>
+        <td>{{ val.symbol }}</td>
+        <td>{{ val.companyName }}</td>
+        <td>{{ val.lastPrice }}</td>
+        <td style="color: green;">+{{ val.change }}</td>
+        <td style="color: green;">+{{ val.changePercent }}</td>
+        </tr>
+      {% endfor %}
+
+    </tbody>
   </table>
 </div>
 {% endblock %}
