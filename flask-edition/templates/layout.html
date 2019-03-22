@@ -185,7 +185,7 @@
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button id="share" class="btn btn-sm btn-outline-secondary">Share</button>
+                <button id="share" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#sharing">Share</button>
                 <button id="export" class="btn btn-sm btn-outline-secondary">Export</button>
               </div>
               <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
@@ -193,6 +193,42 @@
               </button>
             </div>
           </div>
+
+          <!-- Modal -->
+          <div class="modal" id="sharing" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Share this with</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="s-buttons">
+                    <div class="fb-share-button share-item" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+
+                    <div class="share-item"><a class="twitter-share-button"
+                      href="https://twitter.com/intent/tweet"
+                      data-size="large"
+                      data-text="custom share text"
+                      data-url="https://dev.twitter.com/web/tweet-button"
+                      data-hashtags="example,demo"
+                      data-via="twitterdev"
+                      data-related="twitterapi,twitter">
+                    Tweet
+                    </a>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Modal -->
 
     <!-- This block below contains the main content rendered to the page -->
     {% block body %} {% endblock %}
@@ -203,6 +239,34 @@
         <p class="text-muted">&#169; Buffet Group</p>
       </div>
     </footer>
+
+    <!-- Facebook JavaScript SDK
+        ================================================== -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2"></script>
+    <!-- End Facebook JavaScript SDK
+        ================================================== -->
+
+        <!-- Twitter JavaScript SDK
+            ================================================== -->
+        <script>window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+
+          return t;
+        }(document, "script", "twitter-wjs"));</script>
+        <!-- End Twitter JavaScript SDK
+            ================================================== -->
 
     <!-- Bootstrap core JavaScript
         ================================================== -->
@@ -228,6 +292,12 @@
     <script>
       feather.replace();
     </script>
-    
+
+    <style>
+      #s-buttons {
+        display: inline-flex;
+      }
+    </style>
+
   </body>
 </html>
