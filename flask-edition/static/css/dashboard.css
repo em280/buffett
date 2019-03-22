@@ -98,3 +98,14 @@ body {
   border-color: transparent;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
 }
+
+button.accordion {
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  border: 0px;
+  padding: 18px;
+  width: 70%;
+  text-align: left;
+  font-size: 18px;
+}
