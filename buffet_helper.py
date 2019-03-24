@@ -15,12 +15,16 @@ import pandas_datareader as pdr
 from datetime import datetime, timedelta
 import time
 
+from stocky import get_company_name, get_month_chart
+
+
 def usd(value):
     """
     @author: EM
     Format an amount in usd currency.
     """
     return f"${value:,.2f}"
+
 
 def login_required(f):
     """
@@ -29,7 +33,7 @@ def login_required(f):
     Login is required for any route that is visited by the user.
     """
     @wraps(f)
-    def decorated_function(*args,**kwargs):
+    def decorated_function(*args, **kwargs):
         # return redirect(url_for("login"))
         # if session["username"] is None:
         if "username" not in session:
@@ -37,6 +41,7 @@ def login_required(f):
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
+
 
 def plotter(symbol):
     """
@@ -49,7 +54,7 @@ def plotter(symbol):
     start = dt.datetime(2016, 1, 1)
 
     # Currently the data manipulated goes back 3 months from the current date
-    n_data = 60 # for 60 days / or 3 months
+    n_data = 60  # for 60 days / or 3 months
     # n_data = 30 # for 30 days / or 1 month
 
     df = web.DataReader(symbol, "iex", start)
@@ -86,6 +91,7 @@ def plotter(symbol):
 
     return data
 
+
 def search_autocomplete():
     """
     @author: EM
@@ -104,6 +110,7 @@ def search_autocomplete():
         values.append(data["symbols"][q] + " " + data["names"][q])
     return values
 
+
 def prepare_leaderboard(symbol=None):
     """
     @author: EM
@@ -111,7 +118,8 @@ def prepare_leaderboard(symbol=None):
     """
     data = {}
     if symbol is not None:
-        df = web.DataReader(symbol, "iex", dt.date(2019, 3, 11)) # Edit this line for when the market is closed
+        # Edit this line for when the market is closed
+        df = web.DataReader(symbol, "iex", dt.date(2019, 3, 11))
         # df = web.DataReader(symbol, "iex", dt.date.today())
         # df = df.head(1)
         open_price = df["open"].values
@@ -121,26 +129,25 @@ def prepare_leaderboard(symbol=None):
 
         return data
 
+
 def get_gainers_losers(symbols):
     """
     @author: EM
     """
-    t3m = timedelta(days=60)
-    today = datetime.today()
-    t3m_ago = today - t3m
+    data = []
 
-    data = {}
-    symbol_cur_price = []
-
-    # Retrieve current price
-    for s in symbols:
-        df = web.DataReader(s, "iex", today)
-        # data[s] = df.loc[today.date().strftime('%Y-%m-%d')]
-
-        # datetime.strptime(today, '%Y-%m-%d')
-
+    for q in symbols:
+        d = {}
+        d["symbol"] = q
+        d["companyName"] = get_company_name(q)
+        d["lastPrice"] = get_month_chart(q, 3)[-1]["close"]
+        d["change"] = get_month_chart(q, 3)[-1]["change"]
+        d["changePercent"] = get_month_chart(q, 3)[-1]["changePercent"]
+        if d["change"] < 0:
+            data.append(d)
 
     return data
+
 
 def quote_validate(symbol):
     """
@@ -164,6 +171,7 @@ def quote_validate(symbol):
         return symbol.upper()
     else:
         return None
+
 
 def clock():
     """
