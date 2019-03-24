@@ -143,6 +143,7 @@ def get_gainers_losers(symbols, tag):
         d["lastPrice"] = get_month_chart(q, 3)[-1]["close"]
         d["change"] = get_month_chart(q, 3)[-1]["change"]
         d["changePercent"] = get_month_chart(q, 3)[-1]["changePercent"]
+
         if tag == "g":
             if d["change"] > 0:
                 data.append(d)
