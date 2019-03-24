@@ -130,6 +130,7 @@ def index():
     data['ns2_url'] = news['articles'][1]['url']
     data['ns3'] = news['articles'][2]['title']
     data['ns3_url'] = news['articles'][2]['url']
+
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
@@ -233,7 +234,10 @@ def dashboard():
             info["g_total"] = usd(grand_total)
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
-    return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm)
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm, quotes=quotes)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -246,6 +250,9 @@ def buy():
     # Initialise the relevant forms
     buyForm = BuyForm()
     searchForm = SearchForm()
+
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
 
     if buyForm.validate_on_submit():
         # Get form information
@@ -324,13 +331,12 @@ def buy():
 
         flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!", "success")
 
-
         return render_template('index.html',
-                        data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
+                        data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata, quotes=quotes)
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
-    return render_template("buy.html", buyForm=buyForm, searchForm=searchForm)
+    return render_template("buy.html", buyForm=buyForm, searchForm=searchForm, quotes=quotes)
 
 
 @app.route("/sell", methods=["GET", "POST"])
@@ -350,6 +356,9 @@ def sell():
     sellForm = SellForm()
     searchForm = SearchForm()
     error = None
+
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
 
     # Validate that the sell form was submitted via post and that the contents of the form were valid
     if sellForm.validate_on_submit():
@@ -440,9 +449,9 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
+                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata, quotes=quotes)
 
-    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error)
+    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error, quotes=quotes)
 
 @app.route("/history")
 # @login_required
@@ -474,7 +483,10 @@ def history():
         temp["transaction_type"] = stock.transaction_type
         hist.append(temp)
 
-    return render_template("history.html", searchForm=searchForm, hist=hist)
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("history.html", searchForm=searchForm, hist=hist, quotes=quotes)
 
 @app.route("/summary")
 # @login_required
@@ -503,7 +515,10 @@ def summary():
     data['sector'] = company_in['sector']
     data["current_price"] = usd(get_current_share_quote(symbol)["latestPrice"])
 
-    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
 @app.route("/unregister")
 def unregister():
@@ -604,11 +619,8 @@ def logout():
     """
     session.clear()
     session.pop("username", None)
-    if "username" in session:
-        flash("You are still somehow logged in")
-    else:
-        session["logged_in"] = False
-        flash("You have successfully logged out.", "info")
+    session["logged_in"] = False
+    flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
 @app.route("/gainers")
@@ -703,7 +715,6 @@ def leaderboard():
                     total_gain += stock.quantity * v["amount"]
 
             # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
-
             total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
 
             if i == len(portfolio) - 1:
@@ -711,12 +722,12 @@ def leaderboard():
                 temp["totalChange"] = f"{total_change:.2f}"
             i = i + 1
 
-        # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()
-        # https://api.iextrading.com/1.0/stock/aapl/dividends/1m
-
         data.append(temp)
 
-    return render_template("leaderboard.html", searchForm=searchForm, data=data)
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+
+    return render_template("leaderboard.html", searchForm=searchForm, data=data, quotes=quotes)
 
 @app.route("/home")
 def home():
