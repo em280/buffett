@@ -628,6 +628,9 @@ def logout():
 def gainers():
     """
     @author: EM
+
+    Functionality to generate information regarding the most declined stocks 
+    based on the stocks owned by users of the buffet stock market game.
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
@@ -652,6 +655,9 @@ def gainers():
 def losers():
     """
     @author: EM
+
+    Functionality to generate information regarding the most advanced stocks 
+    based on the stocks owned by users of the buffet stock market game
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
@@ -676,6 +682,9 @@ def losers():
 def leaderboard():
     """
     @author: EM
+
+    Functionality to generate information to rank users of the buffet stock market game
+    based on their net value of stocks.
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
