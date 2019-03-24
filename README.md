@@ -43,9 +43,26 @@ If you are using both python2 and python3 in your system then use the following 
 ```sh
 $ python3 application.py
 ```
-You can run the application in a debug mode like so:
+You can run the application in a debug mode by executing the below command if you are running a macOS 
+operating system or UNIX-like operating system:
+
 ```sh
 $ export FLASK_ENV=development
+
+$ export FLASK_APP=application.py
+
+$ flask run
+
+```
+
+If you are using a Windows operating system, execute the following commands to achieve the equivalent of the above:
+
+```sh
+$ set FLASK_ENV=development
+
+$ set FLASK_APP=application.py
+
+$ flask run
 
 ```
 
