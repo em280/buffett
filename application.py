@@ -63,7 +63,7 @@ db.init_app(app)
 #################### The rest of the application ####################
 @app.route("/")
 @app.route("/index")
-# @login_required # This line can be commented out when you are testing out the application.
+@login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -75,7 +75,7 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    session["username"] = "bob" # This line should be removed before production
+    # session["username"] = "bob" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
@@ -138,7 +138,7 @@ def index():
 
 
 @app.route("/search", methods=["GET", "POST"])
-# @login_required
+@login_required
 def search():
     """
     @author: SH
@@ -193,7 +193,7 @@ def search():
 
 
 @app.route("/dashboard")
-# @login_required
+@login_required
 def dashboard():
     """
     @author: EM
@@ -241,7 +241,7 @@ def dashboard():
 
 
 @app.route("/buy", methods=["GET", "POST"])
-# @login_required
+@login_required
 def buy():
     """
     @author: EM
@@ -340,7 +340,7 @@ def buy():
 
 
 @app.route("/sell", methods=["GET", "POST"])
-# @login_required
+@login_required
 def sell():
     """
     @author: EM
@@ -454,7 +454,7 @@ def sell():
     return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error, quotes=quotes)
 
 @app.route("/history")
-# @login_required
+@login_required
 def history():
     """
     @author: EM
@@ -489,7 +489,7 @@ def history():
     return render_template("history.html", searchForm=searchForm, hist=hist, quotes=quotes)
 
 @app.route("/summary")
-# @login_required
+@login_required
 def summary():
     """
     @author: EM
@@ -521,6 +521,7 @@ def summary():
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
 @app.route("/unregister")
+@login_required
 def unregister():
     """
     Functionality for the user unregister function.
@@ -612,7 +613,7 @@ def login():
     return render_template("login.html", form=loginForm)
 
 @app.route("/logout")
-# @login_required
+@login_required
 def logout():
     """
     @author: EM
@@ -624,7 +625,7 @@ def logout():
     return redirect(url_for("login"))
 
 @app.route("/gainers")
-# @login_required
+@login_required
 def gainers():
     """
     @author: EM
@@ -651,7 +652,7 @@ def gainers():
     return render_template("gainers.html", searchForm=searchForm, data=gainers, quotes=quotes)
 
 @app.route("/losers")
-# @login_required
+@login_required
 def losers():
     """
     @author: EM
@@ -678,7 +679,7 @@ def losers():
     return render_template("losers.html", searchForm=searchForm, data=losers, quotes=quotes)
 
 @app.route("/leaderboard")
-# @login_required
+@login_required
 def leaderboard():
     """
     @author: EM
