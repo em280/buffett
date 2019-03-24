@@ -2,6 +2,12 @@
 
 A web implementation of the Stock Market Game.
 
+### Website
+
+An instance of this project is running at the link below, feel free to check it out:
+
+[Buffet - Stock Market Game](https://buffet-stock-market-game.herokuapp.com/)
+
 # Application Requirements
 
 The requirements text file has been added to the repository.
