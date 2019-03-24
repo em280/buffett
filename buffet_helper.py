@@ -130,7 +130,7 @@ def prepare_leaderboard(symbol=None):
         return data
 
 
-def get_gainers_losers(symbols):
+def get_gainers_losers(symbols, tag):
     """
     @author: EM
     """
@@ -143,8 +143,12 @@ def get_gainers_losers(symbols):
         d["lastPrice"] = get_month_chart(q, 3)[-1]["close"]
         d["change"] = get_month_chart(q, 3)[-1]["change"]
         d["changePercent"] = get_month_chart(q, 3)[-1]["changePercent"]
-        if d["change"] < 0:
-            data.append(d)
+        if tag == "g":
+            if d["change"] > 0:
+                data.append(d)
+        if tag == "l":
+            if d["change"] < 0:
+                data.append(d)
 
     return data
 

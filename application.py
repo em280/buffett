@@ -619,7 +619,6 @@ def gainers():
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
-    temp = []
     stocks_symbols = []
     ptf = Portfolio.query.all()
 
@@ -629,20 +628,12 @@ def gainers():
     # Remove duplicates
     stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
 
-    for q in stocks_symbols_d:
-        d = {}
-        d["symbol"] = q
-        d["companyName"] = get_company_name(q)
-        d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
-        d["change"] = get_month_chart(q,3)[-1]["change"]
-        d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
-        if d["change"] > 0:
-            temp.append(d)
+    gainers = get_gainers_losers(stocks_symbols_d, tag="g")
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
-    return render_template("gainers.html", searchForm=searchForm, data=temp, quotes=quotes)
+    return render_template("gainers.html", searchForm=searchForm, data=gainers, quotes=quotes)
 
 @app.route("/losers")
 # @login_required
@@ -652,8 +643,6 @@ def losers():
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
-
-    temp = []
     stocks_symbols = []
     ptf = Portfolio.query.all()
 
@@ -663,22 +652,12 @@ def losers():
     # Remove duplicates
     stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
 
-    temp = get_gainers_losers(stocks_symbols_d)
-
-    # for q in stocks_symbols_d:
-    #     d = {}
-    #     d["symbol"] = q
-    #     d["companyName"] = get_company_name(q)
-    #     d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
-    #     d["change"] = get_month_chart(q,3)[-1]["change"]
-    #     d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
-    #     if d["change"] < 0:
-    #         temp.append(d)
+    losers = get_gainers_losers(stocks_symbols_d, tag="l")
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
-    return render_template("losers.html", searchForm=searchForm, data=temp, quotes=quotes)
+    return render_template("losers.html", searchForm=searchForm, data=losers, quotes=quotes)
 
 @app.route("/leaderboard")
 # @login_required
