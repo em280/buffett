@@ -42,9 +42,18 @@
     <link href="../static/css/carousel.css" rel="stylesheet" />
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <!-- Importing jQuery and jQueryUI via cdn links -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"
+    ></script>
+
     <script src="https://code.highcharts.com/stock/highstock.js"></script>
     <script>
-      $.getJSON("https://www.highcharts.com/samples/data/aapl-c.json", function(
+      $.getJSON("https://api.iextrading.com/1.0/stock/aapl/chart/5y", function(
         data
       ) {
         // Create the chart
@@ -298,9 +307,9 @@
           <!-- /.col-lg-4 -->
           <div id="mycontainer"></div>
 
-          <button id="large">Large</button>
+          <!-- <button id="large">Large</button>
           <button id="small">Small</button>
-          <button id="auto">Auto</button>
+          <button id="auto">Auto</button> -->
         </div>
         <!-- /.row -->
 
