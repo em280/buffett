@@ -62,8 +62,16 @@ db.init_app(app)
 
 #################### The rest of the application ####################
 @app.route("/")
+def home():
+    """
+    @author: EM
+
+    Implementation of the homepage for the buffet stock market game application.
+    """
+    return render_template("home.html")
+
 @app.route("/index")
-@login_required # This line can be commented out when you are testing out the application.
+# @login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -75,7 +83,7 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    # session["username"] = "bob" # This line should be removed before production
+    session["username"] = "bob" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
@@ -739,12 +747,6 @@ def leaderboard():
 
     return render_template("leaderboard.html", searchForm=searchForm, data=data, quotes=quotes)
 
-@app.route("/home")
-def home():
-    '''
-    @author: SA
-    '''
-    return render_template("home.html")
 
 if __name__ == "__main__":
     """
