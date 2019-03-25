@@ -50,78 +50,6 @@
       integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
       crossorigin="anonymous"
     ></script>
-
-    <script src="https://code.highcharts.com/stock/highstock.js"></script>
-    <script>
-      $.getJSON("https://api.iextrading.com/1.0/stock/aapl/chart/5y", function(
-        data
-      ) {
-        // Create the chart
-        var chart = Highcharts.stockChart("container", {
-          chart: {
-            height: 400
-          },
-
-          title: {
-            text: "Highstock Responsive Chart"
-          },
-
-          subtitle: {
-            text:
-              "Click small/large buttons or change window size to test responsiveness"
-          },
-
-          rangeSelector: {
-            selected: 1
-          },
-
-          series: [
-            {
-              name: "AAPL Stock Price",
-              data: data,
-              type: "area",
-              threshold: null,
-              tooltip: {
-                valueDecimals: 2
-              }
-            }
-          ],
-
-          responsive: {
-            rules: [
-              {
-                condition: {
-                  maxWidth: 500
-                },
-                chartOptions: {
-                  chart: {
-                    height: 300
-                  },
-                  subtitle: {
-                    text: null
-                  },
-                  navigator: {
-                    enabled: false
-                  }
-                }
-              }
-            ]
-          }
-        });
-
-        $("#small").click(function() {
-          chart.setSize(400);
-        });
-
-        $("#large").click(function() {
-          chart.setSize(800);
-        });
-
-        $("#auto").click(function() {
-          chart.setSize(null);
-        });
-      });
-    </script>
   </head>
   <body>
     <header>
@@ -214,7 +142,7 @@
           >
             <div class="container">
               <div class="carousel-caption text-left">
-                <h1>Example headline.</h1>
+                <h1>Buffet Stock Market Game.</h1>
                 <p>
                   Cras justo odio, dapibus ac facilisis in, egestas eget quam.
                   Donec id elit non mi porta gravida at eget metus. Nullam id
@@ -380,13 +308,14 @@
             </svg>
           </div>
         </div>
-
+ -->
         <hr class="featurette-divider" />
 
         <div class="row featurette">
           <div class="col-md-7">
             <h2 class="featurette-heading">
-              And lastly, this one. <span class="text-muted">Checkmate.</span>
+              About Buffet Stock Market Game.
+              <!-- <span class="text-muted">Checkmate.</span> -->
             </h2>
             <p class="lead">
               Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id
@@ -412,7 +341,7 @@
             </svg>
           </div>
         </div>
- -->
+
         <hr class="featurette-divider" />
 
         <!-- /END THE FEATURETTES -->
