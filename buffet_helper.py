@@ -178,10 +178,10 @@ def quote_validate(symbol):
         return None
 
 
-def clock():
-    """
-    @author: SA
+# enter_auth_code(username)
 
-    Function that displays the clock and tells the time.
-    """
-    pass
+# get_auth_code(usrname)
+
+# auth_user(username)
+# then someone can manage the front end to check whether the user has been autherised
+# if yes the signup goes through
