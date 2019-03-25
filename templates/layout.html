@@ -298,18 +298,31 @@
       #s-buttons {
         display: inline-flex;
       }
-
-      button.accordion {
-        background: #416dfd;
-        color: #fff;
+      .collapsible {
+        background-color: #777;
+        color: white;
         cursor: pointer;
-        border: 0px;
         padding: 18px;
-        width: 70%;
+        width: 100%;
+        border: none;
         text-align: left;
-        font-size: 18px;
+        outline: none;
+        font-size: 15px;
+      }
+
+      .active, .collapsible:hover {
+        background-color: #555;
+      }
+
+      .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+        background-color: #f1f1f1;
       }
     </style>
+
+
     <!-- End of the styling -->
 
   </body>
