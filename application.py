@@ -609,7 +609,7 @@ def login():
                 break
 
         if user is not None:
-            session["looged_in"] = True
+            session["logged_in"] = True
             session["username"] = loginForm.username.data
             flash(f"{session['username'].upper()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
