@@ -101,7 +101,3 @@ def get_similar_stocks(symbol):
 	api_url ='{}stock/{}/peers'.format(base_api_link, symbol)
 
 	return process_api_call(api_url)
-
-x = get_similar_stocks('msft')
-for stocks in x:
-	print(stocks)
