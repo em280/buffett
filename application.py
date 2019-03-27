@@ -139,7 +139,7 @@ def index():
     data['ns3'] = news['articles'][2]['title']
     data['ns3_url'] = news['articles'][2]['url']
 
-    similar = get_similar_stocks('msft')
+    similar = get_similar_stocks(symbol)
 
 
 
@@ -210,7 +210,7 @@ def search():
         data['ns3'] = news['articles'][2]['title']
         data['ns3_url'] = news['articles'][2]['url']
 
-        similar = get_similar_stocks()
+        similar = get_similar_stocks(symbol)
 
         # calling the utility function for autocomplete
         quotes = search_autocomplete()
