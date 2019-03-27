@@ -1,91 +1,103 @@
-{% extends "base.html" %}
-{% block title %}
-Join Buffet - Buffet Stock Market Game
-{% endblock %}
-{% block body %}
-<!-- author: SA -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta
+      name="author"
+      content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
+    />
+    <meta name="generator" content="Jekyll v3.8.5" />
+    <title>Floating labels example · Bootstrap</title>
 
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('home') }}"
-      >Buffett</a>
+    <link
+      rel="canonical"
+      href="https://getbootstrap.com/docs/4.3/examples/floating-labels/"
+    />
 
-        <!-- links directing user to signup -->
-        <ul class="navbar-nav navbar-dark px-3">
-                <li class="nav-item text-nowrap">
-                    {% block a %}
-                  <a class="nav-link" href="{{ url_for('signup') }}" style="color:#ffd700;">Sign up</a>
-                    {% endblock %}
-                </li>
-        </ul>
+    <!-- Bootstrap core CSS -->
+    <link
+      href="/docs/4.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
 
-</nav>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
 
-<main class="container" style="margin: 6em auto;">
-    <div id="login-sect" class="row">
-        <div class="w-30 mx-auto top top-placement">
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="floating-labels.css" rel="stylesheet" />
+  </head>
+  <body>
+    <form class="form-signin">
+      <div class="text-center mb-4">
+        <img
+          class="mb-4"
+          src="/docs/4.3/assets/brand/bootstrap-solid.svg"
+          alt=""
+          width="72"
+          height="72"
+        />
+        <h1 class="h3 mb-3 font-weight-normal">Floating labels</h1>
+        <p>
+          Build form controls with floating labels via the
+          <code>:placeholder-shown</code> pseudo-element.
+          <a href="https://caniuse.com/#feat=css-placeholder-shown"
+            >Works in latest Chrome, Safari, and Firefox.</a
+          >
+        </p>
+      </div>
 
-            <div class="section-content">
-                <h2>Log In</h2>
-            </div>
-        </div>
-    </div>
+      <div class="form-label-group">
+        <input
+          type="email"
+          id="inputEmail"
+          class="form-control"
+          placeholder="Email address"
+          required
+          autofocus
+        />
+        <label for="inputEmail">Email address</label>
+      </div>
 
-      <!-- Login implementation-->
-      <!-- @author: EM -->
-      <form action="/login" method="POST">
-          {{
-            form.csrf_token
-          }}
-          {{ form.hidden_tag() }}
+      <div class="form-label-group">
+        <input
+          type="password"
+          id="inputPassword"
+          class="form-control"
+          placeholder="Password"
+          required
+        />
+        <label for="inputPassword">Password</label>
+      </div>
 
-          <div class="form-group">
-              {% if form.username.errors %}
-                  {% for error in form.username.errors %}
-                      <p class="error-message">{{ error }}</p>
-                  {% endfor %}
-              {% endif %}
-
-              {{ form.username(placeholder="Username", class="form-control") }}
-          </div>
-
-            <div class="form-group">
-                {% if form.password.errors %}
-                    {% for error in form.password.errors %}
-                        <p class="error-message">{{ error }}</p>
-                    {% endfor %}
-                {% endif %}
-
-                {{ form.password(placeholder="Password", class="form-control") }}
-            </div>
-
-            <div class="form-group">
-              {{ form.submit(class="btn btn-primary") }}
-            </div>
-
-
-            <div class="form-group">
-              {% if error %}
-                <p class=error><strong>Error:</strong> {{ error }}
-              {% endif %}
-            </div>
-
-              {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                  <div class=flashes>
-                  {% for category, message in messages %}
-                    <div class="alert alert-{{ category }} alert-dismissible fade show form-group" role="alert">
-                      {{ message }}
-                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                  {% endfor %}
-                  </div>
-                {% endif %}
-              {% endwith %}
-
-      </form>
-
-</main>
-
-{% endblock %}
+      <div class="checkbox mb-3">
+        <label>
+          <input type="checkbox" value="remember-me" /> Remember me
+        </label>
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">
+        Sign in
+      </button>
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2019</p>
+    </form>
+  </body>
+</html>
