@@ -139,6 +139,10 @@ def index():
     data['ns3'] = news['articles'][2]['title']
     data['ns3_url'] = news['articles'][2]['url']
 
+    similar = get_similar_stocks('msft')
+
+
+
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
@@ -155,8 +159,7 @@ def index():
         counter += 1
 
 
-    print(data['current_position'])
-    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes)
+    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -207,10 +210,12 @@ def search():
         data['ns3'] = news['articles'][2]['title']
         data['ns3_url'] = news['articles'][2]['url']
 
+        similar = get_similar_stocks()
+
         # calling the utility function for autocomplete
         quotes = search_autocomplete()
 
-        return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
+        return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes, similar=similar)
     return redirect(url_for("index"))
 
 

@@ -16,15 +16,23 @@ endblock %} {% block body %}
         <h3>General Information:</h3>
           <button class="collapsible">Exchange</button>
             <div class="content">
-              <p> <b> Exchange: </b>{{data["exchange"]}} <br>
+              <p> {{data["exchange"]}} <br>
             </div>
           <button class="collapsible">Industry</button>
             <div class="content">
-              <p> <b> Industry: </b> {{data["industry"]}} <br>
+              <p> {{data["industry"]}} <br>
             </div>
           <button class="collapsible">Description</button>
             <div class="content">
-              <p> <b> Description: </b> {{data["description"]}}</p>
+              <p> {{data["description"]}}</p>
+            </div>
+            <button class="collapsible">Similar Stocks</button>
+            <div class="content">
+              <ul>
+              {% for x in similar %}
+              <li>{{ x }}</li>
+              {% endfor %} 
+              </ul>
             </div>
       </div>
       <br>
