@@ -44,7 +44,11 @@ endblock %} {% block body %}
       });
 
       // send initial notification
-      var notification = new Notification("Your current leaderboard position is: {{data['current_position']}}");
+
+      if ( {{data['current_position']}} == 1) {
+        var notification = new Notification("Woo congrats you are first in our leaderboard 🎉");
+      }
+      
 
       setInterval(function() {
         location.reload()
