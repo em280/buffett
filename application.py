@@ -142,6 +142,20 @@ def index():
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
+
+    #initialise leaderboard position
+    counter = 1
+    data['current_position'] = 0
+
+    users = User.query.order_by(User.cash.desc()).all()
+    for user in users:
+        
+        if username.lower() == user.username.title().lower():
+            data['current_position'] = counter
+        counter += 1
+
+
+    print(data['current_position'])
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes)
 
 
@@ -690,7 +704,7 @@ def losers():
 @login_required
 def leaderboard():
     """
-    @author: EM
+    @author: EM + SH
 
     Functionality to generate information to rank users of the buffet stock market game
     based on their net value of stocks.
@@ -711,7 +725,6 @@ def leaderboard():
         temp["userName"] = user.username.title()
         temp["netValue"] = usd(user.cash)
         temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
-
         i = 0
         total_gain = 0
         total_by_price = 0
@@ -741,6 +754,8 @@ def leaderboard():
             i = i + 1
 
         data.append(temp)
+
+
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()

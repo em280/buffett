@@ -37,6 +37,19 @@ endblock %} {% block body %}
       {% endif %}
 
     </div>
+        <script>
+      // when the page loads we request permission to send the user notifications.
+      Notification.requestPermission(function(status) {
+        console.log('permission status:', status);
+      });
+
+      // send initial notification
+      var notification = new Notification("Your current leaderboard position is: {{data['current_position']}}");
+
+      setInterval(function() {
+        location.reload()
+      }, (60 * 1000) * 60); //runs every hour
+    </script>
 
 
       {% block buy %} {% endblock %}
@@ -73,6 +86,7 @@ endblock %} {% block body %}
 <!-- Graphs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
 
 
 <script>
