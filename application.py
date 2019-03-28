@@ -1,9 +1,9 @@
 from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file, send_from_directory
 
-# BEGIN : Imports for utility functions implemented by the buffet members
+# BEGIN : Imports for utility functions implemented by the buffett members
 from stocky import * # Import all the functions
 from models import * # Import all the models
-from buffet_helper import * # Import all the helper functions
+from buffett_helper import * # Import all the helper functions
 from newslib import *
 from auth_phone import *
 from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
@@ -55,7 +55,7 @@ Session(app)
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
 # PostgreSQL or MySQL shall be used for production
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffet.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffett.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
@@ -66,7 +66,7 @@ def home():
     """
     @author: EM
 
-    Implementation of the homepage for the buffet stock market game application.
+    Implementation of the homepage for the buffett stock market game application.
     """
     return render_template("home.html")
 
@@ -587,7 +587,7 @@ def signup():
     """
     @author: EM
 
-    This is an implementation of user registration for the buffet application.
+    This is an implementation of user registration for the buffett application.
     """
     signupForm = SignupForm()
     error = None
@@ -664,7 +664,7 @@ def gainers():
     @author: EM
 
     Functionality to generate information regarding the most declined stocks 
-    based on the stocks owned by users of the buffet stock market game.
+    based on the stocks owned by users of the buffett stock market game.
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
@@ -691,7 +691,7 @@ def losers():
     @author: EM
 
     Functionality to generate information regarding the most advanced stocks 
-    based on the stocks owned by users of the buffet stock market game
+    based on the stocks owned by users of the buffett stock market game
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
@@ -717,7 +717,7 @@ def leaderboard():
     """
     @author: EM + SH
 
-    Functionality to generate information to rank users of the buffet stock market game
+    Functionality to generate information to rank users of the buffett stock market game
     based on their net value of stocks.
     """
     # Initiliase the form and relevant local variables

@@ -1,4 +1,4 @@
-# Buffet
+# buffett
 
 A web implementation of the Stock Market Game.
 
@@ -6,7 +6,7 @@ A web implementation of the Stock Market Game.
 
 An instance of this project is running at the link below, feel free to check it out:
 
-[Buffet - Stock Market Game](https://buffet-stock-market-game.herokuapp.com/) (https://buffet-stock-market-game.herokuapp.com/)
+[buffett - Stock Market Game](https://buffett-stock-market-game.herokuapp.com/) (https://buffett-stock-market-game.herokuapp.com/)
 
 # Application Requirements
 
@@ -32,10 +32,10 @@ $ pip install -r requirements.txt
 
 Note: The application is compatible, and has only been tested using a [Python](https://www.python.org/) version of 3.7.2+.
 
-You can run the application by navigating to the 'buffet' folder and using the 'python' command to start up the application:
+You can run the application by navigating to the 'buffett' folder and using the 'python' command to start up the application:
 
 ```sh
-$ cd buffet
+$ cd buffett
 
 $ python application.py
 ```
