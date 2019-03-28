@@ -560,11 +560,13 @@ def summary():
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
-@app.route("/time")
+@app.route("/unregister")
 def time():
     """
+     @author: SA
+     
     """
-    return render_template("time.html")
+    return render_template("unregister")
 
 @app.route("/initdb")
 def main():
