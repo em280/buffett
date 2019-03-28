@@ -547,13 +547,13 @@ def summary():
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
-@app.route("/unregister")
-@login_required
-def unregister():
+@app.route("/time")
+#@login_required
+def time():
     """
     Functionality for the user unregister function.
     """
-    pass
+    return render_template("time.html")
 
 @app.route("/initdb")
 def main():
