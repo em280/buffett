@@ -1,11 +1,20 @@
-function startTime() {
+// Author: SA
+
+
+  // document.addEventListener("DOMContentLoaded", function() {
+  //   startTime();
+    
+  // });
+  startTime();
+
+  function startTime() {
     var day = new Date();
     var h = day.getHours();
     var m = day.getMinutes();
     var s = day.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
-    document.getElementById('txt').innerHTML = h + ":" + m + ":" + s;
+    document.querySelector("#clock").innerHTML = h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
   }
 
@@ -15,13 +24,3 @@ function startTime() {
     }  // add zero in front of numbers < 10
     return i;
   }
-
-  document.addEventListener("DOMContentLoaded", function() {
-
-  
-    let vals = document.querySelector("#clock");
-
-    for (let i = 0; i< vals.length; i++) {
-      vals[i].innerHTML = (startTime);
-    }
-  });
