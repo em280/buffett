@@ -157,6 +157,12 @@
                   <span data-feather="bar-chart-2"></span> Losers
                 </a>
               </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('index') }}">
+                  <span data-feather="clock"></span> Time
+                </a>
+              </li>
             </ul>
           </div>
         </nav>
@@ -301,7 +307,7 @@
         display: inline-flex;
       }
       .collapsible {
-        background-color: #777;
+        background-color: #3366ff;
         color: white;
         cursor: pointer;
         padding: 18px;
@@ -312,8 +318,8 @@
         font-size: 15px;
       }
 
-      .active, .collapsible:hover {
-        background-color: #555;
+      .collapsible:hover {
+        background-color: #8080ff;
       }
 
       .content {
