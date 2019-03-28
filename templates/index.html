@@ -46,6 +46,7 @@ endblock %} {% block body %}
 
     </div>
         <script>
+          console.log('ran')
       // when the page loads we request permission to send the user notifications.
       Notification.requestPermission(function(status) {
         console.log('permission status:', status);

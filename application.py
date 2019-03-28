@@ -83,7 +83,7 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    session["username"] = "bob" # This line should be removed before production
+    session["username"] = "alice" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
@@ -149,14 +149,18 @@ def index():
 
     #initialise leaderboard position
     counter = 1
-    data['current_position'] = 0
+    data['current_position'] = 1
 
     users = User.query.order_by(User.cash.desc()).all()
     for user in users:
         
         if username.lower() == user.username.title().lower():
             data['current_position'] = counter
+            print(data['current_position'])
         counter += 1
+
+
+
 
 
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
