@@ -16,10 +16,22 @@
     <title>Account Login · Buffet Stock Market Game</title>
 
     <!-- Bootstrap core CSS -->
+    <script href="../static/js/push_notifications"></script>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+
     <link
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
     <style>
       .bd-placeholder-img {
@@ -41,7 +53,11 @@
     <link href="../static/css/login.css" rel="stylesheet" />
   </head>
   <body>
-    <form class="form-signin">
+    <!-- Login implementation-->
+    <!-- @author: EM -->
+    <form class="form-signin" action="/login" method="POST">
+      {{ form.csrf_token }}
+      {{ form.hidden_tag() }}
       <div class="text-center mb-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -66,25 +82,12 @@
       </div>
 
       <div class="form-label-group">
-        <input
-          type="email"
-          id="inputEmail"
-          class="form-control"
-          placeholder="Email address"
-          required
-          autofocus
-        />
-        <label for="inputEmail">Email address</label>
+        {{ form.username(id="inputUsername", type="text", placeholder="Username", class="form-control", required=true, autofocus=true) }}
+        <label for="inputEmail">Username</label>
       </div>
 
       <div class="form-label-group">
-        <input
-          type="password"
-          id="inputPassword"
-          class="form-control"
-          placeholder="Password"
-          required
-        />
+        {{ form.password(id="inputPassword", placeholder="Password", class="form-control", type="password", required=true) }}
         <label for="inputPassword">Password</label>
       </div>
 
@@ -93,13 +96,37 @@
           <input type="checkbox" value="remember-me" /> Remember me
         </label>
       </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">
-        Sign in
-      </button>
+
+      {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
+
       <p class="mt-5 mb-3 text-muted text-center">
         &copy; 2019 Buffet Group. &middot;
         <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
       </p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %}
+      <div class="flashes">
+        {% for category, message in messages %}
+        <div
+          class="alert alert-{{
+            category
+          }} alert-dismissible fade show form-group"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %} {% endwith %}
     </form>
   </body>
 </html>
