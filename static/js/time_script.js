@@ -14,6 +14,14 @@
     var t = setTimeout(startTime, 500);
   }
 
+  var d = new Date();
+  
+  var utc_offset = d.getTimezoneOffset();
+    d.setMinutes(d.getMinutes() + utc_offset);
+   
+  var ET_offset = -5+60;
+    d.setMinutes(d.getMinutes() + ET_offset); 
+
   function checkTime(i) {
     if (i < 10) {
         i = "0" + i
