@@ -1,10 +1,6 @@
 // Author: SA
 
-
-  // document.addEventListener("DOMContentLoaded", function() {
-  //   startTime();
-    
-  // });
+  // time function created which is called by layout.html 
   startTime();
   
   function startTime() {

@@ -561,12 +561,12 @@ def summary():
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
 @app.route("/unregister")
-def time():
+def unregister():
     """
      @author: SA
-     
+
     """
-    return render_template("unregister")
+    return render_template("unregister.html")
 
 @app.route("/initdb")
 def main():
