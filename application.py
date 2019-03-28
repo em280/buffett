@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file
+from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file, send_from_directory
 
 # BEGIN : Imports for utility functions implemented by the buffet members
 from stocky import * # Import all the functions
@@ -214,10 +214,16 @@ def search():
 
         # calling the utility function for autocomplete
         quotes = search_autocomplete()
+        to_csv(get_month_chart(symbol, 3))
 
         return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes, similar=similar)
     return redirect(url_for("index"))
 
+
+@app.route("/export")
+@login_required
+def export():
+    return send_from_directory('iex.csv')
 
 @app.route("/dashboard")
 @login_required

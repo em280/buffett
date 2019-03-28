@@ -1,132 +1,74 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <link
-      rel="shortcut icon"
-      href="../static/img/Favicon.jpg"
-      type="static/Favicon"
-    />
-    <meta name="description" content="" />
-    <meta name="generator" content="Jekyll v3.8.5" />
-    <title>Account Login · Buffet Stock Market Game</title>
+{% extends "base.html" %} {% block title %} Account Login · Buffet Stock Market
+Game {% endblock %} {% block body %}
+<!-- Login implementation-->
+<!-- @author: EM -->
+<form class="form-signin" action="/login" method="POST">
+  {{ form.csrf_token }}
+  {{ form.hidden_tag() }}
+  <div class="text-center mb-4">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="72"
+      height="72"
+      class="mb-4"
+      viewBox="0 0 612 612"
+      role="img"
+      focusable="false"
+    >
+      <title>Buffet</title>
+      <path
+        fill="currentColor"
+        d="M510 8a94.3 94.3 0 0 1 94 94v408a94.3 94.3 0 0 1-94 94H102a94.3 94.3 0 0 1-94-94V102a94.3 94.3 0 0 1 94-94h408m0-8H102C45.9 0 0 45.9 0 102v408c0 56.1 45.9 102 102 102h408c56.1 0 102-45.9 102-102V102C612 45.9 566.1 0 510 0z"
+      ></path>
+      <path
+        fill="currentColor"
+        d="M196.77 471.5V154.43h124.15c54.27 0 91 31.64 91 79.1 0 33-24.17 63.72-54.71 69.21v1.76c43.07 5.49 70.75 35.82 70.75 78 0 55.81-40 89-107.45 89zm39.55-180.4h63.28c46.8 0 72.29-18.68 72.29-53 0-31.42-21.53-48.78-60-48.78h-75.57zm78.22 145.46c47.68 0 72.73-19.34 72.73-56s-25.93-55.37-76.46-55.37h-74.49v111.4z"
+      ></path>
+    </svg>
+    <h1 class="h3 mb-3 font-weight-normal">Buffet</h1>
+  </div>
 
-    <!-- Bootstrap core CSS -->
-    <script href="../static/js/push_notifications"></script>
+  <div class="form-label-group">
+    {{ form.username(id="inputUsername", type="text", placeholder="Username", class="form-control", required=true, autofocus=true) }}
+    <label for="inputUsername">Username</label>
+  </div>
 
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <div class="form-label-group">
+    {{ form.password(id="inputPassword", placeholder="Password", class="form-control", type="password", required=true) }}
+    <label for="inputPassword">Password</label>
+  </div>
 
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-      crossorigin="anonymous"
-    ></script>
+  <div class="checkbox mb-3">
+    <label> <input type="checkbox" value="remember-me" /> Remember me </label>
+  </div>
 
-    <link
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
+  {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <p class="mt-5 mb-3 text-muted text-center">
+    &copy; 2019 Buffet Group. &middot;
+    <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
+  </p>
 
-    <style>
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
-        }
-      }
-    </style>
-    <!-- Custom styles for this template -->
-    <link href="../static/css/login.css" rel="stylesheet" />
-  </head>
-  <body>
-    <!-- Login implementation-->
-    <!-- @author: EM -->
-    <form class="form-signin" action="/login" method="POST">
-      {{ form.csrf_token }}
-      {{ form.hidden_tag() }}
-      <div class="text-center mb-4">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="72"
-          height="72"
-          class="mb-4"
-          viewBox="0 0 612 612"
-          role="img"
-          focusable="false"
-        >
-          <title>Buffet</title>
-          <path
-            fill="currentColor"
-            d="M510 8a94.3 94.3 0 0 1 94 94v408a94.3 94.3 0 0 1-94 94H102a94.3 94.3 0 0 1-94-94V102a94.3 94.3 0 0 1 94-94h408m0-8H102C45.9 0 0 45.9 0 102v408c0 56.1 45.9 102 102 102h408c56.1 0 102-45.9 102-102V102C612 45.9 566.1 0 510 0z"
-          ></path>
-          <path
-            fill="currentColor"
-            d="M196.77 471.5V154.43h124.15c54.27 0 91 31.64 91 79.1 0 33-24.17 63.72-54.71 69.21v1.76c43.07 5.49 70.75 35.82 70.75 78 0 55.81-40 89-107.45 89zm39.55-180.4h63.28c46.8 0 72.29-18.68 72.29-53 0-31.42-21.53-48.78-60-48.78h-75.57zm78.22 145.46c47.68 0 72.73-19.34 72.73-56s-25.93-55.37-76.46-55.37h-74.49v111.4z"
-          ></path>
-        </svg>
-        <h1 class="h3 mb-3 font-weight-normal">Buffet</h1>
-      </div>
-
-      <div class="form-label-group">
-        {{ form.username(id="inputUsername", type="text", placeholder="Username", class="form-control", required=true, autofocus=true) }}
-        <label for="inputUsername">Username</label>
-      </div>
-
-      <div class="form-label-group">
-        {{ form.password(id="inputPassword", placeholder="Password", class="form-control", type="password", required=true) }}
-        <label for="inputPassword">Password</label>
-      </div>
-
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me" /> Remember me
-        </label>
-      </div>
-
-      {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
-
-      <p class="mt-5 mb-3 text-muted text-center">
-        &copy; 2019 Buffet Group. &middot;
-        <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
-      </p>
-
-      {% with messages = get_flashed_messages(with_categories=true) %} {% if
-      messages %}
-      <div class="flashes">
-        {% for category, message in messages %}
-        <div
-          class="alert alert-{{
-            category
-          }} alert-dismissible fade show form-group"
-          role="alert"
-        >
-          {{ message }}
-          <button
-            type="button"
-            class="close"
-            data-dismiss="alert"
-            aria-label="Close"
-          >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        {% endfor %}
-      </div>
-      {% endif %} {% endwith %}
-    </form>
-  </body>
-</html>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div class="flashes">
+    {% for category, message in messages %}
+    <div
+      class="alert alert-{{ category }} alert-dismissible fade show form-group"
+      role="alert"
+    >
+      {{ message }}
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %} {% endwith %}
+</form>
+{% endblock %}
