@@ -216,11 +216,11 @@
                 </div>
                 <div class="modal-body">
                   <div id="s-buttons">
-                    <div class="fb-share-button share-item" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+                    <div class="fb-share-button share-item" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
 
                     <div class="share-item"><a class="twitter-share-button"
                       href="https://twitter.com/intent/tweet"
-                      data-size="large"
+                      data-size="small"
                       data-text="custom share text"
                       data-url="https://dev.twitter.com/web/tweet-button"
                       data-hashtags="example,demo"
@@ -228,6 +228,10 @@
                       data-related="twitterapi,twitter">
                     Tweet
                     </a>
+                    </div>
+                    <div class="share-item">
+                        <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+                        <script type="IN/Share" data-url="https://www.linkedin.com"></script>
                     </div>
                   </div>
 
@@ -244,11 +248,12 @@
     {% block body %} {% endblock %}
 
     <!-- Implementation of the footer -->
-    <footer class="footer mt-auto py-3">
+    <!-- <footer class="footer mt-auto py-3">
       <div class="container">
         <p class="text-muted">&#169; Buffet Group</p>
       </div>
-    </footer>
+    </footer> -->
+    <!-- FOOTER -->
 
     <!-- Facebook JavaScript SDK
         ================================================== -->
