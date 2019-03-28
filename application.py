@@ -223,7 +223,7 @@ def search():
 @app.route("/export")
 @login_required
 def export():
-    return send_from_directory('iex.csv')
+    return send_from_directory('tmp.csv')
 
 @app.route("/dashboard")
 @login_required
