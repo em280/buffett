@@ -1,11 +1,20 @@
-function startTime() {
+// Author: SA
+
+
+  // document.addEventListener("DOMContentLoaded", function() {
+  //   startTime();
+    
+  // });
+  startTime();
+
+  function startTime() {
     var day = new Date();
     var h = day.getHours();
     var m = day.getMinutes();
     var s = day.getSeconds();
     m = checkTime(m);
     s = checkTime(s);
-    document.getElementById('txt').innerHTML = h + ":" + m + ":" + s;
+    document.querySelector("#clock").innerHTML = h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
   }
 
