@@ -15,3 +15,13 @@ function startTime() {
     }  // add zero in front of numbers < 10
     return i;
   }
+
+  document.addEventListener("DOMContentLoaded", function() {
+
+  
+    let vals = document.querySelector("#clock");
+
+    for (let i = 0; i< vals.length; i++) {
+      vals[i].innerHTML = (startTime);
+    }
+  });
