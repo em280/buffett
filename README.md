@@ -19,7 +19,7 @@ If you are on windows, you shall make use of the Windows Command Prompt or Windo
 
 ### Installation
 
-The Stock-Market-Game application requires [Python](https://www.python.org/) version 3.7.2+ to run. Pip also needs to be installed.
+The Stock-Market-Game application requires [Python](https://www.python.org/) version 3.7.3+ to run. Pip also needs to be installed.
 
 Use the following command to install the dependencies and devDependencies.
 
