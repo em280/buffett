@@ -68,7 +68,10 @@ def home():
 
     Implementation of the homepage for the buffet stock market game application.
     """
-    return render_template("home.html")
+    symbol = "MSFT"
+    # obtaining graph information
+    graphdata = plotter(symbol)
+    return render_template("home.html", graphdata=graphdata)
 
 @app.route("/index")
 # @login_required # This line can be commented out when you are testing out the application.
@@ -554,10 +557,8 @@ def summary():
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
 @app.route("/time")
-#@login_required
 def time():
     """
-    Functionality for the user unregister function.
     """
     return render_template("time.html")
 

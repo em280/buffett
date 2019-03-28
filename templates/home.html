@@ -32,10 +32,10 @@
         user-select: none;
       }
 
-      #mycontainer {
+      /* #mycontainer {
         min-width: 310px;
         max-width: 800px;
-      }
+      } */
 
       @media (min-width: 768px) {
         .bd-placeholder-img-lg {
@@ -55,7 +55,10 @@
       integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
       crossorigin="anonymous"
     ></script>
-      
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   </head>
   <body>
     <header>
@@ -239,7 +242,7 @@
           <!-- /.col-lg-4 -->
           <!-- <div class="col-lg-4"></div> -->
           <!-- /.col-lg-4 -->
-          <div id="mycontainer"></div>
+          <!-- <div id="mycontainer"></div> -->
 
           <!-- <button id="large">Large</button>
           <button id="small">Small</button>
@@ -283,38 +286,11 @@
         </div>
 
         <hr class="featurette-divider" />
-
-        <div class="row featurette">
-          <div class="col-md-7 order-md-2">
-            <h2 class="featurette-heading">
-              Oh yeah, it’s that good.
-              <span class="text-muted">See for yourself.</span>
-            </h2>
-            <p class="lead">
-              Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id
-              ligula porta felis euismod semper. Praesent commodo cursus magna,
-              vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus
-              commodo.
-            </p>
-          </div>
-          <div class="col-md-5 order-md-1">
-            <svg
-              class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto"
-              width="500"
-              height="500"
-              xmlns="http://www.w3.org/2000/svg"
-              preserveAspectRatio="xMidYMid slice"
-              focusable="false"
-              role="img"
-              aria-label="Placeholder: 500x500"
-            >
-              <title>Placeholder</title>
-              <rect width="100%" height="100%" fill="#eee" />
-              <text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text>
-            </svg>
-          </div>
-        </div>
  -->
+        <div class="row featurette">
+            <div id="mycontainer"></div>
+        </div>
+
         <hr class="featurette-divider" />
 
         <div class="row featurette">
@@ -376,5 +352,46 @@
     </script>
 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <script>
+        /* Author: EM
+            The code below handles plotting graphs on the web page
+        */
+
+      var trace = {
+        x: {{ graphdata["date"] | safe }},
+        close: {{ graphdata["close"] }},
+        high: {{ graphdata["high"] }},
+        low: {{ graphdata["low"] }},
+        open: {{ graphdata["open"] }},
+
+        // cutomise colors
+        increasing: {line: {color: 'green'}},
+        decreasing: {line: {color: 'red'}},
+
+        type: 'candlestick',
+        xaxis: 'x',
+        yaxis: 'y'
+      };
+
+      var data = [trace];
+
+      var layout = {
+        title: "Basic Graph",
+        dragmode: 'zoom',
+        showlegend: false,
+        xaxis: {
+          rangeslider: {
+           visible: false
+         }
+        }
+      };
+
+      Plotly.plot('mycontainer', data, layout);
+
+      /* Author: EM
+            End of plotting graphs
+        */
+    </script>
   </body>
 </html>
