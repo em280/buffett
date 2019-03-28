@@ -6,7 +6,7 @@
     
   // });
   startTime();
-
+  
   function startTime() {
     var day = new Date();
     var h = day.getHours();
