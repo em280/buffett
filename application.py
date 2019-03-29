@@ -75,7 +75,10 @@ def home():
     symbol = "MSFT"
     # obtaining graph information
     graphdata = plotter(symbol)
-    return render_template("home.html", graphdata=graphdata)
+    news = get_general_headlines()
+    latest = news['articles'][0]['title']
+
+    return render_template("home.html", graphdata=graphdata, latest=latest)
 
 @app.route("/index")
 @login_required # This line can be commented out when you are testing out the application.
