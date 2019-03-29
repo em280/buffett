@@ -623,10 +623,10 @@ def signupcode():
     form = SignupCodeForm()
     if form.validate_on_submit():
         acode = form.signup_code.data
-        print("printer", acode, "session", session['a_code'])
-        if acode is session["a_code"]:
-            flash(f"Welcome {session['username']}, you were successfully registered!", "success")
+        if acode == session["a_code"]:
+            flash(f"Welcome {session['username'].title()}, you were successfully registered!", "success")
             return redirect(url_for("dashboard"))
+        flash(f"Authentication code entered is incorrect.", "danger")
         return render_template("authcode.html", form=form)
     return render_template("authcode.html", form=form)
 
@@ -662,6 +662,7 @@ def signup():
         for i in range(6):
             authcode += str(random.randint(0, 9))
         session["a_code"] = authcode
+        # Authentication code can be sent to the user here or using sessions
         flash(f"Authentication code is {authcode}", "success")
         return redirect(url_for("signupcode"))
         # flash(f"Welcome {username}, you were successfully registered!", "success")
