@@ -53,14 +53,9 @@ class SellForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-<<<<<<< HEAD
-    search = StringField("Search", validators=[
-                         DataRequired("Please enter a valid symbol.")])
-=======
     search = StringField("Search", validators=[DataRequired("Please enter a valid symbol.")])
 
 class UnregisterForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired("Please provide a password."), Length(min=8, message="Passwords must be 8 characters or more."), EqualTo('confirm', message='Passwords must match')])    
     confirm = PasswordField("Confirm Password")
     submit = SubmitField("Unregister")
->>>>>>> b821a3c381406e08b63d49a2e83a0d01ab976cce
