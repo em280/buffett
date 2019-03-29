@@ -1,5 +1,6 @@
 """
 @author: EM
+@author: SA
 
 This is a helper file for forms and form validation.
 """
@@ -37,3 +38,8 @@ class SellForm(FlaskForm):
 
 class SearchForm(FlaskForm):
     search = StringField("Search", validators=[DataRequired("Please enter a valid symbol.")])
+
+class UnregisterForm(FlaskForm):
+    password = PasswordField("Password", validators=[DataRequired("Please provide a password."), Length(min=8, message="Passwords must be 8 characters or more."), EqualTo('confirm', message='Passwords must match')])    
+    confirm = PasswordField("Confirm Password")
+    submit = SubmitField("Unregister")
