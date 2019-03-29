@@ -6,7 +6,7 @@ from models import * # Import all the models
 from buffett_helper import * # Import all the helper functions
 from newslib import *
 from auth_phone import *
-from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, UnregisterForm # Import for form functionality
 # END : Imports for utility funtions
 # import the desired hasher
 from passlib.hash import pbkdf2_sha256
@@ -560,13 +560,33 @@ def summary():
 
     return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
 
-@app.route("/unregister")
+@app.route("/unregister", methods=["GET", "POST"])
 def unregister():
     """
      @author: SA
 
+    This implementation unregisters user from the buffett application
+
     """
-    return render_template("unregister.html")
+    unregisterForm = UnregisterForm()
+
+    if unregisterForm.validate_on_submit():
+        # The user has supplied credentials that meet the expected input
+        # Obtain form data
+        password = unregisterForm.password.data
+        passhash = pbkdf2_sha256.hash(password)
+
+
+        # Deleting user from the database
+        user = User.query.get(1) 
+        db.session.delete(user)
+        db.session.commit()
+
+        flash(f"You have successfully unregistered! :(", "success")
+        # User successfully unregistered  
+        return render_template("home.html")
+    
+    return render_template("unregister.html", form=unregisterForm)
 
 @app.route("/initdb")
 def main():
