@@ -606,6 +606,7 @@ def signup():
         password = signupForm.password.data
         passhash = pbkdf2_sha256.hash(password)
         phone_number = signupForm.phone_number.data
+        phone_number = prepare_phone_number(phone_number)
 
         # Adding a new user to the database
         db.session.add(User(username=username, password=passhash, phone_number=phone_number))

@@ -26,6 +26,15 @@ def usd(value):
     return f"${value:,.2f}"
 
 
+def prepare_phone_number(value):
+    """
+    @author: EM
+    Format a phone number in UK format.
+    """
+    value = value.replace(" ", "")
+    return f"+44{value[-10:]}"
+
+
 def login_required(f):
     """
     @author: EM

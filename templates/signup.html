@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %} Account Signup · buffett Stock Market
-Game {% endblock %} {% block body %}
+{% extends "base.html" %} {% block title %} Account Signup · buffett Stock
+Market Game {% endblock %} {% block body %}
 <!-- Sign up implementation-->
 <!-- @author: EM -->
 <form class="form-signin" action="/signup" method="POST">
@@ -31,11 +31,18 @@ Game {% endblock %} {% block body %}
   <div class="form-label-group">
     {{ form.username(id="inputUsername", type="text", placeholder="Username", class="form-control", required=true, autofocus=true) }}
     <label for="inputUsername">Username</label>
+    {% if form.username.errors %} {% for error in form.username.errors %}
+    <p class="error-message">{{ error }}</p>
+    {% endfor %} {% endif %}
   </div>
 
   <div class="form-label-group">
     {{ form.password(id="inputPassword", placeholder="Password", class="form-control", type="password", required=true) }}
     <label for="inputPassword">Password</label>
+
+    {% if form.password.errors %} {% for error in form.password.errors %}
+    <p class="error-message">{{ error }}</p>
+    {% endfor %} {% endif %}
   </div>
 
   <div class="form-label-group">
@@ -49,7 +56,9 @@ Game {% endblock %} {% block body %}
   </div>
 
   <div class="checkbox mb-3">
-    <label> <input type="checkbox" value="remember-me" /> Remember me </label>
+    <!-- <label> <input type="checkbox" value="remember-me" /> Remember me </label> -->
+    {{ form.accept_tac }}
+    {{ form.accept_tac.label }}
   </div>
 
   {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
