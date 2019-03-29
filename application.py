@@ -230,6 +230,7 @@ def search():
 @app.route("/export")
 @login_required
 def export():
+    fname = "iex.csv"
     try:
         return send_file(os.path.dirname(fname) + fname, attachment_filename=fname)
     except Exception as e:
