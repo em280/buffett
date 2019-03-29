@@ -6,7 +6,7 @@ from models import * # Import all the models
 from buffett_helper import * # Import all the helper functions
 from newslib import *
 from auth_phone import *
-from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, UnregisterForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, SignupCodeForm, UnregisterForm # Import for form functionality
 # END : Imports for utility funtions
 # import the desired hasher
 from passlib.hash import pbkdf2_sha256
@@ -609,6 +609,19 @@ def main():
     return "db initialized"
 
 
+@app.route("/signupcode", methods=["GET", "POST"])
+def signupcode():
+    """
+    @author: EM
+
+    This is an implementation of user authentication.
+    """
+    form = SignupCodeForm()
+    if signupForm.validate_on_submit():
+        flash(f"Welcome {session["username"]}, you were successfully registered!", "success")
+        return redirect(url_for("dashboard"))
+    return render_template("authcode.html", form=form)
+
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     """
@@ -618,6 +631,7 @@ def signup():
     """
     signupForm = SignupForm()
     error = None
+    authcode = None
 
     if signupForm.validate_on_submit():
         # The user has supplied credentials that meet the expected input
@@ -633,8 +647,15 @@ def signup():
         db.session.commit()
 
         session["username"] = username
-        flash(f"Welcome {username}, you were successfully registered!", "success")
-        return redirect(url_for("dashboard"))
+
+        # Prompt the user for an authentication code to be confirmed
+        # Generate a six digit random number
+        for i in range(6):
+            authcode += random.randint(0, 9)
+        flash(f"Authentication code is {authcode}", "success")
+        return redirect(url_for("signupcode"))
+        # flash(f"Welcome {username}, you were successfully registered!", "success")
+        # return redirect(url_for("dashboard"))
     # Else the form was submitted via get
     return render_template("signup.html", form=signupForm, error=error)
 

@@ -10,9 +10,9 @@ from wtforms import StringField, PasswordField, SubmitField, IntegerField, Boole
 from wtforms.validators import DataRequired, Length, EqualTo
 
 
-class PhoneForm(FlaskForm):
-    country_code = IntegerField('Country Code', validators=[DataRequired()])
-    number = TextField('Number', validators=[DataRequired()])
+class SignupCodeForm(FlaskForm):
+    signup_code = IntegerField("Authentication Code", validators=[DataRequired(Length(min=6, max=6))])
+    submit = SubmitField("Submit")
 
 
 class SignupForm(FlaskForm):
