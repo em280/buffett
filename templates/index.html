@@ -1,4 +1,4 @@
-{% extends "layout.html" %} {% block title %} Buffett - Stock Market Game {%
+{% extends "layout.html" %} {% block title %} Buffet - Stock Market Game {%
 endblock %} {% block body %}
 
 <!-- This is where the body starts [BODY BEGIN] -->
@@ -31,7 +31,7 @@ endblock %} {% block body %}
               <ul>
               {% for x in similar %}
               <li>{{ x }}</li>
-              {% endfor %}
+              {% endfor %} 
               </ul>
             </div>
       </div>
@@ -46,7 +46,6 @@ endblock %} {% block body %}
 
     </div>
         <script>
-          console.log('ran')
       // when the page loads we request permission to send the user notifications.
       Notification.requestPermission(function(status) {
         console.log('permission status:', status);
@@ -57,7 +56,7 @@ endblock %} {% block body %}
       if ( {{data['current_position']}} == 1) {
         var notification = new Notification("congrats on topping the leaderboard 👏🙌🍾🎉");
       }
-
+      
 
       setInterval(function() {
         location.reload()
@@ -66,15 +65,7 @@ endblock %} {% block body %}
 
 
       {% block buy %} {% endblock %}
-
-      <footer class="container">
-        <p class="float-right"><a href="#">Back to top</a></p>
-        <p>
-          &copy; 2019 buffett Group. &middot;
-          <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
-        </p>
-      </footer>
-
+      
     </main>
   </div>
 </div>
@@ -125,21 +116,13 @@ for (i = 0; i < coll.length; i++) {
       content.style.display = "block";
     }
   });
-
 }
 
 
 
 </script>
 
-<script>
-  $(document).on("#export", "a.fileDownloadSimpleRichExperience", function () {
-    $.fileDownload($(this).prop('tmp.csv'), {
-        preparingMessageHtml: "We are preparing your report, please wait...",
-        failMessageHtml: "There was a problem generating your report, please try again."
-    });
-    return false; //this is critical to stop the click event which will trigger a normal file download!
-});</script>
+
   <script>
     /* Author: SH
         The code below handles plotting graphs on the web page
