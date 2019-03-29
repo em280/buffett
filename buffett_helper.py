@@ -194,6 +194,14 @@ def prepare_authcode(numcode, numphone):
 	auth_code = numcode
 	to = numphone
 
+def get_auth_code(username):
+    """
+    Username represents the username of the currently logged in user.
+    """
+    if username in session:
+        return session["a_code"]
+    else:
+        return None
 
 # enter_auth_code(username)
 

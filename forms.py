@@ -11,7 +11,7 @@ from wtforms.validators import DataRequired, Length, EqualTo
 
 
 class SignupCodeForm(FlaskForm):
-    signup_code = IntegerField("Authentication Code", validators=[DataRequired(Length(min=6, max=6))])
+    signup_code = StringField("Authentication Code", validators=[DataRequired(Length(min=6, max=6))])
     submit = SubmitField("Submit")
 
 
@@ -56,6 +56,6 @@ class SearchForm(FlaskForm):
     search = StringField("Search", validators=[DataRequired("Please enter a valid symbol.")])
 
 class UnregisterForm(FlaskForm):
-    password = PasswordField("Password", validators=[DataRequired("Please provide a password."), Length(min=8, message="Passwords must be 8 characters or more."), EqualTo('confirm', message='Passwords must match')])    
+    password = PasswordField("Password", validators=[DataRequired("Please provide a password."), Length(min=8, message="Passwords must be 8 characters or more."), EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField("Confirm Password")
     submit = SubmitField("Unregister")

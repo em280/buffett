@@ -26,6 +26,9 @@ from flask_session import Session
 from tempfile import mkdtemp
 # end import for sessions
 
+# Implementation of sessions using flask-login
+
+
 # Imports for database functionality
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -619,8 +622,12 @@ def signupcode():
     """
     form = SignupCodeForm()
     if form.validate_on_submit():
-        flash(f"Welcome {session['username']}, you were successfully registered!", "success")
-        return redirect(url_for("login"))
+        acode = form.signup_code.data
+        print("printer", acode, "session", session['a_code'])
+        if acode is session["a_code"]:
+            flash(f"Welcome {session['username']}, you were successfully registered!", "success")
+            return redirect(url_for("dashboard"))
+        return render_template("authcode.html", form=form)
     return render_template("authcode.html", form=form)
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -654,7 +661,7 @@ def signup():
         # Generate a six digit random number
         for i in range(6):
             authcode += str(random.randint(0, 9))
-
+        session["a_code"] = authcode
         flash(f"Authentication code is {authcode}", "success")
         return redirect(url_for("signupcode"))
         # flash(f"Welcome {username}, you were successfully registered!", "success")
@@ -688,7 +695,7 @@ def login():
         if user is not None:
             session["logged_in"] = True
             session["username"] = loginForm.username.data
-            flash(f"{session['username'].upper()}, you are successfully logged in!", "success")
+            flash(f"{session['username'].title()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
         else:
             flash("You have entered an incorrect username or password.", "danger")
