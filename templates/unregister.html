@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %} Unregister · buffett Stock Market
+{% extends "base.html" %} {% block title %} Unregister · Buffett Stock Market
 Game {% endblock %} {% block body %}
 <!-- Unregister implementaion -->
 <!-- author: SA-->
@@ -27,26 +27,26 @@ Game {% endblock %} {% block body %}
       </svg>
       <h1 class="h3 mb-3 font-weight-normal">buffett</h1>
     </div>
-  
+
 
     <div class="form-label-group">
       {{ form.password(id="inputPassword", placeholder="Password", class="form-control", type="password", required=true, autofocus=true) }}
       <label for="inputPassword">Password</label>
     </div>
-  
+
     <div class="form-label-group">
       {{ form.confirm(id="inputPassword", placeholder="Confirm Password", class="form-control", type="password", required=true) }}
       <label for="inputPassword">Confirm Password</label>
     </div>
-  
-  
+
+
     {{ form.submit(class="btn btn-primary btn-block", type="submit") }}
-  
+
     <p class="mt-5 mb-3 text-muted text-center">
       &copy; 2019 buffett Group. &middot;
       <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
     </p>
-  
+
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="flashes">

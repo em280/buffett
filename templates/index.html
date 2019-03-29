@@ -1,4 +1,4 @@
-{% extends "layout.html" %} {% block title %} buffett - Stock Market Game {%
+{% extends "layout.html" %} {% block title %} Buffett - Stock Market Game {%
 endblock %} {% block body %}
 
 <!-- This is where the body starts [BODY BEGIN] -->
@@ -31,7 +31,7 @@ endblock %} {% block body %}
               <ul>
               {% for x in similar %}
               <li>{{ x }}</li>
-              {% endfor %} 
+              {% endfor %}
               </ul>
             </div>
       </div>
@@ -57,7 +57,7 @@ endblock %} {% block body %}
       if ( {{data['current_position']}} == 1) {
         var notification = new Notification("congrats on topping the leaderboard 👏🙌🍾🎉");
       }
-      
+
 
       setInterval(function() {
         location.reload()
@@ -125,7 +125,7 @@ for (i = 0; i < coll.length; i++) {
       content.style.display = "block";
     }
   });
-  
+
 }
 
 

@@ -166,10 +166,6 @@ def index():
             print(data['current_position'])
         counter += 1
 
-
-
-
-
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
 
 

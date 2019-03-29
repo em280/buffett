@@ -1,6 +1,6 @@
 {% extends "index.html" %}
 {% block title %}
-Buy Stocks - buffett Stock Market Game
+Buy Stocks - Buffett Stock Market Game
 {% endblock %}
 {% block body %}
 
@@ -14,8 +14,8 @@ Buy Stocks - buffett Stock Market Game
 
               {{ buyForm.csrf_token }}
               {{ buyForm.hidden_tag() }}
-      
-              {{ buyForm.symbol(placeholder="Symbol") }}        
+
+              {{ buyForm.symbol(placeholder="Symbol") }}
               {{ buyForm.shares(placeholder="Shares") }}
               {{ buyForm.submit(class="btn-primary") }}
 
