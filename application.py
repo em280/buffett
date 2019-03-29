@@ -78,7 +78,7 @@ def home():
     return render_template("home.html", graphdata=graphdata)
 
 @app.route("/index")
-# @login_required # This line can be commented out when you are testing out the application.
+@login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -90,7 +90,7 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    session["username"] = "alice" # This line should be removed before production
+    # session["username"] = "alice" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
@@ -625,7 +625,8 @@ def signupcode():
         acode = form.signup_code.data
         if acode == session["a_code"]:
             flash(f"Welcome {session['username'].title()}, you were successfully registered!", "success")
-            return redirect(url_for("dashboard"))
+            return redirect(url_for("index"))
+            # return redirect(url_for("dashboard"))
         flash(f"Authentication code entered is incorrect.", "danger")
         return render_template("authcode.html", form=form)
     return render_template("authcode.html", form=form)
@@ -688,16 +689,17 @@ def login():
         for u in usr:
             un = u.username
             ph = u.password
-            print(un,ph)
+            # print(un,ph)
             if pbkdf2_sha256.verify(password, ph) == True:
                 user = u
                 break
 
         if user is not None:
             session["logged_in"] = True
-            session["username"] = loginForm.username.data
+            session["username"] = username
             flash(f"{session['username'].title()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
+            # return redirect(url_for("dashboard"))
         else:
             flash("You have entered an incorrect username or password.", "danger")
             redirect(url_for("login"))
