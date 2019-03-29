@@ -13,6 +13,7 @@ from passlib.hash import pbkdf2_sha256
 
 import csv
 import os
+import random
 import re
 import json
 import plotly
@@ -156,7 +157,7 @@ def index():
 
     users = User.query.order_by(User.cash.desc()).all()
     for user in users:
-        
+
         if username.lower() == user.username.title().lower():
             data['current_position'] = counter
             print(data['current_position'])
@@ -578,14 +579,14 @@ def unregister():
 
 
         # Deleting user from the database
-        user = User.query.get(1) 
+        user = User.query.get(1)
         db.session.delete(user)
         db.session.commit()
 
         flash(f"You have successfully unregistered! :(", "success")
-        # User successfully unregistered  
+        # User successfully unregistered
         return render_template("home.html")
-    
+
     return render_template("unregister.html", form=unregisterForm)
 
 @app.route("/initdb")
@@ -617,8 +618,8 @@ def signupcode():
     This is an implementation of user authentication.
     """
     form = SignupCodeForm()
-    if signupForm.validate_on_submit():
-        flash(f"Welcome {session["username"]}, you were successfully registered!", "success")
+    if form.validate_on_submit():
+        flash(f"Welcome {session['username']}, you were successfully registered!", "success")
         return redirect(url_for("dashboard"))
     return render_template("authcode.html", form=form)
 
@@ -631,7 +632,7 @@ def signup():
     """
     signupForm = SignupForm()
     error = None
-    authcode = None
+    authcode = 0
 
     if signupForm.validate_on_submit():
         # The user has supplied credentials that meet the expected input
@@ -712,7 +713,7 @@ def gainers():
     """
     @author: EM
 
-    Functionality to generate information regarding the most declined stocks 
+    Functionality to generate information regarding the most declined stocks
     based on the stocks owned by users of the buffett stock market game.
     """
     # Initiliase the form and relevant local variables
@@ -739,7 +740,7 @@ def losers():
     """
     @author: EM
 
-    Functionality to generate information regarding the most advanced stocks 
+    Functionality to generate information regarding the most advanced stocks
     based on the stocks owned by users of the buffett stock market game
     """
     # Initiliase the form and relevant local variables
