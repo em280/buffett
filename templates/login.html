@@ -39,7 +39,9 @@ Game {% endblock %} {% block body %}
   </div>
 
   <div class="checkbox mb-3">
-    <label> <input type="checkbox" value="remember-me" /> Remember me </label>
+    {{ form.remember_me }}
+    {{ form.remember_me.label }}
+    <!-- <label> <input type="checkbox" value="remember-me" /> Remember me </label> -->
   </div>
 
   {{ form.submit(class="btn btn-primary btn-block", type="submit") }}

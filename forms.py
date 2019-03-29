@@ -33,6 +33,7 @@ class LoginForm(FlaskForm):
                            DataRequired("Please enter your username.")])
     password = PasswordField("Password", validators=[
                              DataRequired("Please provide a password.")])
+    remember_me = BooleanField("Remember me.")
     submit = SubmitField("Sign in")
 
 
