@@ -186,6 +186,14 @@ def quote_validate(symbol):
     else:
         return None
 
+def prepare_authcode(numcode, numphone):
+	"""
+	Authentication code for registering a user.
+	"""
+	# Initialise values of the auth code and phone number to send to
+	auth_code = numcode
+	to = numphone
+
 
 # enter_auth_code(username)
 

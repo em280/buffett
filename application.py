@@ -44,7 +44,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Protecting the form against CSRF security exploit (this exploit is called Cross-Site Request Forgery)
-app.secret_key = "development-key"
+app.secret_key = os.urandom(32)
 
 # begin configuration of application for sessions
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -620,7 +620,7 @@ def signupcode():
     form = SignupCodeForm()
     if form.validate_on_submit():
         flash(f"Welcome {session['username']}, you were successfully registered!", "success")
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("login"))
     return render_template("authcode.html", form=form)
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -632,7 +632,7 @@ def signup():
     """
     signupForm = SignupForm()
     error = None
-    authcode = 0
+    authcode = ""
 
     if signupForm.validate_on_submit():
         # The user has supplied credentials that meet the expected input
@@ -648,11 +648,13 @@ def signup():
         db.session.commit()
 
         session["username"] = username
+        # session["username"] = username
 
         # Prompt the user for an authentication code to be confirmed
         # Generate a six digit random number
         for i in range(6):
-            authcode += random.randint(0, 9)
+            authcode += str(random.randint(0, 9))
+
         flash(f"Authentication code is {authcode}", "success")
         return redirect(url_for("signupcode"))
         # flash(f"Welcome {username}, you were successfully registered!", "success")
@@ -703,7 +705,8 @@ def logout():
     """
     session.clear()
     session.pop("username", None)
-    session["logged_in"] = False
+    session.pop("logged_in", False)
+    # session["logged_in"] = False
     flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
