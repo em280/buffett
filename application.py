@@ -230,7 +230,10 @@ def search():
 @app.route("/export")
 @login_required
 def export():
-    return send_from_directory('tmp.csv')
+    try:
+        return send_file(os.path.dirname(fname) + fname, attachment_filename=fname)
+    except Exception as e:
+        return str(e)
 
 @app.route("/dashboard")
 @login_required
@@ -276,6 +279,8 @@ def dashboard():
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
+
+    prepare_export(portfolio)
 
     return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm, quotes=quotes)
 
