@@ -23,3 +23,5 @@ def search_headlines(company):
 	response = requests.get(base, params=payload)
 	
 	return response.json()
+
+print(get_general_headlines())
