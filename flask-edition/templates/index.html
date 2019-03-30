@@ -1,0 +1,145 @@
+{% extends "layout.html" %} {% block title %} Buffet - Stock Market Game {%
+endblock %} {% block body %}
+
+<!-- This is where the body starts [BODY BEGIN] -->
+
+      <!-- Plotly chart will be drawn inside this DIV -->
+      <div id="chartDIV"></div>
+
+      <div style="text-align: center;">
+        <h5>
+          The current price for a share of <span style="color: #d4af37;">{{ data["companyName"] }}</span> is
+          <span style="color: #d4af37;">{{ data["current_price"] }}</span>.
+        </h5>
+      </div>
+      <div class="wrapper">
+        <h3>General Information:</h3>
+          <button class="accordion" type="button">Exchange</button>
+            <div class="panel">
+              <p> <b> Exchange: </b>{{data["exchange"]}} <br>
+            </div>
+          <button class="accordion" type="button">Industry</button>
+            <div class="panel">
+              <p> <b> Industry: </b> {{data["industry"]}} <br>
+            </div>
+          <button class="accordion" type="button">Description</button>
+            <div class="panel">
+              <p> <b> Description: </b> {{data["description"]}}</p>
+            </div>
+      </div>
+
+      {% if data["ns1"] is defined %}
+        <h3> News: </h3>
+        <a href="{{data['ns1_url']}}"> {{data["ns1"]}} </a><br>
+        <a href="{{data['ns2_url']}}"> {{data["ns2"]}} </a><br>
+        <a href="{{data['ns3_url']}}"> {{data["ns3"]}} </a>
+      {% endif %}
+
+
+      {% block buy %} {% endblock %}
+
+    </main>
+  </div>
+</div>
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script
+  src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+  integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+  integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+  integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+  crossorigin="anonymous"
+></script>
+
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+  feather.replace();
+</script>
+
+<!-- Graphs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+<script>
+  /* Author: SA
+      code below makes use of collapsibles
+  */
+  var acc = document.getElementsByClassName("accordion");
+
+    var i;
+    for(i = 0;i < acc.length; i++) {
+        acc[i].onclick = function() {
+            this.classList.toggle("active");
+            
+            var panel = this.nextElementSibling;
+
+            if(panel.style.maxHeight) {
+                panel.style.maxHeight = null;
+            }
+
+            else {
+                panel.style.maxHeight = panel.scrollHeight + "px";
+            }
+        }
+    }
+</script>
+
+
+  <script>
+    /* Author: SH
+        The code below handles plotting graphs on the web page
+    */
+
+  var trace = {
+    x: {{ graphdata["date"] | safe }},
+    close: {{ graphdata["close"] }},
+    high: {{ graphdata["high"] }},
+    low: {{ graphdata["low"] }},
+    open: {{ graphdata["open"] }},
+
+    // cutomise colors
+    increasing: {line: {color: 'green'}},
+    decreasing: {line: {color: 'red'}},
+
+    type: 'candlestick',
+    xaxis: 'x',
+    yaxis: 'y'
+  };
+
+  var data = [trace];
+
+  var layout = {
+    title: "{{ data["companyName"] }} ({{ data["symbol"] }})",
+    dragmode: 'zoom',
+    showlegend: false,
+    xaxis: {
+      rangeslider: {
+       visible: false
+     }
+    }
+  };
+
+  Plotly.plot('chartDIV', data, layout);
+
+  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
+/>
+
+{% endblock %}
