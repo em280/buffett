@@ -166,7 +166,7 @@ def index():
 
         if username.lower() == user.username.title().lower():
             data['current_position'] = counter
-            print(data['current_position'])
+            # print(data['current_position'])
         counter += 1
 
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
