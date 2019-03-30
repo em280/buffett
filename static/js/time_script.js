@@ -2,23 +2,25 @@
 
 // time function created which is called by layout.html
 startTime();
-
 function startTime() {
-  var day = new Date();
-  var h = day.getHours();
-  var m = day.getMinutes();
-  var s = day.getSeconds();
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
   m = checkTime(m);
   s = checkTime(s);
-  document.querySelector("#clock").innerHTML = h + ":" + m + ":" + s;
-  var t = setTimeout(startTime, 500);
+  document.getElementById("clock").setText = h + ":" + m + ":" + s;
+  var t = setTimeout(function() {
+    startTime();
+  }, 500);
+}
 
-  function checkTime(i) {
-    if (i < 10) {
-      i = "0" + i;
-    } // add zero in front of numbers < 10
-    return i;
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
   }
+  return i;
 }
 
 // var d = new Date();
