@@ -24,7 +24,7 @@ class SignupForm(FlaskForm):
     phone_number = StringField("Phone Number", validators=[DataRequired(
         "Please enter your phone number."), Length(min=10, max=13)])
     accept_tac = BooleanField(
-        "I accept the Terms and conditions.", validators=[DataRequired()])
+        "Agree to terms and conditions.", validators=[DataRequired()])
     submit = SubmitField("Sign up")
 
 
