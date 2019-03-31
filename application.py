@@ -615,28 +615,9 @@ def unregister():
     """
      @author: SA
 
-    This implementation unregisters user from the buffett application
-
+    Implementation of the unregister function.
     """
-    unregisterForm = UnregisterForm()
-
-    if unregisterForm.validate_on_submit():
-        user = User.query.filter_by(username=session["username"]).first()
-        password = unregisterForm.password.data
-        hash = user.password
-        print(password, "user entered")
-        print(hash, "from database")
-        if pbkdf2_sha256.verify(password, hash) == True:
-            print("this is true")
-            # db.session.delete(user)
-            # db.session.commit()
-            flash(f"You have successfully unregistered! :(", "success")
-            return redirect(url_for("signup"))
-        else:
-            print("this is false")
-            return redirect(url_for("unregister"))
-
-    return render_template("unregister.html", form=unregisterForm)
+    pass
 
 @app.route("/initdb")
 def main():
