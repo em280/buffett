@@ -2,7 +2,7 @@
 
 A web implementation of the Stock Market Game.
 
-Immerse yourself in the world of stock trading, using real-time data competing with others to become the next Warren Buffett. The service is free and does not require you to submit any sort of payment, just sign up and start playing. We also understand that you can’t always be the site checking the leaderboard so we will send you a push notification if you top the leaderboard!
+Immerse yourself in the world of stock trading, using real-time data competing with others to become the next [Warren Buffett](http://www.berkshirehathaway.com/). The service is free and does not require you to submit any sort of payment, just sign up and start playing. We also understand that you can’t always be at the site checking the leaderboard so we will send you a push notification if you top the leaderboard!
 
 ### Website
 
