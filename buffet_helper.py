@@ -1,5 +1,6 @@
 """
 @author: EM
+@author: SA
 
 This is a helper file for the application,
 it consists of functional utilities needed by the application.
@@ -25,6 +26,7 @@ def usd(value):
 def login_required(f):
     """
     @author: EM
+    @author: SA
 
     Login is required for any route that is visited by the user.
     """
@@ -164,11 +166,3 @@ def quote_validate(symbol):
         return symbol.upper()
     else:
         return None
-
-def clock():
-    """
-    @author: SA
-
-    Function that displays the clock and tells the time.
-    """
-    pass
