@@ -273,6 +273,15 @@ def passwordupdate():
         return redirect(url_for("index"))
     return redirect(url_for("settings"))
 
+@app.route("/profile")
+@login_required
+def profile():
+    """
+    @author: EM
+    Implementation of the profile feature.
+    """
+    return redirect(url_for("dashboard"))
+
 @app.route("/dashboard")
 @login_required
 def dashboard():
@@ -317,8 +326,6 @@ def dashboard():
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
-
-    prepare_export(portfolio)
 
     return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm, quotes=quotes)
 

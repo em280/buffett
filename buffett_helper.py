@@ -203,8 +203,6 @@ def get_auth_code(username):
     else:
         return None
 
-def prepare_export(content):
-    pass
 
 # enter_auth_code(username)
 
