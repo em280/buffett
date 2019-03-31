@@ -583,15 +583,14 @@ def unregister():
     unregisterForm = UnregisterForm()
 
     if unregisterForm.validate_on_submit():
+
+        user = User.query.filter_by(username=session["username"]).first()
         # The user has supplied credentials that meet the expected input
         # Obtain form data
-        uname = session["username"]
         password = unregisterForm.password.data
         passhash = pbkdf2_sha256.hash(password)
         
-
         # Deleting user from the database
-        user = User.query.get(1)
         db.session.delete(user)
         db.session.commit()
 
