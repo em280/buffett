@@ -26,9 +26,6 @@ from flask_session import Session
 from tempfile import mkdtemp
 # end import for sessions
 
-# Implementation of sessions using flask-login
-
-
 # Imports for database functionality
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -93,11 +90,9 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    # session["username"] = "alice" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
-    # user = User.query.first()
     current_user_amount = usd(current_user.cash)
     # Attempt to overwrite the default value for symbol if the user has bought any stocks before
     if Portfolio.query.filter_by(userid=current_user.id).first() is not None:
@@ -166,7 +161,6 @@ def index():
 
         if username.lower() == user.username.title().lower():
             data['current_position'] = counter
-            # print(data['current_position'])
         counter += 1
 
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
@@ -733,6 +727,7 @@ def login():
 def logout():
     """
     @author: EM
+    Implementation of the logout function.
     """
     session.clear()
     session.pop("username", None)
