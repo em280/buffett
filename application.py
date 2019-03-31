@@ -366,7 +366,8 @@ def buy():
 
         # Query database
         # Based on the id of the currently logged in user , obtain this id from the session variable
-        userid = 1
+        us = User.query.filter_by(username=session['username']).first()
+        userid = us.id
         user = User.query.get(userid)
 
         total_cost = (float(noOfShares) * current_price)
@@ -612,19 +613,19 @@ def unregister():
     Implementation of the unregister function.
     """
     unregisterForm = UnregisterForm()
-    
+
     if unregisterForm.validate_on_submit():
         user = User.query.filter_by(username=session["username"]).first()
         password = unregisterForm.password.data
         hash = user.password
-        
+
         if pbkdf2_sha256.verify(password, hash) == True:
             db.session.delete(user)
             db.session.commit()
-            
-            
+
+
             flash(f"You have successfully unregistered! :(", "success")
-            
+
             return redirect(url_for("signup"))
         return redirect(url_for("unregister"))
 
