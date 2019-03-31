@@ -621,20 +621,20 @@ def unregister():
     unregisterForm = UnregisterForm()
 
     if unregisterForm.validate_on_submit():
-
         user = User.query.filter_by(username=session["username"]).first()
-        # The user has supplied credentials that meet the expected input
-        # Obtain form data
         password = unregisterForm.password.data
-        passhash = pbkdf2_sha256.hash(password)
-
-        # Deleting user from the database
-        db.session.delete(user)
-        db.session.commit()
-
-        flash(f"You have successfully unregistered! :(", "success")
-        # User successfully unregistered
-        return render_template("signup.html")
+        hash = user.password
+        print(password, "user entered")
+        print(hash, "from database")
+        if pbkdf2_sha256.verify(password, hash) == True:
+            print("this is true")
+            # db.session.delete(user)
+            # db.session.commit()
+            flash(f"You have successfully unregistered! :(", "success")
+            return redirect(url_for("signup"))
+        else:
+            print("this is false")
+            return redirect(url_for("unregister"))
 
     return render_template("unregister.html", form=unregisterForm)
 
@@ -735,7 +735,6 @@ def login():
         for u in usr:
             un = u.username
             ph = u.password
-            # print(un,ph)
             if pbkdf2_sha256.verify(password, ph) == True:
                 user = u
                 break
