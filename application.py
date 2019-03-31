@@ -26,9 +26,6 @@ from flask_session import Session
 from tempfile import mkdtemp
 # end import for sessions
 
-# Implementation of sessions using flask-login
-
-
 # Imports for database functionality
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
@@ -93,11 +90,9 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    # session["username"] = "alice" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
-    # user = User.query.first()
     current_user_amount = usd(current_user.cash)
     # Attempt to overwrite the default value for symbol if the user has bought any stocks before
     if Portfolio.query.filter_by(userid=current_user.id).first() is not None:
@@ -166,7 +161,6 @@ def index():
 
         if username.lower() == user.username.title().lower():
             data['current_position'] = counter
-            # print(data['current_position'])
         counter += 1
 
     return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
@@ -670,7 +664,6 @@ def signupcode():
         if acode == session["a_code"]:
             flash(f"Welcome {session['username'].title()}, you were successfully registered!", "success")
             return redirect(url_for("index"))
-            # return redirect(url_for("dashboard"))
         flash(f"Authentication code entered is incorrect.", "danger")
         return render_template("authcode.html", form=form)
     return render_template("authcode.html", form=form)
@@ -700,7 +693,6 @@ def signup():
         db.session.commit()
 
         session["username"] = username
-        # session["username"] = username
 
         # Prompt the user for an authentication code to be confirmed
         # Generate a six digit random number
@@ -710,8 +702,6 @@ def signup():
         # Authentication code can be sent to the user here or using sessions
         flash(f"Authentication code is {authcode}", "success")
         return redirect(url_for("signupcode"))
-        # flash(f"Welcome {username}, you were successfully registered!", "success")
-        # return redirect(url_for("dashboard"))
     # Else the form was submitted via get
     return render_template("signup.html", form=signupForm, error=error)
 
@@ -742,7 +732,6 @@ def login():
             session["username"] = username
             flash(f"{session['username'].title()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
-            # return redirect(url_for("dashboard"))
         else:
             flash("You have entered an incorrect username or password.", "danger")
             redirect(url_for("login"))
@@ -755,11 +744,11 @@ def login():
 def logout():
     """
     @author: EM
+    Implementation of the logout function.
     """
     session.clear()
     session.pop("username", None)
     session.pop("logged_in", False)
-    # session["logged_in"] = False
     flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
