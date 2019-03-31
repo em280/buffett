@@ -6,7 +6,7 @@ from models import * # Import all the models
 from buffett_helper import * # Import all the helper functions
 from newslib import *
 from auth_phone import *
-from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, SignupCodeForm, UnregisterForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, SignupCodeForm, UpdatePasswordForm, UnregisterForm # Import for form functionality
 # END : Imports for utility funtions
 # import the desired hasher
 from passlib.hash import pbkdf2_sha256
@@ -234,6 +234,8 @@ def search():
 @login_required
 def export():
     """
+    @author: EM & SH
+
     Implementation of the export feature.
     """
     fname = "iex.csv"
@@ -241,6 +243,35 @@ def export():
         return send_file(os.path.dirname(fname) + fname, attachment_filename=fname)
     except Exception as e:
         return str(e)
+
+@app.route("/settings")
+@login_required
+def settings():
+    """
+    @author: EM
+
+    Implementation of the settings feature.
+    """
+    searchForm = SearchForm()
+    passwordForm = UpdatePasswordForm()
+    # calling the utility function for autocomplete
+    quotes = search_autocomplete()
+    settings = {}
+    return render_template("settings.html", searchForm=searchForm, quotes=quotes, settings=settings, form=passwordForm)
+
+@app.route("/passwordupdate", methods=["GET", "POST"])
+@login_required
+def passwordupdate():
+    """
+    @author: EM
+
+    Implementation of the password update feature.
+    """
+    passwordForm = UpdatePasswordForm()
+    if passwordForm.validate_on_submit():
+        flash(f"{session['username'].title()}, you have successfully changed your password.", "success")
+        return redirect(url_for("index"))
+    return redirect(url_for("settings"))
 
 @app.route("/dashboard")
 @login_required
@@ -589,7 +620,7 @@ def unregister():
         # Obtain form data
         password = unregisterForm.password.data
         passhash = pbkdf2_sha256.hash(password)
-        
+
         # Deleting user from the database
         db.session.delete(user)
         db.session.commit()
