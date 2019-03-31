@@ -146,11 +146,8 @@ def index():
 
     similar = get_similar_stocks(symbol)
 
-
-
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
-
 
     #initialise leaderboard position
     counter = 1
@@ -389,7 +386,7 @@ def buy():
             db.session.commit()
 
             # Notify the user about their recent trade
-            # send_buy_confirmation(symbol, noOfShares)
+            send_buy_confirmation(symbol, noOfShares)
 
         # Putting together a summary of the users current transaction
         data = {}
@@ -464,10 +461,7 @@ def sell():
 
         # Query database
         # Based on the id of the currently logged in user , obtain this id from the session variable
-        # Temporary variables for testing purposes
-        if session["username"] is None:
-            session["username"] = "bob" # This line should be removed before production
-        current_user = User.query.filter_by(username=session["username"]).first()
+        current_user = User.query.filter_by(username=session['username']).first()
         userid = current_user.id
         user = User.query.get(userid)
 
