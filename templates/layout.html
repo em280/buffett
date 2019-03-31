@@ -67,13 +67,17 @@
 
     <script src="../static/js/time_script.js"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
   </head>
   <body class="d-flex flex-column h-100">
 
     <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0">
       <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('index') }}"
-        >Buffett</a
-      >
+        >Buffett</a>
 
       <!-- Begin implementation of the search functionality -->
       <!-- @author: EM
@@ -97,43 +101,22 @@
       </form>
       <!-- End of search functionality implementation -->
 
-      <ul class="navbar-nav navbar-dark px-3">
-        <li class="nav-item text-nowrap">
-          <!-- nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" -->
+      <ul class="nav">
+        <!-- <li class="nav-item text-nowrap">
           <a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
-          <!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Log out</a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>-->
+        </li> -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle pb-0" data-toggle="dropdown" data-target="dropdown_target" href="#" style="color: #000;"><i class="material-icons md-light bg-light rounded-circle">face</i></a>
+          <div class="dropdown-menu dropdown-menu-lg-right" aria-labelledby="dropdown_target">
+            <a class="dropdown-item" href="#">{{ session["username"].title() }}</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Profile</a>
+            <a class="dropdown-item" href="#">Settings</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('logout') }}">Log out</a>
+          </div>
         </li>
       </ul>
-      <!-- <div class="collapse navbar-collapse" id="navbarNavDropdown"> -->
-    <!-- <ul class="navbar-nav px-3">
-
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Dropdown link
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </li>
-    </ul> -->
-  <!-- </div> -->
-  <!-- <div class="btn-group">
-  <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Right-aligned menu
-  </button>
-  <div class="dropdown-menu dropdown-menu-right">
-    <button class="dropdown-item" type="button">Action</button>
-    <button class="dropdown-item" type="button">Another action</button>
-    <button class="dropdown-item" type="button">Something else here</button>
-  </div>
-</div> -->
     </nav>
 
     <div class="container-fluid">
@@ -229,9 +212,9 @@
                 <button id="share" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#sharing">Share</button>
                 <a href="/export" target="_blank"><button id="export" class="btn btn-sm btn-outline-secondary">Export</button></a>
               </div>
-              <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+              <!-- <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
                 <span data-feather="calendar"></span> This week
-              </button>
+              </button> -->
             </div>
           </div>
 
