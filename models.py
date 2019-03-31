@@ -29,21 +29,6 @@ class User(db.Model):
         db.session.add(usr)
         db.session.commit()
 
-    # use the update method which requires the use of set
-    def update_user(self, id, cash):
-        usr = User.query.get(id=int(id))
-        usr.cash = cash
-
-    def remove_user(self, id):
-        """
-        Remove the user from the game.
-        """
-        usr = User.query.get(int(id))
-        if not usr:
-            return False
-        db.session.delete(usr)
-        db.session.commit()
-
     def __repr__(self):
         return f"<User {self.id}, '{self.username}', {self.cash}>"
 
