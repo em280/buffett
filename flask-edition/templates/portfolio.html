@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block title %}
+ Portfolio - Buffet Stock Market Game
+{% endblock %}
+{% block body %}
+<h2>Portfolio</h2>
+<div class="table-responsive">
+  <table class="table table-striped table-sm">
+    <thead>
+      <tr>
+        <th>Symbol</th>
+        <th>Name</th>
+        <th>Shares</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for stock in portfolio %}
+        <tr>
+
+            <td>{{ stock["symbol"] }}</td>
+            <td>{{ stock["companyName"] }}</td>
+            <td>{{ stock["shares"] }}</td>
+            <td>{{ info[stock["symbol"] + "price"] }}</td>
+            <td>{{ info[stock["symbol"] + "total"] }}</td>
+
+        </tr>
+        {% endfor %}
+      <tr>
+        <td>AMOUNT</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <!-- The field below is for the cash at hand for the user -->
+        <td>{{ info["user_cash"] }}</td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <!-- The field below is for the TOTAL amount / sum for the displayed column -->
+        <td style="color: green;">{{ info["g_total"] }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

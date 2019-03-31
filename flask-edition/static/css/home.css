@@ -1,0 +1,18 @@
+body {
+  overflow-x: hidden;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Slider */
+.carousel-item {
+  height: 100vh;
+}
+
+.signup-section {
+  margin: 8em auto;
+}
+
+#login-sect {
+  margin: 10em auto;
+}

@@ -1,19 +1,18 @@
-from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file, send_from_directory
+from flask import Flask, flash, render_template, request, jsonify, redirect, url_for, session, g, send_file
 
-# BEGIN : Imports for utility functions implemented by the buffett members
+# BEGIN : Imports for utility functions implemented by the buffet members
 from stocky import * # Import all the functions
 from models import * # Import all the models
-from buffett_helper import * # Import all the helper functions
+from buffet_helper import * # Import all the helper functions
 from newslib import *
 from auth_phone import *
-from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm, SignupCodeForm, UnregisterForm # Import for form functionality
+from forms import SignupForm, LoginForm, BuyForm, SellForm, SearchForm # Import for form functionality
 # END : Imports for utility funtions
 # import the desired hasher
 from passlib.hash import pbkdf2_sha256
 
 import csv
 import os
-import random
 import re
 import json
 import plotly
@@ -25,9 +24,6 @@ import numpy as np
 from flask_session import Session
 from tempfile import mkdtemp
 # end import for sessions
-
-# Implementation of sessions using flask-login
-
 
 # Imports for database functionality
 from flask_sqlalchemy import SQLAlchemy
@@ -47,7 +43,7 @@ from datetime import datetime
 app = Flask(__name__)
 
 # Protecting the form against CSRF security exploit (this exploit is called Cross-Site Request Forgery)
-app.secret_key = os.urandom(32)
+app.secret_key = "development-key"
 
 # begin configuration of application for sessions
 app.config["SESSION_FILE_DIR"] = mkdtemp()
@@ -59,29 +55,15 @@ Session(app)
 # Relevant variables for database access, implementation and access
 # The program shall make use of simple SQLLite for testing and development purposes
 # PostgreSQL or MySQL shall be used for production
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffett.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///buffet.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 
 #################### The rest of the application ####################
 @app.route("/")
-def home():
-    """
-    @author: EM
-
-    Implementation of the homepage for the buffett stock market game application.
-    """
-    symbol = "MSFT"
-    # obtaining graph information
-    graphdata = plotter(symbol)
-    news = get_general_headlines()
-    latest = news['articles'][0]['title']
-
-    return render_template("home.html", graphdata=graphdata, latest=latest)
-
 @app.route("/index")
-@login_required # This line can be commented out when you are testing out the application.
+# @login_required # This line can be commented out when you are testing out the application.
 def index():
     """
     @author: SH
@@ -93,7 +75,7 @@ def index():
     symbol = "MSFT"
 
     # Obtain data about current user using their session data
-    # session["username"] = "alice" # This line should be removed before production
+    session["username"] = "bob" # This line should be removed before production
     username = session["username"]
     # Query the database with the given username
     current_user = User.query.filter_by(username=username).first()
@@ -148,32 +130,14 @@ def index():
     data['ns2_url'] = news['articles'][1]['url']
     data['ns3'] = news['articles'][2]['title']
     data['ns3_url'] = news['articles'][2]['url']
-
-    similar = get_similar_stocks(symbol)
-
-
-
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
-
-    #initialise leaderboard position
-    counter = 1
-    data['current_position'] = 1
-
-    users = User.query.order_by(User.cash.desc()).all()
-    for user in users:
-
-        if username.lower() == user.username.title().lower():
-            data['current_position'] = counter
-            # print(data['current_position'])
-        counter += 1
-
-    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes, similar=similar)
+    return render_template('index.html', data=data, stocks=stocks, searchForm=searchForm, graphdata=graphdata, quotes=quotes)
 
 
 @app.route("/search", methods=["GET", "POST"])
-@login_required
+# @login_required
 def search():
     """
     @author: SH
@@ -220,30 +184,15 @@ def search():
         data['ns3'] = news['articles'][2]['title']
         data['ns3_url'] = news['articles'][2]['url']
 
-        similar = get_similar_stocks(symbol)
-
         # calling the utility function for autocomplete
         quotes = search_autocomplete()
-        to_csv(get_month_chart(symbol, 3))
 
-        return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes, similar=similar)
+        return render_template('index.html', searchForm=searchForm, data=data, users=users, user=user, graphdata=graphdata, quotes=quotes)
     return redirect(url_for("index"))
 
 
-@app.route("/export")
-@login_required
-def export():
-    """
-    Implementation of the export feature.
-    """
-    fname = "iex.csv"
-    try:
-        return send_file(os.path.dirname(fname) + fname, attachment_filename=fname)
-    except Exception as e:
-        return str(e)
-
 @app.route("/dashboard")
-@login_required
+# @login_required
 def dashboard():
     """
     @author: EM
@@ -284,16 +233,11 @@ def dashboard():
             info["g_total"] = usd(grand_total)
         info[item.symbol+"total"] = usd(current_price * item.quantity)
 
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
-
-    prepare_export(portfolio)
-
-    return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm, quotes=quotes)
+    return render_template("portfolio.html", portfolio=portfolio, info=info, searchForm=searchForm)
 
 
 @app.route("/buy", methods=["GET", "POST"])
-@login_required
+# @login_required
 def buy():
     """
     @author: EM
@@ -302,9 +246,6 @@ def buy():
     # Initialise the relevant forms
     buyForm = BuyForm()
     searchForm = SearchForm()
-
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
 
     if buyForm.validate_on_submit():
         # Get form information
@@ -383,16 +324,17 @@ def buy():
 
         flash(f"You have bought shares from {data['companyName']} worth {usd(current_price)}!", "success")
 
+
         return render_template('index.html',
-                        data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata, quotes=quotes)
+                        data=data, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
     # the code below is executed if the request method
     # was GET or there was some sort of error
-    return render_template("buy.html", buyForm=buyForm, searchForm=searchForm, quotes=quotes)
+    return render_template("buy.html", buyForm=buyForm, searchForm=searchForm)
 
 
 @app.route("/sell", methods=["GET", "POST"])
-@login_required
+# @login_required
 def sell():
     """
     @author: EM
@@ -408,9 +350,6 @@ def sell():
     sellForm = SellForm()
     searchForm = SearchForm()
     error = None
-
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
 
     # Validate that the sell form was submitted via post and that the contents of the form were valid
     if sellForm.validate_on_submit():
@@ -501,12 +440,12 @@ def sell():
                 data["grand_total"] = usd(grand_total)
 
         return render_template('index.html',
-                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata, quotes=quotes)
+                        data=data, sellForm=sellForm, searchForm=searchForm, stocks=stocks, graphdata=graphdata)
 
-    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error, quotes=quotes)
+    return render_template("sell.html", sellForm=sellForm, searchForm=searchForm, error=error)
 
 @app.route("/history")
-@login_required
+# @login_required
 def history():
     """
     @author: EM
@@ -535,13 +474,10 @@ def history():
         temp["transaction_type"] = stock.transaction_type
         hist.append(temp)
 
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
-
-    return render_template("history.html", searchForm=searchForm, hist=hist, quotes=quotes)
+    return render_template("history.html", searchForm=searchForm, hist=hist)
 
 @app.route("/summary")
-@login_required
+# @login_required
 def summary():
     """
     @author: EM
@@ -567,38 +503,14 @@ def summary():
     data['sector'] = company_in['sector']
     data["current_price"] = usd(get_current_share_quote(symbol)["latestPrice"])
 
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
+    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data)
 
-    return render_template("index.html", graphdata=graphdata, searchForm=searchForm, data=data, quotes=quotes)
-
-@app.route("/unregister", methods=["GET", "POST"])
+@app.route("/unregister")
 def unregister():
     """
-     @author: SA
-
-    This implementation unregisters user from the buffett application
-
+    Functionality for the user unregister function.
     """
-    unregisterForm = UnregisterForm()
-
-    if unregisterForm.validate_on_submit():
-
-        user = User.query.filter_by(username=session["username"]).first()
-        # The user has supplied credentials that meet the expected input
-        # Obtain form data
-        password = unregisterForm.password.data
-        passhash = pbkdf2_sha256.hash(password)
-        
-        # Deleting user from the database
-        db.session.delete(user)
-        db.session.commit()
-
-        flash(f"You have successfully unregistered! :(", "success")
-        # User successfully unregistered
-        return render_template("signup.html")
-
-    return render_template("unregister.html", form=unregisterForm)
+    pass
 
 @app.route("/initdb")
 def main():
@@ -621,34 +533,15 @@ def main():
     return "db initialized"
 
 
-@app.route("/signupcode", methods=["GET", "POST"])
-def signupcode():
-    """
-    @author: EM
-
-    This is an implementation of user authentication.
-    """
-    form = SignupCodeForm()
-    if form.validate_on_submit():
-        acode = form.signup_code.data
-        if acode == session["a_code"]:
-            flash(f"Welcome {session['username'].title()}, you were successfully registered!", "success")
-            return redirect(url_for("index"))
-            # return redirect(url_for("dashboard"))
-        flash(f"Authentication code entered is incorrect.", "danger")
-        return render_template("authcode.html", form=form)
-    return render_template("authcode.html", form=form)
-
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     """
     @author: EM
 
-    This is an implementation of user registration for the buffett application.
+    This is an implementation of user registration for the buffet application.
     """
     signupForm = SignupForm()
     error = None
-    authcode = ""
 
     if signupForm.validate_on_submit():
         # The user has supplied credentials that meet the expected input
@@ -657,25 +550,14 @@ def signup():
         password = signupForm.password.data
         passhash = pbkdf2_sha256.hash(password)
         phone_number = signupForm.phone_number.data
-        phone_number = prepare_phone_number(phone_number)
 
         # Adding a new user to the database
         db.session.add(User(username=username, password=passhash, phone_number=phone_number))
         db.session.commit()
 
         session["username"] = username
-        # session["username"] = username
-
-        # Prompt the user for an authentication code to be confirmed
-        # Generate a six digit random number
-        for i in range(6):
-            authcode += str(random.randint(0, 9))
-        session["a_code"] = authcode
-        # Authentication code can be sent to the user here or using sessions
-        flash(f"Authentication code is {authcode}", "success")
-        return redirect(url_for("signupcode"))
-        # flash(f"Welcome {username}, you were successfully registered!", "success")
-        # return redirect(url_for("dashboard"))
+        flash(f"Welcome {username}, you were successfully registered!", "success")
+        return redirect(url_for("dashboard"))
     # Else the form was submitted via get
     return render_template("signup.html", form=signupForm, error=error)
 
@@ -697,17 +579,16 @@ def login():
         for u in usr:
             un = u.username
             ph = u.password
-            # print(un,ph)
+            print(un,ph)
             if pbkdf2_sha256.verify(password, ph) == True:
                 user = u
                 break
 
         if user is not None:
-            session["logged_in"] = True
-            session["username"] = username
-            flash(f"{session['username'].title()}, you are successfully logged in!", "success")
+            session["looged_in"] = True
+            session["username"] = loginForm.username.data
+            flash(f"{session['username'].upper()}, you are successfully logged in!", "success")
             return redirect(url_for("index"))
-            # return redirect(url_for("dashboard"))
         else:
             flash("You have entered an incorrect username or password.", "danger")
             redirect(url_for("login"))
@@ -716,29 +597,29 @@ def login():
     return render_template("login.html", form=loginForm)
 
 @app.route("/logout")
-@login_required
+# @login_required
 def logout():
     """
     @author: EM
     """
     session.clear()
     session.pop("username", None)
-    session.pop("logged_in", False)
-    # session["logged_in"] = False
-    flash("You have successfully logged out.", "info")
+    if "username" in session:
+        flash("You are still somehow logged in")
+    else:
+        session["logged_in"] = False
+        flash("You have successfully logged out.", "info")
     return redirect(url_for("login"))
 
 @app.route("/gainers")
-@login_required
+# @login_required
 def gainers():
     """
     @author: EM
-
-    Functionality to generate information regarding the most declined stocks
-    based on the stocks owned by users of the buffett stock market game.
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
+    temp = []
     stocks_symbols = []
     ptf = Portfolio.query.all()
 
@@ -748,24 +629,33 @@ def gainers():
     # Remove duplicates
     stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
 
-    gainers = get_gainers_losers(stocks_symbols_d, tag="g")
+    for q in stocks_symbols_d:
+        d = {}
+        d["symbol"] = q
+        d["companyName"] = get_company_name(q)
+        d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
+        d["change"] = get_month_chart(q,3)[-1]["change"]
+        d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
+        if d["change"] > 0:
+            temp.append(d)
+
+    print(temp, "kkkkkkk")
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
-    return render_template("gainers.html", searchForm=searchForm, data=gainers, quotes=quotes)
+    return render_template("gainers.html", searchForm=searchForm, data=temp, quotes=quotes)
 
 @app.route("/losers")
-@login_required
+# @login_required
 def losers():
     """
     @author: EM
-
-    Functionality to generate information regarding the most advanced stocks
-    based on the stocks owned by users of the buffett stock market game
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
+
+    temp = []
     stocks_symbols = []
     ptf = Portfolio.query.all()
 
@@ -775,21 +665,26 @@ def losers():
     # Remove duplicates
     stocks_symbols_d = list(dict.fromkeys(stocks_symbols))
 
-    losers = get_gainers_losers(stocks_symbols_d, tag="l")
+    for q in stocks_symbols_d:
+        d = {}
+        d["symbol"] = q
+        d["companyName"] = get_company_name(q)
+        d["lastPrice"] = get_month_chart(q,3)[-1]["close"]
+        d["change"] = get_month_chart(q,3)[-1]["change"]
+        d["changePercent"] = get_month_chart(q,3)[-1]["changePercent"]
+        if d["change"] < 0:
+            temp.append(d)
 
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
-    return render_template("losers.html", searchForm=searchForm, data=losers, quotes=quotes)
+    return render_template("losers.html", searchForm=searchForm, data=temp, quotes=quotes)
 
 @app.route("/leaderboard")
-@login_required
+# @login_required
 def leaderboard():
     """
-    @author: EM + SH
-
-    Functionality to generate information to rank users of the buffett stock market game
-    based on their net value of stocks.
+    @author: EM
     """
     # Initiliase the form and relevant local variables
     searchForm = SearchForm()
@@ -807,6 +702,7 @@ def leaderboard():
         temp["userName"] = user.username.title()
         temp["netValue"] = usd(user.cash)
         temp["numberOfTrades"] = len(History.query.filter_by(userid=user.id).all())
+
         i = 0
         total_gain = 0
         total_by_price = 0
@@ -828,6 +724,7 @@ def leaderboard():
                     total_gain += stock.quantity * v["amount"]
 
             # Multiply the number of shares you own of each stock by its price regardless of whether or not it pays a dividend.
+
             total_by_price += stock.quantity * get_current_share_quote(stock.symbol)['latestPrice']
 
             if i == len(portfolio) - 1:
@@ -835,15 +732,19 @@ def leaderboard():
                 temp["totalChange"] = f"{total_change:.2f}"
             i = i + 1
 
+        # portfolio = Portfolio.query.order_by(Portfolio.transaction_date.desc()).all()
+        # https://api.iextrading.com/1.0/stock/aapl/dividends/1m
+
         data.append(temp)
 
+    return render_template("leaderboard.html", searchForm=searchForm, data=data)
 
-
-    # calling the utility function for autocomplete
-    quotes = search_autocomplete()
-
-    return render_template("leaderboard.html", searchForm=searchForm, data=data, quotes=quotes)
-
+@app.route("/home")
+def home():
+    '''
+    @author: SA
+    '''
+    return render_template("home.html")
 
 if __name__ == "__main__":
     """

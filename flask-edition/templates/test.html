@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+
+    {% if temp is none %}
+      <h6>Nothing to do</h6>
+    {% else %}
+    {% for item in temp %}
+      {{ item }}
+
+    {% endfor %}
+    <h6>THE END</h6>
+    {% endif %}
+
+  <!-- Plotly chart will be drawn inside this DIV -->
+  <div id="myDiv"></div>
+    <script>
+    /* JAVASCRIPT CODE GOES HERE */
+
+    var trace1 = {
+      type: "scatter",
+      mode: "lines",
+      name: 'AAPL High',
+      x: {{ graphdata["date"] | safe }},
+      y: {{ graphdata["high"] }},
+      line: {color: '#17BECF'}
+    };
+
+    var trace2 = {
+      type: "scatter",
+      mode: "lines",
+      name: 'AAPL Low',
+      x: {{ data["date"] | safe }},
+      y: {{ data["low"] }},
+      line: {color: '#7F7F7F'}
+    };
+
+    var data = [trace1, trace2];
+
+    var layout = {
+      title: 'Basic Time Series',
+    };
+
+
+        Plotly.newPlot('myDiv', data, layout);
+
+    </script>
+  </body>
+</html>

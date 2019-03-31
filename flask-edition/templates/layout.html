@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<!-- author: SA -->
+<!-- layout.html uses Jinja2 template engine -->
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="../static/css/dashboard.css"
+    />
+    <link rel="shortcut icon" href="../static/img/Favicon.jpg" type="static/Favicon">
+    <link rel="icon" href="../static/img/Favicon.jpg" type="static/Favicon">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+    ></script>
+
+    <!-- Importing a custom css file -- layout.css -->
+    <link href="../static/css/layout.css" rel="stylesheet" />
+
+    <!-- Importing jQuery and jQueryUI via cdn links -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"></script>
+
+    <!-- Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Importing custom JavaScript files into the application -->
+    <script src="../static/js/layout.js"></script>
+
+  </head>
+  <body class="d-flex flex-column h-100">
+
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ url_for('index') }}"
+        >Buffett</a
+      >
+
+      <!-- Begin implementation of the search functionality -->
+      <!-- @author: EM
+            Implementation of autocomplete with the help of Jinja2 and backend python -->
+      <form
+        class="form-inline w-100"
+        action="{{ url_for('search') }}"
+        method="POST"
+      >
+        {{ searchForm.csrf_token }}
+        {{ searchForm.hidden_tag() }}
+
+        {{ searchForm.search(id="searchBoxStocks", class="form-control form-control-dark w-100", list="quotes", placeholder="Search") }}
+
+        <datalist id="quotes">
+          {% for item in quotes %}
+                  <option value="{{ item }}">
+          {% endfor %}
+        </datalist>
+
+      </form>
+      <!-- End of search functionality implementation -->
+
+      <ul class="navbar-nav navbar-dark px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{{ url_for('logout') }}">Log out</a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" href="{{ url_for('dashboard') }}">
+                  <span data-feather="home"></span> Dashboard
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+            </ul>
+
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a id="buy" class="nav-link" href="{{ url_for('buy') }}">
+                  <span data-feather="shopping-cart"></span> Buy
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a id="sell" class="nav-link" href="{{ url_for('sell') }}">
+                  <span data-feather="shopping-bag"></span> Sell
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('history') }}">
+                  <span data-feather="archive"></span> History
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('summary') }}">
+                  <span data-feather="file-text"></span> Summary
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('leaderboard') }}">
+                  <span data-feather="bar-chart-2"></span> Leaderboard
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('gainers') }}">
+                  <span data-feather="bar-chart-2"></span> Gainers
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('losers') }}">
+                  <span data-feather="bar-chart-2"></span> Losers
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+          <div
+            class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom"
+          >
+            <h1 class="h2">Dashboard</h1>
+
+            <div>
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  <ul class=flashes>
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                      {{ message }}
+                    </div>
+                  {% endfor %}
+                  </ul>
+                {% endif %}
+              {% endwith %}
+            </div>
+
+            {% if error %}
+              <p class=error><strong>Error:</strong> {{ error }}
+            {% endif %}
+
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <button id="share" class="btn btn-sm btn-outline-secondary" data-toggle="modal" data-target="#sharing">Share</button>
+                <button id="export" class="btn btn-sm btn-outline-secondary">Export</button>
+              </div>
+              <button id="thisweek" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                <span data-feather="calendar"></span> This week
+              </button>
+            </div>
+          </div>
+
+          <!-- Modal -->
+          <div class="modal" id="sharing" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Share this with</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="s-buttons">
+                    <div class="fb-share-button share-item" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>
+
+                    <div class="share-item"><a class="twitter-share-button"
+                      href="https://twitter.com/intent/tweet"
+                      data-size="large"
+                      data-text="custom share text"
+                      data-url="https://dev.twitter.com/web/tweet-button"
+                      data-hashtags="example,demo"
+                      data-via="twitterdev"
+                      data-related="twitterapi,twitter">
+                    Tweet
+                    </a>
+                    </div>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- End Modal -->
+
+    <!-- This block below contains the main content rendered to the page -->
+    {% block body %} {% endblock %}
+
+    <!-- Implementation of the footer -->
+    <footer class="footer mt-auto py-3">
+      <div class="container">
+        <p class="text-muted">&#169; Buffet Group</p>
+      </div>
+    </footer>
+
+    <!-- Facebook JavaScript SDK
+        ================================================== -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.2"></script>
+    <!-- End Facebook JavaScript SDK
+        ================================================== -->
+
+        <!-- Twitter JavaScript SDK
+            ================================================== -->
+        <script>window.twttr = (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+          if (d.getElementById(id)) return t;
+          js = d.createElement(s);
+          js.id = id;
+          js.src = "https://platform.twitter.com/widgets.js";
+          fjs.parentNode.insertBefore(js, fjs);
+
+          t._e = [];
+          t.ready = function(f) {
+            t._e.push(f);
+          };
+
+          return t;
+        }(document, "script", "twitter-wjs"));</script>
+        <!-- End Twitter JavaScript SDK
+            ================================================== -->
+
+    <!-- Bootstrap core JavaScript
+        ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>
+      feather.replace();
+    </script>
+
+    <style>
+      #s-buttons {
+        display: inline-flex;
+      }
+    </style>
+
+  </body>
+</html>
