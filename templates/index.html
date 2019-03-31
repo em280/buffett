@@ -31,18 +31,20 @@ endblock %} {% block body %}
               <ul>
               {% for x in similar %}
               <li>{{ x }}</li>
-              {% endfor %} 
+              {% endfor %}
               </ul>
             </div>
       </div>
       <br>
-
+<div>
       {% if data["ns1"] is defined %}
         <h3> News: </h3>
         <a href="{{data['ns1_url']}}"> {{data["ns1"]}} </a><br>
         <a href="{{data['ns2_url']}}"> {{data["ns2"]}} </a><br>
         <a href="{{data['ns3_url']}}"> {{data["ns3"]}} </a>
       {% endif %}
+
+      <hr class="featurette-divider" />
 
     </div>
         <script>
@@ -56,7 +58,7 @@ endblock %} {% block body %}
       if ( {{data['current_position']}} == 1) {
         var notification = new Notification("congrats on topping the leaderboard 👏🙌🍾🎉");
       }
-      
+
 
       setInterval(function() {
         location.reload()
@@ -65,7 +67,16 @@ endblock %} {% block body %}
 
 
       {% block buy %} {% endblock %}
-      
+
+      <!-- FOOTER -->
+      <footer class="container pt-3">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>
+          &copy; 2019 Buffett Group. &middot;
+          <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
+        </p>
+      </footer>
+
     </main>
   </div>
 </div>
