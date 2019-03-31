@@ -611,7 +611,24 @@ def unregister():
 
     Implementation of the unregister function.
     """
-    pass
+    unregisterForm = UnregisterForm()
+    
+    if unregisterForm.validate_on_submit():
+        user = User.query.filter_by(username=session["username"]).first()
+        password = unregisterForm.password.data
+        hash = user.password
+        
+        if pbkdf2_sha256.verify(password, hash) == True:
+            db.session.delete(user)
+            db.session.commit()
+            
+            
+            flash(f"You have successfully unregistered! :(", "success")
+            
+            return redirect(url_for("signup"))
+        return redirect(url_for("unregister"))
+
+    return render_template("unregister.html", form=unregisterForm)
 
 @app.route("/initdb")
 def main():
