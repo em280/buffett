@@ -7,15 +7,18 @@ function startTime() {
   var h = today.getHours();
   var m = today.getMinutes();
   var s = today.getSeconds();
+  // add a zero in front of numbers<10
   m = checkTime(m);
   s = checkTime(s);
-  document.getElementById("txt").setText = h + ":" + m + ":" + s;
-  var t = setTimeout(startTime, 500); 
+  document.getElementById("clock").setText = h + ":" + m + ":" + s;
+  var t = setTimeout(function() {
+    startTime();
+  }, 500);
 }
 
 function checkTime(i) {
-  if (i < 10) { // add a zero in front of numbers<10
-    i = "0" + i;
+  if (i < 10) {
+    i = "0" + i; // add a zero in front of numbers<10
   }
   return i;
 }
