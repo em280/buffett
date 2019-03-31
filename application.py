@@ -844,8 +844,6 @@ def leaderboard():
 
         data.append(temp)
 
-
-
     # calling the utility function for autocomplete
     quotes = search_autocomplete()
 
