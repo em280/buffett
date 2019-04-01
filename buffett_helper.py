@@ -43,10 +43,7 @@ def login_required(f):
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # return redirect(url_for("login"))
-        # if session["username"] is None:
-        if "username" not in session:
-            # return redirect(url_for('login', next=request.url))
+        if 'username' not in session:
             return redirect(url_for("login"))
         return f(*args, **kwargs)
     return decorated_function
