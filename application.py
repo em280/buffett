@@ -729,7 +729,7 @@ def login():
             return redirect(url_for("index"))
         else:
             flash("You have entered an incorrect username or password.", "danger")
-            redirect(url_for("login"))
+            return redirect(url_for("login"))
 
     # rendering login page
     return render_template("login.html", form=loginForm)
